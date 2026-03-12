@@ -1,4 +1,4 @@
-# 🌐 Visibility Browser v1.2.0
+# 🌐 Visibility Browser
 
 ![Logo](icon.ico)
 
