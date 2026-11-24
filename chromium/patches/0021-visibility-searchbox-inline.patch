@@ -1,0 +1,15 @@
+diff --git a/chrome/browser/resources/webui_browser/webui_browser_searchbox.ts b/chrome/browser/resources/webui_browser/webui_browser_searchbox.ts
+index 18f4f8c..15004f4 100644
+--- a/chrome/browser/resources/webui_browser/webui_browser_searchbox.ts
++++ b/chrome/browser/resources/webui_browser/webui_browser_searchbox.ts
+@@ -44,7 +44,9 @@ interface UnboundedElement extends HTMLElement {
+  * @return Whether the Unbounded Element API is available in this context.
+  */
+ function isUnboundedSupported(): boolean {
+-  return 'showUnboundedElement' in HTMLElement.prototype;
++  // Visibility: the separate OS window repaints in stripes and lags behind
++  // the typed text, so keep the dropdown inside the frame.
++  return false;
+ }
+ 
+ const WebuiBrowserSearchboxElementBase = SearchboxMixin(
