@@ -1,0 +1,78 @@
+diff --git a/chrome/browser/resources/webui_browser/app.html.ts b/chrome/browser/resources/webui_browser/app.html.ts
+index 000000000000..000000000000 100644
+--- a/chrome/browser/resources/webui_browser/app.html.ts
++++ b/chrome/browser/resources/webui_browser/app.html.ts
+@@ -23,6 +23,17 @@
+           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+         </svg>
+         <span class="tbBrand">Visibility</span>
++        ${this.isIncognito_ ? html`
++          <div class="tbIncognitoPill">
++            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2" stroke-linecap="round"
++                stroke-linejoin="round">
++              <path d="M2 15s3 4 10 4 10-4 10-4"></path>
++              <circle cx="7" cy="10" r="3"></circle>
++              <circle cx="17" cy="10" r="3"></circle>
++            </svg>
++            $i18n{visIncognitoPill}
++          </div>` : html``}
+       </div>
+ <if expr="not is_macosx">
+       <div class="captionButtonsDiv">
+diff --git a/chrome/browser/resources/webui_browser/app.ts b/chrome/browser/resources/webui_browser/app.ts
+index 000000000000..000000000000 100644
+--- a/chrome/browser/resources/webui_browser/app.ts
++++ b/chrome/browser/resources/webui_browser/app.ts
+@@ -113,6 +113,12 @@
+   protected accessor showingSidePanel_: boolean = false;
+   protected accessor showLocationIconButton_: boolean = false;
+   protected accessor locationIcon_: string = 'no-encryption';
++  // Visibility: fixed for the lifetime of the window (see
++  // webui_browser_ui.cc), so a plain field is enough -- no need to make it
++  // reactive.
++  protected readonly isIncognito_: boolean =
++      loadTimeData.valueExists('isIncognito') &&
++      loadTimeData.getBoolean('isIncognito');
+   protected accessor tabStripInset_: number =
+       loadTimeData.valueExists('tabStripInset') ?
+       loadTimeData.getInteger('tabStripInset') :
+diff --git a/chrome/browser/resources/webui_browser/app.css b/chrome/browser/resources/webui_browser/app.css
+index 000000000000..000000000000 100644
+--- a/chrome/browser/resources/webui_browser/app.css
++++ b/chrome/browser/resources/webui_browser/app.css
+@@ -99,6 +99,22 @@
+   text-transform: uppercase;
+ }
+ 
++/* Visibility: 2.1's title-bar "Инкогнито" pill (index.html's
++ * .tb-incognito-pill), shown only when webui_browser_ui.cc's isIncognito
++ * loadTimeData value is true. */
++.tbIncognitoPill {
++  display: flex;
++  align-items: center;
++  gap: 6px;
++  background: rgba(156, 110, 245, 15%);
++  border: 1px solid #9c6ef5;
++  border-radius: 20px;
++  padding: 2px 10px;
++  font-size: 11px;
++  font-weight: 600;
++  color: #9c6ef5;
++}
++
+ .captionButtonsDiv {
+   display: flex;
+   height: 100%;
+diff --git a/chrome/browser/ui/webui_browser/webui_browser_ui.cc b/chrome/browser/ui/webui_browser/webui_browser_ui.cc
+index 000000000000..000000000000 100644
+--- a/chrome/browser/ui/webui_browser/webui_browser_ui.cc
++++ b/chrome/browser/ui/webui_browser/webui_browser_ui.cc
+@@ -152,6 +152,7 @@
+          "Bookmark this page (Ctrl+D)"},
+         {"visIncognito", "Инкогнито (Ctrl+Shift+N)",
+          "Incognito (Ctrl+Shift+N)"},
++        {"visIncognitoPill", "Инкогнито", "Incognito"},
+         {"visVpn", "VPN", "VPN"},
+         {"visHistory", "История (Ctrl+H)", "History (Ctrl+H)"},
+         {"visDownloads", "Загрузки (Ctrl+J)", "Downloads (Ctrl+J)"},

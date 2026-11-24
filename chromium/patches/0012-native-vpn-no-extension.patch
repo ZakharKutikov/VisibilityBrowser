@@ -1,0 +1,718 @@
+diff --git a/chrome/browser/profiles/BUILD.gn b/chrome/browser/profiles/BUILD.gn
+index a85eb865e5..11bf88b910 100644
+--- a/chrome/browser/profiles/BUILD.gn
++++ b/chrome/browser/profiles/BUILD.gn
+@@ -806,6 +806,7 @@ source_set("profiles_extra_parts_impl") {
+     "//chrome/browser/history",
+     "//chrome/browser/history_clusters",
+     "//chrome/browser/history_embeddings",
++    "//chrome/browser/vpn",
+     "//chrome/browser/language",
+     "//chrome/browser/language_detection",
+     "//chrome/browser/loader",
+diff --git a/chrome/browser/profiles/chrome_browser_main_extra_parts_profiles.cc b/chrome/browser/profiles/chrome_browser_main_extra_parts_profiles.cc
+index a03bb1d355..730fb7b8d9 100644
+--- a/chrome/browser/profiles/chrome_browser_main_extra_parts_profiles.cc
++++ b/chrome/browser/profiles/chrome_browser_main_extra_parts_profiles.cc
+@@ -118,6 +118,7 @@
+ #include "chrome/browser/hid/hid_policy_allowed_devices_factory.h"
+ #include "chrome/browser/history/domain_diversity_reporter_factory.h"
+ #include "chrome/browser/history/history_service_factory.h"
++#include "chrome/browser/vpn/visibility_vpn_service_factory.h"
+ #include "chrome/browser/history/top_sites_factory.h"
+ #include "chrome/browser/history_clusters/history_clusters_service_factory.h"
+ #include "chrome/browser/history_embeddings/history_embeddings_service_factory.h"
+@@ -1080,6 +1081,7 @@ void ChromeBrowserMainExtraPartsProfiles::
+   HistoryClustersServiceFactory::EnsureFactoryBuilt();
+   HistoryEmbeddingsServiceFactory::GetInstance();
+   HistoryServiceFactory::GetInstance();
++  VisibilityVpnServiceFactory::GetInstance();
+   HistoryUiFaviconRequestHandlerFactory::GetInstance();
+   HostContentSettingsMapFactory::GetInstance();
+   HttpsEngagementServiceFactory::GetInstance();
+diff --git a/chrome/browser/vpn/BUILD.gn b/chrome/browser/vpn/BUILD.gn
+new file mode 100644
+index 0000000000..a892f9ee91
+--- /dev/null
++++ b/chrome/browser/vpn/BUILD.gn
+@@ -0,0 +1,32 @@
++# Copyright 2026 The Chromium Authors
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++# Visibility: the native backend of the built-in VPN panel (chrome/browser/
++# resources/webui_browser/vis_vpn.ts). Replaces what used to be a Chrome
++# extension plus a Node.js native-messaging host: this profile-scoped
++# service downloads and runs the Xray core directly as a child process of
++# the browser, and sets the profile's own proxy pref — no extension
++# involved at all.
++source_set("vpn") {
++  sources = [
++    "visibility_vpn_service.cc",
++    "visibility_vpn_service.h",
++    "visibility_vpn_service_factory.cc",
++    "visibility_vpn_service_factory.h",
++  ]
++  deps = [
++    "//base",
++    "//chrome/browser/profiles:profile",
++    "//components/keyed_service/core",
++    "//components/prefs",
++    "//components/proxy_config",
++    "//content/public/browser",
++    "//net",
++    "//net/traffic_annotation",
++    "//services/network/public/cpp",
++    "//services/network/public/mojom",
++    "//third_party/zlib/google:zip",
++    "//url",
++  ]
++}
+diff --git a/chrome/browser/vpn/visibility_vpn_service.cc b/chrome/browser/vpn/visibility_vpn_service.cc
+new file mode 100644
+index 0000000000..3041142b3e
+--- /dev/null
++++ b/chrome/browser/vpn/visibility_vpn_service.cc
+@@ -0,0 +1,441 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifdef UNSAFE_BUFFERS_BUILD
++// The Winsock FD_SET macro used by ProbeOnce()'s select() call indexes a
++// fixed-size array without a bounds check the analyzer can see.
++#pragma allow_unsafe_buffers
++#endif
++
++#include "chrome/browser/vpn/visibility_vpn_service.h"
++
++#include <algorithm>
++
++#include "base/base_paths.h"
++#include "base/command_line.h"
++#include "base/files/file_util.h"
++#include "base/functional/bind.h"
++#include "base/path_service.h"
++#include "base/process/kill.h"
++#include "base/process/launch.h"
++#include "base/strings/string_number_conversions.h"
++#include "base/task/thread_pool.h"
++#include "base/threading/platform_thread.h"
++#include "base/threading/scoped_blocking_call.h"
++#include "base/time/time.h"
++#include "base/values.h"
++#include "build/build_config.h"
++#include "chrome/browser/profiles/profile.h"
++#include "components/prefs/pref_service.h"
++#include "components/proxy_config/proxy_config_dictionary.h"
++#include "components/proxy_config/proxy_config_pref_names.h"
++#include "content/public/browser/storage_partition.h"
++#include "net/base/load_flags.h"
++#include "net/base/winsock_init.h"
++#include "net/traffic_annotation/network_traffic_annotation.h"
++#include "services/network/public/cpp/resource_request.h"
++#include "services/network/public/cpp/shared_url_loader_factory.h"
++#include "services/network/public/cpp/simple_url_loader.h"
++#include "services/network/public/mojom/url_response_head.mojom.h"
++#include "third_party/zlib/google/zip.h"
++#include "url/gurl.h"
++
++#if BUILDFLAG(IS_WIN)
++#include <winsock2.h>
++#include <ws2tcpip.h>
++#endif
++
++namespace {
++
++// Chromium's socks5 proxy string, pointing at Xray's SOCKS inbound (see
++// lib/config.js SOCKS_PORT, kept in sync with the panel's TypeScript).
++constexpr int kSocksPort = 10808;
++
++base::FilePath CoreDirFor(Profile* profile) {
++#if BUILDFLAG(IS_WIN)
++  base::FilePath local_app_data;
++  base::PathService::Get(base::DIR_LOCAL_APP_DATA, &local_app_data);
++  return local_app_data.AppendASCII("Visibility").AppendASCII("core");
++#else
++  return profile->GetPath().AppendASCII("visibility_vpn_core");
++#endif
++}
++
++#if BUILDFLAG(IS_WIN)
++// Blocking: tries to open a TCP connection to 127.0.0.1:`port` until one
++// succeeds or `deadline` passes. Mirrors the retry loop the old Node.js
++// native host ran with net.connect().
++bool WaitForLocalPort(int port, base::TimeTicks deadline) {
++  net::EnsureWinsockInit();
++  while (base::TimeTicks::Now() < deadline) {
++    SOCKET s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
++    if (s != INVALID_SOCKET) {
++      sockaddr_in addr = {};
++      addr.sin_family = AF_INET;
++      addr.sin_port = htons(static_cast<u_short>(port));
++      addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
++      const int rv = connect(s, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
++      closesocket(s);
++      if (rv == 0) {
++        return true;
++      }
++    }
++    base::PlatformThread::Sleep(base::Milliseconds(200));
++  }
++  return false;
++}
++
++// Blocking: single-attempt TCP connect time in ms, or -1. Used for the
++// server list's ping column.
++int ProbeOnce(const std::string& address, int port) {
++  if (address.empty() || port <= 0 || port >= 65536) {
++    return -1;
++  }
++  net::EnsureWinsockInit();
++  const base::TimeTicks started = base::TimeTicks::Now();
++
++  addrinfo hints = {};
++  hints.ai_family = AF_UNSPEC;
++  hints.ai_socktype = SOCK_STREAM;
++  addrinfo* result = nullptr;
++  if (getaddrinfo(address.c_str(), base::NumberToString(port).c_str(), &hints,
++                  &result) != 0 ||
++      !result) {
++    return -1;
++  }
++  SOCKET s = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
++  if (s == INVALID_SOCKET) {
++    freeaddrinfo(result);
++    return -1;
++  }
++  // A short, bounded, blocking connect: switch to non-blocking + select() so
++  // a dead server cannot stall this worker task past the deadline.
++  u_long non_blocking = 1;
++  ioctlsocket(s, FIONBIO, &non_blocking);
++  connect(s, result->ai_addr, static_cast<int>(result->ai_addrlen));
++  freeaddrinfo(result);
++
++  fd_set write_set;
++  FD_ZERO(&write_set);
++  FD_SET(s, &write_set);
++  timeval timeout = {2, 500000};  // 2.5s, matching the old native host.
++  const int rv = select(0, nullptr, &write_set, nullptr, &timeout);
++  int ms = -1;
++  if (rv > 0) {
++    int err = 0;
++    int err_len = sizeof(err);
++    getsockopt(s, SOL_SOCKET, SO_ERROR, reinterpret_cast<char*>(&err), &err_len);
++    if (err == 0) {
++      ms = static_cast<int>((base::TimeTicks::Now() - started).InMilliseconds());
++    }
++  }
++  closesocket(s);
++  return ms;
++}
++
++std::vector<int> ProbeAll(std::vector<VisibilityVpnService::PingTarget> targets) {
++  std::vector<int> out;
++  out.reserve(targets.size());
++  for (const auto& t : targets) {
++    out.push_back(ProbeOnce(t.address, t.port));
++  }
++  return out;
++}
++#endif  // BUILDFLAG(IS_WIN)
++
++net::NetworkTrafficAnnotationTag VpnCoreTrafficAnnotation() {
++  return net::DefineNetworkTrafficAnnotation("visibility_vpn_core_download", R"(
++    semantics {
++      sender: "Visibility VPN panel"
++      description:
++        "Downloads the Xray-core binary that the built-in VPN panel runs "
++        "locally to proxy traffic for servers the user adds."
++      trigger: "The user clicks 'Download' in the VPN panel."
++      data: "None; this is a GET of a fixed public release asset."
++      destination: OTHER
++      internal {
++        contacts { email: "noreply@gomp.studio" }
++      }
++      user_data { type: NONE }
++      last_reviewed: "2026-11-15"
++    }
++    policy {
++      cookies_allowed: NO
++      setting: "No setting; only runs when the user opens the VPN panel."
++      policy_exception_justification:
++        "Not a network request Chromium makes on its own."
++    })");
++}
++
++}  // namespace
++
++VisibilityVpnService::VisibilityVpnService(Profile* profile)
++    : profile_(profile) {}
++
++VisibilityVpnService::~VisibilityVpnService() {
++  Stop();
++}
++
++void VisibilityVpnService::AddObserver(Observer* observer) {
++  observers_.AddObserver(observer);
++}
++
++void VisibilityVpnService::RemoveObserver(Observer* observer) {
++  observers_.RemoveObserver(observer);
++}
++
++base::FilePath VisibilityVpnService::CoreDir() const {
++  return CoreDirFor(profile_);
++}
++
++base::FilePath VisibilityVpnService::BinPath() const {
++#if BUILDFLAG(IS_WIN)
++  return CoreDir().AppendASCII("xray.exe");
++#else
++  return CoreDir().AppendASCII("xray");
++#endif
++}
++
++void VisibilityVpnService::HasCore(HasCoreCallback callback) {
++  base::ThreadPool::PostTaskAndReplyWithResult(
++      FROM_HERE, {base::MayBlock()},
++      base::BindOnce(&base::PathExists, BinPath()), std::move(callback));
++}
++
++void VisibilityVpnService::InstallCore() {
++#if BUILDFLAG(IS_WIN)
++  if (download_loader_) {
++    return;  // Already downloading.
++  }
++  const base::FilePath core_dir = CoreDir();
++  base::ThreadPool::PostTaskAndReply(
++      FROM_HERE, {base::MayBlock()},
++      base::BindOnce(base::IgnoreResult(&base::CreateDirectory), core_dir),
++      base::BindOnce(
++          [](base::WeakPtr<VisibilityVpnService> self,
++             base::FilePath core_dir) {
++            if (!self) {
++              return;
++            }
++            auto request = std::make_unique<network::ResourceRequest>();
++            // Windows x64 only: this fork only ships a Windows build.
++            request->url = GURL(
++                "https://github.com/XTLS/Xray-core/releases/latest/download/"
++                "Xray-windows-64.zip");
++            request->load_flags = net::LOAD_DISABLE_CACHE;
++            self->download_loader_ = network::SimpleURLLoader::Create(
++                std::move(request), VpnCoreTrafficAnnotation());
++            self->download_total_bytes_ = 0;
++            self->download_loader_->SetOnResponseStartedCallback(
++                base::BindOnce(&VisibilityVpnService::OnResponseStarted,
++                               self));
++            self->download_loader_->SetOnDownloadProgressCallback(
++                base::BindRepeating(&VisibilityVpnService::OnDownloadProgress,
++                                    self));
++            self->download_loader_->DownloadToFile(
++                self->profile_->GetDefaultStoragePartition()
++                    ->GetURLLoaderFactoryForBrowserProcess()
++                    .get(),
++                base::BindOnce(&VisibilityVpnService::OnDownloadToFile, self),
++                core_dir.AppendASCII("xray-download.zip"));
++          },
++          weak_factory_.GetWeakPtr(), core_dir));
++#else
++  for (Observer& observer : observers_) {
++    observer.OnInstallFinished(false);
++  }
++#endif
++}
++
++void VisibilityVpnService::OnResponseStarted(
++    const GURL& url,
++    const network::mojom::URLResponseHead& head) {
++  download_total_bytes_ = head.content_length > 0 ? head.content_length : 0;
++}
++
++void VisibilityVpnService::OnDownloadProgress(uint64_t current) {
++  if (download_total_bytes_ <= 0) {
++    return;
++  }
++  const int percent = static_cast<int>(
++      std::min<int64_t>(100, current * 100 / download_total_bytes_));
++  for (Observer& observer : observers_) {
++    observer.OnInstallProgress(percent);
++  }
++}
++
++void VisibilityVpnService::OnDownloadToFile(base::FilePath path) {
++  download_loader_.reset();
++  if (path.empty()) {
++    for (Observer& observer : observers_) {
++      observer.OnInstallFinished(false);
++    }
++    return;
++  }
++  base::ThreadPool::PostTaskAndReplyWithResult(
++      FROM_HERE, {base::MayBlock()},
++      base::BindOnce(
++          [](base::FilePath zip_path, base::FilePath dest_dir) {
++            base::ScopedBlockingCall scope(FROM_HERE,
++                                           base::BlockingType::MAY_BLOCK);
++            return zip::Unzip(zip_path, dest_dir);
++          },
++          path, CoreDir()),
++      base::BindOnce(&VisibilityVpnService::OnUnzipped,
++                     weak_factory_.GetWeakPtr(), path));
++}
++
++void VisibilityVpnService::OnUnzipped(base::FilePath zip_path,
++                                      bool unzip_ok) {
++  base::ThreadPool::PostTask(
++      FROM_HERE, {base::MayBlock()},
++      base::BindOnce(base::IgnoreResult(&base::DeleteFile), zip_path));
++  if (!unzip_ok) {
++    for (Observer& observer : observers_) {
++      observer.OnInstallFinished(false);
++    }
++    return;
++  }
++  base::ThreadPool::PostTaskAndReplyWithResult(
++      FROM_HERE, {base::MayBlock()},
++      base::BindOnce(&base::PathExists, BinPath()),
++      base::BindOnce(&VisibilityVpnService::OnInstallCoreChecked,
++                     weak_factory_.GetWeakPtr()));
++}
++
++void VisibilityVpnService::OnInstallCoreChecked(bool has_core) {
++  for (Observer& observer : observers_) {
++    observer.OnInstallFinished(has_core);
++  }
++}
++
++void VisibilityVpnService::Start(std::string config_json,
++                                 StartCallback callback) {
++#if BUILDFLAG(IS_WIN)
++  Stop();
++  const base::FilePath core_dir = CoreDir();
++  const base::FilePath bin = BinPath();
++  const base::FilePath config_path = core_dir.AppendASCII("config.json");
++
++  base::ThreadPool::PostTaskAndReplyWithResult(
++      FROM_HERE, {base::MayBlock()},
++      base::BindOnce(
++          [](base::FilePath core_dir, base::FilePath bin,
++             base::FilePath config_path, std::string config_json) {
++            if (!base::PathExists(bin)) {
++              return false;
++            }
++            base::CreateDirectory(core_dir);
++            return base::WriteFile(config_path, config_json);
++          },
++          core_dir, bin, config_path, std::move(config_json)),
++      base::BindOnce(
++          [](base::WeakPtr<VisibilityVpnService> self, base::FilePath bin,
++             base::FilePath core_dir, base::FilePath config_path,
++             StartCallback callback, bool wrote_config) {
++            if (!self) {
++              return;
++            }
++            if (!wrote_config) {
++              std::move(callback).Run(false, "NO_CORE");
++              return;
++            }
++            base::CommandLine cmd(bin);
++            cmd.AppendArg("run");
++            cmd.AppendArg("-c");
++            cmd.AppendArgPath(config_path);
++            base::LaunchOptions options;
++            options.current_directory = core_dir;
++            options.start_hidden = true;
++            self->process_ = base::LaunchProcess(cmd, options);
++            if (!self->process_.IsValid()) {
++              std::move(callback).Run(false, "SPAWN_FAILED");
++              return;
++            }
++            base::ThreadPool::PostTaskAndReplyWithResult(
++                FROM_HERE, {base::MayBlock()},
++                base::BindOnce(&WaitForLocalPort, kSocksPort,
++                               base::TimeTicks::Now() + base::Seconds(8)),
++                base::BindOnce(&VisibilityVpnService::OnPortReady, self,
++                              std::move(callback)));
++          },
++          weak_factory_.GetWeakPtr(), bin, core_dir, config_path,
++          std::move(callback)));
++#else
++  std::move(callback).Run(false, "UNSUPPORTED_PLATFORM");
++#endif
++}
++
++void VisibilityVpnService::OnPortReady(StartCallback callback, bool ready) {
++  if (!ready) {
++    Stop();
++    std::move(callback).Run(false, "START_TIMEOUT");
++    return;
++  }
++
++  base::DictValue proxy_config = ProxyConfigDictionary::CreateFixedServers(
++      "socks5://127.0.0.1:" + base::NumberToString(kSocksPort),
++      "<local>;127.0.0.1;localhost;[::1]");
++  profile_->GetPrefs()->Set(proxy_config::prefs::kProxy,
++                            base::Value(std::move(proxy_config)));
++
++  // Watch the process on a background sequence; hop back here when it exits
++  // (whether we kill it in Stop() or it crashes on its own). A duplicated
++  // handle is used so this does not race Process::Close() on the UI thread.
++  base::ThreadPool::PostTaskAndReply(
++      FROM_HERE, {base::MayBlock()},
++      base::BindOnce(
++          [](base::Process watched) {
++            // WaitForExit() calls AssertBaseSyncPrimitivesAllowed()
++            // directly (it deliberately does not use ScopedBlockingCall
++            // -- see its comment), so {base::MayBlock()} on this task
++            // alone is not enough to satisfy it; this is the same pair
++            // base::GetAppOutput() uses around its own wait on a child
++            // process (base/process/launch_win.cc).
++            base::internal::GetAppOutputScopedAllowBaseSyncPrimitives
++                allow_wait;
++            base::ScopedBlockingCall scoped_blocking_call(
++                FROM_HERE, base::BlockingType::MAY_BLOCK);
++            int exit_code = 0;
++            watched.WaitForExit(&exit_code);
++          },
++          process_.Duplicate()),
++      base::BindOnce(&VisibilityVpnService::OnProcessExited,
++                     weak_factory_.GetWeakPtr()));
++
++  std::move(callback).Run(true, "");
++}
++
++void VisibilityVpnService::OnProcessExited() {
++  if (!process_.IsValid()) {
++    return;  // We already called Stop(); this is the exit of that kill.
++  }
++  process_.Close();
++  profile_->GetPrefs()->ClearPref(proxy_config::prefs::kProxy);
++  for (Observer& observer : observers_) {
++    observer.OnCoreExited();
++  }
++}
++
++void VisibilityVpnService::Stop() {
++  if (process_.IsValid()) {
++    process_.Terminate(/*exit_code=*/0, /*wait=*/false);
++    process_.Close();
++  }
++  profile_->GetPrefs()->ClearPref(proxy_config::prefs::kProxy);
++}
++
++void VisibilityVpnService::Ping(std::vector<PingTarget> targets,
++                                PingCallback callback) {
++#if BUILDFLAG(IS_WIN)
++  if (targets.size() > 200) {
++    targets.resize(200);
++  }
++  base::ThreadPool::PostTaskAndReplyWithResult(
++      FROM_HERE, {base::MayBlock()}, base::BindOnce(&ProbeAll, targets),
++      std::move(callback));
++#else
++  std::move(callback).Run(std::vector<int>(targets.size(), -1));
++#endif
++}
+diff --git a/chrome/browser/vpn/visibility_vpn_service.h b/chrome/browser/vpn/visibility_vpn_service.h
+new file mode 100644
+index 0000000000..f859debbb1
+--- /dev/null
++++ b/chrome/browser/vpn/visibility_vpn_service.h
+@@ -0,0 +1,115 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef CHROME_BROWSER_VPN_VISIBILITY_VPN_SERVICE_H_
++#define CHROME_BROWSER_VPN_VISIBILITY_VPN_SERVICE_H_
++
++#include <string>
++#include <vector>
++
++#include "base/files/file_path.h"
++#include "base/functional/callback.h"
++#include "base/memory/raw_ptr.h"
++#include "base/memory/weak_ptr.h"
++#include "base/observer_list.h"
++#include "base/observer_list_types.h"
++#include "base/process/process.h"
++#include "components/keyed_service/core/keyed_service.h"
++#include "services/network/public/mojom/url_response_head.mojom-forward.h"
++
++class GURL;
++class Profile;
++
++namespace network {
++class SimpleURLLoader;
++}
++
++// Visibility: owns the Xray core (download, launch, stop) and the profile's
++// proxy setting, for the VPN panel built into the browser frame. This is the
++// native replacement for the Node.js native-messaging host that vpn-extension
++// used to need, so the VPN no longer depends on a Chrome extension at all —
++// only on this profile-scoped service, called from WebUIBrowserPageHandler.
++//
++// Business data (the server list, routing mode) is not this service's job;
++// it stays in the WebUI page's own storage, exactly as before. This service
++// only does the parts that need OS-level privilege: spawning a process and
++// setting the browser's own proxy.
++class VisibilityVpnService : public KeyedService {
++ public:
++  class Observer : public base::CheckedObserver {
++   public:
++    // Progress of the InstallCore() download, 0-100.
++    virtual void OnInstallProgress(int percent) {}
++    // InstallCore() finished; `ok` is false if the download, the unpack, or
++    // the resulting binary all failed to materialize.
++    virtual void OnInstallFinished(bool ok) {}
++    // The running core exited on its own (crash, or killed outside us). The
++    // profile's proxy has already been cleared by the time this fires.
++    virtual void OnCoreExited() {}
++  };
++
++  explicit VisibilityVpnService(Profile* profile);
++  VisibilityVpnService(const VisibilityVpnService&) = delete;
++  VisibilityVpnService& operator=(const VisibilityVpnService&) = delete;
++  ~VisibilityVpnService() override;
++
++  void AddObserver(Observer* observer);
++  void RemoveObserver(Observer* observer);
++
++  // Asks (off the UI thread) whether the Xray binary is present.
++  using HasCoreCallback = base::OnceCallback<void(bool)>;
++  void HasCore(HasCoreCallback callback);
++
++  // Downloads and unpacks the latest Xray release. Reports progress and
++  // completion through the Observer interface rather than a callback, since
++  // this can be asked for again (to retry) before the first call replies.
++  void InstallCore();
++
++  // Writes `config_json` as Xray's config, (re)starts Xray with it, waits
++  // for its SOCKS port to accept connections, and only then switches the
++  // profile's proxy to it. Calls back with ok=false and an error code
++  // ("NO_CORE", "START_TIMEOUT", ...) on failure, leaving the proxy
++  // untouched in that case.
++  using StartCallback = base::OnceCallback<void(bool ok, const std::string& error)>;
++  void Start(std::string config_json, StartCallback callback);
++
++  // Stops Xray if running and clears the profile's proxy. Safe to call when
++  // already stopped.
++  void Stop();
++
++  bool IsConnected() const { return process_.IsValid(); }
++
++  // TCP connect time in ms for each target, in the same order; -1 for one
++  // that did not answer within the deadline. Targets beyond the first 200
++  // are ignored, same limit as the old native host.
++  struct PingTarget {
++    std::string address;
++    int port = 0;
++  };
++  using PingCallback = base::OnceCallback<void(const std::vector<int>&)>;
++  void Ping(std::vector<PingTarget> targets, PingCallback callback);
++
++ private:
++  base::FilePath CoreDir() const;
++  base::FilePath BinPath() const;
++
++  void OnDownloadToFile(base::FilePath path);
++  void OnResponseStarted(const GURL& url,
++                        const network::mojom::URLResponseHead& head);
++  void OnDownloadProgress(uint64_t current);
++  void OnUnzipped(base::FilePath zip_path, bool unzip_ok);
++  void OnInstallCoreChecked(bool has_core);
++
++  void OnPortReady(StartCallback callback, bool ready);
++  void OnProcessExited();
++
++  raw_ptr<Profile> profile_;
++  base::Process process_;
++  int64_t download_total_bytes_ = 0;
++  std::unique_ptr<network::SimpleURLLoader> download_loader_;
++  base::ObserverList<Observer> observers_;
++  base::WeakPtrFactory<VisibilityVpnService> weak_factory_{this};
++};
++
++#endif  // CHROME_BROWSER_VPN_VISIBILITY_VPN_SERVICE_H_
+diff --git a/chrome/browser/vpn/visibility_vpn_service_factory.cc b/chrome/browser/vpn/visibility_vpn_service_factory.cc
+new file mode 100644
+index 0000000000..7f84dcfd90
+--- /dev/null
++++ b/chrome/browser/vpn/visibility_vpn_service_factory.cc
+@@ -0,0 +1,38 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#include "chrome/browser/vpn/visibility_vpn_service_factory.h"
++
++#include "chrome/browser/profiles/profile.h"
++#include "chrome/browser/vpn/visibility_vpn_service.h"
++
++// static
++VisibilityVpnService* VisibilityVpnServiceFactory::GetForProfile(
++    Profile* profile) {
++  return static_cast<VisibilityVpnService*>(
++      GetInstance()->GetServiceForBrowserContext(profile, true));
++}
++
++// static
++VisibilityVpnServiceFactory* VisibilityVpnServiceFactory::GetInstance() {
++  static base::NoDestructor<VisibilityVpnServiceFactory> instance;
++  return instance.get();
++}
++
++VisibilityVpnServiceFactory::VisibilityVpnServiceFactory()
++    : ProfileKeyedServiceFactory(
++          "VisibilityVpnService",
++          ProfileSelections::Builder()
++              .WithRegular(ProfileSelection::kOwnInstance)
++              .WithGuest(ProfileSelection::kOwnInstance)
++              .Build()) {}
++
++VisibilityVpnServiceFactory::~VisibilityVpnServiceFactory() = default;
++
++std::unique_ptr<KeyedService>
++VisibilityVpnServiceFactory::BuildServiceInstanceForBrowserContext(
++    content::BrowserContext* context) const {
++  return std::make_unique<VisibilityVpnService>(
++      Profile::FromBrowserContext(context));
++}
+diff --git a/chrome/browser/vpn/visibility_vpn_service_factory.h b/chrome/browser/vpn/visibility_vpn_service_factory.h
+new file mode 100644
+index 0000000000..dc29698716
+--- /dev/null
++++ b/chrome/browser/vpn/visibility_vpn_service_factory.h
+@@ -0,0 +1,30 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef CHROME_BROWSER_VPN_VISIBILITY_VPN_SERVICE_FACTORY_H_
++#define CHROME_BROWSER_VPN_VISIBILITY_VPN_SERVICE_FACTORY_H_
++
++#include "base/no_destructor.h"
++#include "chrome/browser/profiles/profile_keyed_service_factory.h"
++
++class Profile;
++class VisibilityVpnService;
++
++class VisibilityVpnServiceFactory : public ProfileKeyedServiceFactory {
++ public:
++  static VisibilityVpnService* GetForProfile(Profile* profile);
++  static VisibilityVpnServiceFactory* GetInstance();
++
++ private:
++  friend base::NoDestructor<VisibilityVpnServiceFactory>;
++
++  VisibilityVpnServiceFactory();
++  ~VisibilityVpnServiceFactory() override;
++
++  // BrowserContextKeyedServiceFactory:
++  std::unique_ptr<KeyedService> BuildServiceInstanceForBrowserContext(
++      content::BrowserContext* context) const override;
++};
++
++#endif  // CHROME_BROWSER_VPN_VISIBILITY_VPN_SERVICE_FACTORY_H_

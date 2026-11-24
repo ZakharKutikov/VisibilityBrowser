@@ -1,0 +1,16 @@
+# Release build: what goes into the installer.
+is_official_build = true
+is_debug = false
+symbol_level = 0
+blink_symbol_level = 0
+v8_symbol_level = 0
+target_cpu = "x64"
+
+# Official builds expect PGO profiles that a plain checkout does not download.
+chrome_pgo_phase = 0
+
+# H.264 / AAC playback. These codecs carry patent licences; see docs/BUILD.md.
+proprietary_codecs = true
+ffmpeg_branding = "Chrome"
+
+enable_widevine = true

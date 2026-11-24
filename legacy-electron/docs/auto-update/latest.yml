@@ -1,0 +1,11 @@
+# Пример файла latest.yml для electron-updater
+# Этот файл автоматически генерируется electron-builder при сборке
+
+version: 2.0.1
+files:
+  - url: Visibility Browser Setup 2.0.1.exe
+    sha512: a1b2c3d4e5f6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab
+    size: 98765432
+path: Visibility Browser Setup 2.0.1.exe
+sha512: a1b2c3d4e5f6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab
+releaseDate: '2026-04-13T10:00:00.000Z'

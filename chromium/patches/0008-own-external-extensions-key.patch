@@ -1,0 +1,15 @@
+diff --git a/chrome/browser/extensions/external_registry_loader_win.cc b/chrome/browser/extensions/external_registry_loader_win.cc
+index 7ea42cc7c8..2a1dd13204 100644
+--- a/chrome/browser/extensions/external_registry_loader_win.cc
++++ b/chrome/browser/extensions/external_registry_loader_win.cc
+@@ -35,7 +35,9 @@ using content::BrowserThread;
+ namespace {
+ 
+ // The Registry subkey that contains information about external extensions.
+-const wchar_t kRegistryExtensions[] = L"Software\\Google\\Chrome\\Extensions";
++// Visibility: our own key, so extensions that other software registers for
++// Google Chrome are not side-loaded into Visibility.
++const wchar_t kRegistryExtensions[] = L"Software\\GOmp\\Visibility\\Extensions";
+ 
+ // Registry value of the key that defines the installation parameter.
+ const wchar_t kRegistryExtensionInstallParam[] = L"install_parameter";

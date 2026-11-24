@@ -1,0 +1,1059 @@
+diff --git a/chrome/browser/resources/webui_browser/app.css b/chrome/browser/resources/webui_browser/app.css
+index 8bcac0e..e41320c 100644
+--- a/chrome/browser/resources/webui_browser/app.css
++++ b/chrome/browser/resources/webui_browser/app.css
+@@ -9,8 +9,9 @@
+  * #include=cr-icons-lit
+  * #css_wrapper_metadata_end */
+ 
+-/* Visibility: the frame of Visibility 2.1 (dark theme values from
+- * legacy-electron/index.html). */
++/* Visibility 3.0: the 2.1 dark palette (legacy-electron/index.html) in a
++ * two-row frame with the page on an inset sheet
++ * (chromium/design/mockup/index.html). */
+ :host {
+   --vis-bg-titlebar: #121318;
+   --vis-bg-primary: #0d0e12;
+@@ -22,6 +23,7 @@
+   --vis-text-secondary: #94a3b8;
+   --vis-text-muted: rgba(255, 255, 255, 0.45);
+   --vis-accent: #818cf8;
++  --vis-accent-dim: rgba(129, 140, 248, 0.15);
+   --vis-accent-glow: rgba(129, 140, 248, 0.25);
+   --vis-border: rgba(255, 255, 255, 0.08);
+   --vis-border-bright: rgba(255, 255, 255, 0.14);
+@@ -34,7 +36,7 @@
+   height: 100%;
+   margin: 0;
+   padding: 0;
+-  background-color: var(--vis-bg-primary);
++  background-color: var(--vis-bg-titlebar);
+   color: var(--vis-text-primary);
+   font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui,
+       sans-serif;
+@@ -43,7 +45,7 @@
+   user-select: none;
+ }
+ 
+-:host([inactive]) .tbBrand,
++:host([inactive]) .tbLogo,
+ :host([inactive]) .wcBtn {
+   opacity: 0.6;
+ }
+@@ -60,20 +62,23 @@
+   left: 0;
+   width: 100%;
+   height: 100%;
++  border-radius: 0;
++}
++
++:host([fullscreen-mode='tab']) #main {
++  padding: 0;
+ }
+ 
+ button {
+   font: inherit;
+ }
+ 
+-/* ── Title bar ─────────────────────────────────────── */
++/* ── Row 1: logo, tabs, window controls ────────────── */
+ #titlebar {
+-  height: 28px;
+-  background: var(--vis-bg-secondary);
++  height: 40px;
++  background: var(--vis-bg-titlebar);
+   display: flex;
+-  align-items: center;
+-  justify-content: space-between;
+-  border-bottom: 1px solid var(--vis-border);
++  align-items: stretch;
+   flex-shrink: 0;
+   app-region: drag;
+   -webkit-app-region: drag;
+@@ -83,20 +88,12 @@ button {
+   display: flex;
+   align-items: center;
+   gap: 8px;
+-  padding-left: 14px;
+-  color: var(--vis-text-secondary);
++  padding: 0 10px 0 12px;
++  flex-shrink: 0;
+ }
+ 
+ .tbLogo {
+-  color: var(--vis-text-primary);
+-}
+-
+-.tbBrand {
+-  font-size: 11px;
+-  font-weight: 700;
+-  letter-spacing: 1.5px;
+-  color: var(--vis-text-secondary);
+-  text-transform: uppercase;
++  flex-shrink: 0;
+ }
+ 
+ /* Visibility: 2.1's title-bar "Инкогнито" pill (index.html's
+@@ -115,15 +112,35 @@ button {
+   color: #9c6ef5;
+ }
+ 
++.tabsBar {
++  flex: 1;
++  min-width: 0;
++  display: flex;
++  align-items: flex-end;
++}
++
++.tabstripDiv {
++  app-region: no-drag;
++  -webkit-app-region: no-drag;
++  flex: 1;
++  min-width: 0;
++  overflow: hidden;
++  text-align: left;
++}
++
++.tabstripDiv:has(webui-browser-tab-strip[drag-in-progress]) {
++  overflow: visible;
++}
++
+ .captionButtonsDiv {
+   display: flex;
+-  height: 100%;
++  flex-shrink: 0;
+   app-region: no-drag;
+   -webkit-app-region: no-drag;
+ }
+ 
+ .wcBtn {
+-  width: 40px;
++  width: 46px;
+   height: 100%;
+   border: none;
+   background: transparent;
+@@ -141,61 +158,44 @@ button {
+ }
+ 
+ .wcBtn.close:hover {
+-  background: var(--vis-danger);
++  background: #e81123;
+   color: #fff;
+ }
+ 
+-/* ── Tabs row ──────────────────────────────────────── */
+-.titlebarDiv {
+-  app-region: drag;
+-  -webkit-app-region: drag;
+-  display: flex;
+-  height: 30px;
+-  align-items: flex-end;
+-  padding: 0 6px;
+-  background-color: var(--vis-bg-titlebar);
+-  border-bottom: 1px solid var(--vis-border);
+-}
+-
+-.tabstripDiv {
+-  app-region: no-drag;
+-  -webkit-app-region: no-drag;
+-  flex: 1;
+-  min-width: 0;
+-  overflow: hidden;
+-  text-align: left;
+-}
+-
+-.tabstripDiv:has(webui-browser-tab-strip[drag-in-progress]) {
+-  overflow: visible;
+-}
+-
+-/* ── Navigation bar ────────────────────────────────── */
++/* ── Row 2: navigation ─────────────────────────────── */
+ #searchBar {
+   display: flex;
+   flex: none;
+   align-items: center;
+   gap: 4px;
+-  height: 36px;
++  height: 44px;
+   padding: 0 8px;
+-  background: var(--vis-bg-tertiary);
+-  border-bottom: 1px solid var(--vis-border);
++  background: var(--vis-bg-secondary);
++}
++
++.navGroup {
++  display: flex;
++  align-items: center;
++  gap: 2px;
++  flex-shrink: 0;
+ }
+ 
+ .navBtn {
+-  width: 28px;
+-  height: 28px;
++  width: 32px;
++  height: 32px;
+   flex-shrink: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   padding: 0;
+   border: none;
+-  border-radius: var(--vis-radius-sm);
++  border-radius: 9px;
+   background: transparent;
+   color: var(--vis-text-secondary);
+   cursor: pointer;
+-  transition: background 0.15s, color 0.15s, transform 0.1s;
++  transition: background 0.15s var(--vis-ease-ios),
++              color 0.15s var(--vis-ease-ios),
++              transform 0.15s var(--vis-ease-ios);
+ }
+ 
+ .navBtn:hover {
+@@ -204,13 +204,12 @@ button {
+ }
+ 
+ .navBtn:active {
+-  transform: scale(0.92);
++  transform: scale(0.94);
+ }
+ 
+ .navBtn:disabled {
+-  opacity: 0.3;
++  opacity: 0.35;
+   pointer-events: none;
+-  color: var(--vis-text-muted);
+ }
+ 
+ .navBtn:focus-visible,
+@@ -226,108 +225,150 @@ button {
+ 
+ .navDivider {
+   width: 1px;
+-  height: 20px;
+-  margin: 0 2px;
++  height: 18px;
++  margin: 0 4px;
+   background: var(--vis-border-bright);
+   flex-shrink: 0;
+ }
+ 
+-#zoomDisplay {
+-  flex-shrink: 0;
+-  padding: 2px 5px;
+-  border: none;
+-  border-radius: 4px;
+-  background: transparent;
+-  color: var(--vis-text-muted);
+-  font-size: 11px;
+-  font-variant-numeric: tabular-nums;
+-  white-space: nowrap;
+-  cursor: pointer;
+-  transition: background 0.15s, color 0.15s;
+-}
+-
+-#zoomDisplay:hover {
+-  background: var(--vis-bg-hover);
+-  color: var(--vis-text-primary);
++/* ── VPN: 2.1's shield, accent when connected ──────── */
++.vpnBtn.connected {
++  color: var(--vis-accent);
+ }
+ 
+-/* Address field: 2.1's compact rounded bar with an indigo focus ring. */
++/* ── Address field ─────────────────────────────────── */
+ #addressBox {
+   position: relative;
+   flex: 1;
+   min-width: 0;
++  max-width: 860px;
++  margin: 0 auto;
+   display: flex;
+   align-items: center;
+-  margin: 0 4px;
+ }
+ 
+ webui-browser-searchbox {
+-  --cr-searchbox-font-size: 12px;
+-  --cr-searchbox-height: 28px;
+-  --cr-searchbox-input-height: 28px;
+-  --cr-searchbox-border-radius: 10px;
+-  --cr-searchbox-shadow: 0 0 0 1px rgba(255, 255, 255, 0.09);
++  --cr-searchbox-font-size: 13px;
++  --cr-searchbox-height: 34px;
++  --cr-searchbox-input-height: 34px;
++  --cr-searchbox-border-radius: 17px;
++  --cr-searchbox-shadow: 0 0 0 1px var(--vis-border);
+   --cr-searchbox-icon-left-position: 10px;
+-  --cr-searchbox-icon-size-in-searchbox: 14px;
++  --cr-searchbox-icon-size-in-searchbox: 15px;
+   --cr-searchbox-icon-top-position: 0;
+   --cr-searchbox-match-padding: 4px 0;
+-  /* Solid colours (2.1's translucent bar over #1e202a), so the page-info
+-   * button can sit on the field without showing what is under it. */
+-  --color-searchbox-background: #23252e;
+-  --color-searchbox-background-hovered: #262833;
++
++  --color-searchbox-background: var(--vis-bg-primary);
++  --color-searchbox-background-hovered: var(--vis-bg-primary);
+   --color-searchbox-foreground: var(--vis-text-primary);
+   --color-searchbox-placeholder: var(--vis-text-muted);
+-  --color-searchbox-results-background: var(--vis-bg-secondary);
++  --color-searchbox-results-background: var(--vis-bg-primary);
++  --color-searchbox-results-background-hovered: var(--vis-bg-hover);
++  --color-searchbox-results-background-selected: var(--vis-bg-active);
++  --color-searchbox-results-foreground: var(--vis-text-primary);
++  --color-searchbox-results-foreground-dimmed: var(--vis-text-secondary);
++  --color-searchbox-results-foreground-selected: var(--vis-text-primary);
++  --color-searchbox-results-dim-selected: var(--vis-text-secondary);
++  --color-searchbox-results-typed-prefix: var(--vis-text-primary);
++  --color-searchbox-results-url: var(--vis-accent);
++  --color-searchbox-results-url-selected: var(--vis-accent);
++  --color-searchbox-results-icon: var(--vis-text-secondary);
++  --color-searchbox-results-icon-selected: var(--vis-text-primary);
++  --color-searchbox-results-icon-container-background: transparent;
++  --color-searchbox-results-focus-indicator: var(--vis-accent);
++  --color-searchbox-results-button-hover: var(--vis-bg-active);
++  --color-searchbox-results-button-selected-hover: var(--vis-bg-active);
++  --color-searchbox-dropdown-divider: var(--vis-border);
++  --color-searchbox-selection-background: var(--vis-accent-glow);
++  --color-searchbox-selection-foreground: var(--vis-text-primary);
+ 
+   flex: 1;
+-  /* Don't let long suggestions widen the searchbox (flex items default to
+-   * min-width: auto, i.e. their min-content width). */
+   min-width: 0;
+ }
+ 
+ webui-browser-searchbox:hover {
+-  --cr-searchbox-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14);
++  --cr-searchbox-shadow: 0 0 0 1px var(--vis-border-bright);
+ }
+ 
+ webui-browser-searchbox:focus-within {
+   --cr-searchbox-shadow: 0 0 0 1px var(--vis-accent),
+-      0 0 0 4px var(--vis-accent-glow);
++      0 0 0 4px var(--vis-accent-dim);
+ }
+ 
+ webui-browser-searchbox[dropdown-is-visible] {
+-  --cr-searchbox-shadow: 0 8px 28px rgba(0, 0, 0, 0.5),
+-      0 0 0 1px var(--vis-border-bright);
++  --cr-searchbox-shadow: 0 0 0 1px var(--vis-accent),
++      0 0 0 4px var(--vis-accent-dim), 0 16px 48px rgba(0, 0, 0, 0.6);
+ }
+ 
+ #locationIconButton {
+   position: absolute;
+   z-index: 101;
+-  top: 3px;
+-  left: 4px;
+-  height: 22px;
+-  min-width: 26px;
++  top: 50%;
++  transform: translateY(-50%);
++  left: 5px;
++  height: 24px;
++  min-width: 28px;
+   padding: 0;
+   border: none;
+-  border-radius: 6px;
+-  --iron-icon-width: 14px;
+-  --iron-icon-height: 14px;
++  border-radius: 12px;
+   background-color: transparent;
+   transition: background-color 0.15s;
++  cursor: pointer;
++  display: flex;
++  align-items: center;
++  justify-content: center;
+ }
+ 
+ #locationIconButton:hover {
+   background-color: var(--vis-bg-hover);
+ }
+ 
+-/* Visibility: 2.1's own lock/warning/danger/verified/globe glyphs (see
+- * app.html.ts's icon ternary chain) are stroke-based SVGs that carry their
+- * own color via `style="color:..."`; this just sizes/centers them. */
++/* Visibility: 2.1's own lock/warning/danger/verified/globe glyphs */
+ #locationIcon {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
+ 
++/* Zoom chip (only when not 100%) and the bookmark star, inside the field;
++ * the field's text stops short of them via --vis-searchbox-trail. */
++#addressTrail {
++  position: absolute;
++  z-index: 101;
++  top: 50%;
++  right: 4px;
++  transform: translateY(-50%);
++  display: flex;
++  align-items: center;
++  gap: 4px;
++}
++
++#zoomDisplay {
++  height: 22px;
++  padding: 0 8px;
++  border: none;
++  border-radius: 11px;
++  background: var(--vis-bg-hover);
++  color: var(--vis-text-secondary);
++  font-size: 11px;
++  font-weight: 500;
++  font-variant-numeric: tabular-nums;
++  cursor: pointer;
++  white-space: nowrap;
++  transition: background 0.15s, color 0.15s;
++}
++
++#zoomDisplay:hover {
++  background: var(--vis-bg-active);
++  color: var(--vis-text-primary);
++}
++
++.trailBtn {
++  width: 26px;
++  height: 26px;
++  border-radius: 13px;
++}
++
+ cr-icon-button {
+   --cr-icon-button-icon-size: 16px;
+   --cr-icon-button-margin-end: 0;
+@@ -344,13 +385,12 @@ cr-icon-button {
+   height: 30px;
+   padding: 0 8px;
+   user-select: none;
+-  background: var(--vis-bg-titlebar);
+-  border-bottom: 1px solid var(--vis-border);
++  background: var(--vis-bg-secondary);
+ }
+ 
+-/* ── Page area ─────────────────────────────────────── */
++/* ── Page sheet ────────────────────────────────────── */
+ #rootContainer {
+-  background-color: var(--vis-bg-primary);
++  background-color: var(--vis-bg-secondary);
+   display: grid;
+   height: 100%;
+   grid-template-rows: auto 1fr;
+@@ -366,12 +406,15 @@ cr-icon-button {
+   display: flex;
+   flex-direction: row;
+   flex: 1;
+-  background-color: var(--vis-bg-primary);
++  min-height: 0;
++  gap: 6px;
++  padding: 0 6px 6px;
++  background-color: var(--vis-bg-secondary);
+ }
+ 
+-content-region[showing-side-panel] {
+-  border-right: 1px var(--vis-border) solid;
+-  border-radius: 0 12px 0 0;
++#contentRegion {
++  border-radius: 10px;
++  background-color: var(--vis-bg-primary);
+ }
+ 
+ @media (prefers-reduced-motion: reduce) {
+diff --git a/chrome/browser/resources/webui_browser/app.html.ts b/chrome/browser/resources/webui_browser/app.html.ts
+index b6fb160..5df2099 100644
+--- a/chrome/browser/resources/webui_browser/app.html.ts
++++ b/chrome/browser/resources/webui_browser/app.html.ts
+@@ -2,9 +2,9 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
+-// Visibility: the browser frame of Visibility 2.1 — a 28px title bar with the
+-// brand and window controls, a row of compact tabs, a 36px navigation bar with
+-// the 2.1 icon set, and the bookmarks bar.
++// Visibility 3.0: the 2.1 frame in two rows — logo, tabs and window
++// controls in one 40px row, then a 44px navigation row — with the page
++// on an inset sheet (chromium/design/mockup/index.html).
+ 
+ import {html} from 'chrome://resources/lit/v3_0/lit.rollup.js';
+ 
+@@ -17,12 +17,16 @@ export function getHtml(this: WebuiBrowserAppElement) {
+   <div id="topContainer">
+     <div id="titlebar" class="dragRegion">
+       <div class="tbLeft">
+-        <svg class="tbLogo" width="14" height="14" viewBox="0 0 24 24"
+-            fill="none" stroke="currentColor" stroke-width="2"
+-            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
++        <!-- legacy-electron/icon.png redrawn as SVG so it stays sharp at 16px -->
++        <svg class="tbLogo" width="16" height="16" viewBox="0 0 512 512"
++            aria-hidden="true">
++          <rect width="512" height="512" rx="112" fill="#22c55e"/>
++          <path d="M96 256Q256 150 416 256Q256 362 96 256Z" fill="#fff"/>
++          <circle cx="256" cy="256" r="78" fill="#16a34a"/>
++          <circle cx="256" cy="256" r="28" fill="#000"/>
++          <path d="M218 214 256 296 294 214" fill="none" stroke="#d1fae5"
++              stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>
+-        <span class="tbBrand">Visibility</span>
+         ${this.isIncognito_ ? html`
+           <div class="tbIncognitoPill">
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+@@ -35,6 +39,15 @@ export function getHtml(this: WebuiBrowserAppElement) {
+             $i18n{visIncognitoPill}
+           </div>` : html``}
+       </div>
++      <div class="tabsBar" @mousedown="${this.onTabDragMousedown_}">
++        <div class="tabstripDiv" style="margin-left:${this.tabStripInset_}px">
++          <webui-browser-tab-strip id="tabstrip"
++              ?inactive-frame="${this.inactive_}" @tab-added="${this.onTabAdded_}"
++              @tab-closed="${this.onTabClosed_}"
++              @tab-updated="${this.onTabUpdated_}">
++          </webui-browser-tab-strip>
++        </div>
++      </div>
+ <if expr="not is_macosx">
+       <div class="captionButtonsDiv">
+         <button class="wcBtn" title="$i18n{visMinimize}"
+@@ -61,56 +74,49 @@ export function getHtml(this: WebuiBrowserAppElement) {
+ </if>
+     </div>
+ 
+-    <div class="titlebarDiv tabsBar" @mousedown="${this.onTabDragMousedown_}">
+-      <div class="tabstripDiv" style="margin-left:${this.tabStripInset_}px">
+-        <webui-browser-tab-strip id="tabstrip"
+-            ?inactive-frame="${this.inactive_}" @tab-added="${this.onTabAdded_}"
+-            @tab-closed="${this.onTabClosed_}"
+-            @tab-updated="${this.onTabUpdated_}">
+-        </webui-browser-tab-strip>
+-      </div>
+-    </div>
+-
+     <div id="searchBar">
+-      <button id="backButton" class="navBtn" title="$i18n{visBack}"
+-          ?disabled="${this.backButtonDisabled_}" @click="${this.onBackClick_}"
+-          @contextmenu="${this.onBackContextmenu_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+-      </button>
+-      <button id="forwardButton" class="navBtn" title="$i18n{visForward}"
+-          ?disabled="${this.forwardButtonDisabled_}"
+-          @click="${this.onForwardClick_}"
+-          @contextmenu="${this.onForwardContextmenu_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+-      </button>
+-      <button class="navBtn" title="${this.reloadOrStopTooltip_()}"
+-          @click="${this.onReloadOrStopClick_}">
+-        ${this.reloadOrStopIcon_ === 'icon-refresh' ? html`
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round">
+-          <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+-        </svg>` : html`
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/>
+-          <line x1="6" y1="6" x2="18" y2="18"/></svg>`}
+-      </button>
+-      <button id="homeButton" class="navBtn" title="$i18n{visHome}"
+-          ?hidden="${!this.showHomeButton_}"
+-          data-command="${BrowserCommand.kHome}" @click="${this.onCommandClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round">
+-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+-          <polyline points="9,22 9,12 15,12 15,22"/></svg>
+-      </button>
++      <div class="navGroup navLeft">
++        <button id="backButton" class="navBtn" title="$i18n{visBack}"
++            ?disabled="${this.backButtonDisabled_}" @click="${this.onBackClick_}"
++            @contextmenu="${this.onBackContextmenu_}">
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
++              stroke="currentColor" stroke-width="2" stroke-linecap="round"
++              stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
++        </button>
++        <button id="forwardButton" class="navBtn" title="$i18n{visForward}"
++            ?disabled="${this.forwardButtonDisabled_}"
++            @click="${this.onForwardClick_}"
++            @contextmenu="${this.onForwardContextmenu_}">
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
++              stroke="currentColor" stroke-width="2" stroke-linecap="round"
++              stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
++        </button>
++        <button id="reloadButton" class="navBtn" title="${this.reloadOrStopTooltip_()}"
++            @click="${this.onReloadOrStopClick_}">
++          ${this.reloadOrStopIcon_ === 'icon-refresh' ? html`
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
++              stroke="currentColor" stroke-width="2" stroke-linecap="round"
++              stroke-linejoin="round">
++            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
++          </svg>` : html`
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
++              stroke="currentColor" stroke-width="2" stroke-linecap="round"
++              stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/>
++            <line x1="6" y1="6" x2="18" y2="18"/></svg>`}
++        </button>
++        <button id="homeButton" class="navBtn" title="$i18n{visHome}"
++            ?hidden="${!this.showHomeButton_}"
++            data-command="${BrowserCommand.kHome}" @click="${this.onCommandClick_}">
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
++              stroke="currentColor" stroke-width="2" stroke-linecap="round"
++              stroke-linejoin="round">
++            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
++            <polyline points="9,22 9,12 15,12 15,22"/></svg>
++        </button>
++      </div>
+ 
+-      <div id="addressBox">
++      <div id="addressBox"
++          style="--vis-searchbox-trail:${this.zoomPercent_ !== 100 ? 92 : 40}px">
+         <webui-browser-searchbox id="address"
+             ?hide-icon="${this.showLocationIconButton_}">
+         </webui-browser-searchbox>
+@@ -125,102 +131,58 @@ export function getHtml(this: WebuiBrowserAppElement) {
+                             html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`}`}`}`}
+           </span>
+         </cr-button>
++        <div id="addressTrail">
++          ${this.zoomPercent_ !== 100 ? html`
++            <button id="zoomDisplay" title="$i18n{visZoomReset}"
++                data-command="${BrowserCommand.kZoomReset}"
++                @click="${this.onZoomClick_}">${this.zoomPercent_}%</button>` : ''}
++          <button class="navBtn trailBtn" title="$i18n{visBookmark}"
++              data-command="${BrowserCommand.kBookmarkThisTab}"
++              @click="${this.onCommandClick_}">
++            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
++                stroke="currentColor" stroke-width="2" stroke-linecap="round"
++                stroke-linejoin="round">
++              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
++          </button>
++        </div>
+       </div>
+ 
+-      <webui-browser-extensions-bar id="extensionsBar">
+-      </webui-browser-extensions-bar>
++      <div class="navGroup navRight">
++        <webui-browser-extensions-bar id="extensionsBar">
++        </webui-browser-extensions-bar>
+ 
+-      <button class="navBtn" title="$i18n{visBookmark}"
+-          data-command="${BrowserCommand.kBookmarkThisTab}" @click="${this.onCommandClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round">
+-          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+-      </button>
+-      <button class="navBtn" title="$i18n{visIncognito}"
+-          data-command="${BrowserCommand.kNewIncognitoWindow}" @click="${this.onCommandClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round">
+-          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+-          <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+-          <line x1="1" y1="1" x2="23" y2="23"/></svg>
+-      </button>
+-      <button class="navBtn" title="$i18n{visVpn}" @click="${this.onVpnClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round">
+-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+-          <line x1="12" y1="8" x2="12" y2="12"/>
+-          <line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+-      </button>
+-      <button class="navBtn" title="$i18n{visHistory}"
+-          data-command="${BrowserCommand.kHistory}" @click="${this.onCommandClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round"><circle cx="12" cy="12" r="10"/>
+-          <polyline points="12,6 12,12 16,14"/></svg>
+-      </button>
+-      <button class="navBtn" title="$i18n{visDownloads}"
+-          data-command="${BrowserCommand.kDownloads}" @click="${this.onCommandClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round">
+-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+-          <polyline points="7,10 12,15 17,10"/>
+-          <line x1="12" y1="15" x2="12" y2="3"/></svg>
+-      </button>
+-      <button class="navBtn" title="$i18n{visExtensions}"
+-          data-command="${BrowserCommand.kExtensions}" @click="${this.onCommandClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round">
+-          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+-          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+-          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+-          <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor"
+-              fill-opacity="0.3"/></svg>
+-      </button>
+-      <button class="navBtn" title="$i18n{visSettings}"
+-          data-command="${BrowserCommand.kSettings}" @click="${this.onCommandClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round"><circle cx="12" cy="12" r="3"/>
+-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+-      </button>
++        <!-- 2.1's shield; connected = shield with a check in the accent color -->
++        <button id="vpnButton" class="navBtn vpnBtn ${this.vpnConnected_ ? 'connected' : ''}"
++            title="$i18n{visVpn}" aria-pressed="${this.vpnConnected_}"
++            @click="${this.onVpnClick_}">
++          ${this.vpnConnected_ ? html`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>` :
++              html`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`}
++        </button>
+ 
+-      <span class="navDivider" aria-hidden="true"></span>
++        <span class="navDivider" aria-hidden="true"></span>
+ 
+-      <button class="navBtn" title="$i18n{visZoomOut}"
+-          data-command="${BrowserCommand.kZoomOut}" @click="${this.onZoomClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round"><circle cx="11" cy="11" r="8"/>
+-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+-          <line x1="8" y1="11" x2="14" y2="11"/></svg>
+-      </button>
+-      <button id="zoomDisplay" title="$i18n{visZoomReset}"
+-          data-command="${BrowserCommand.kZoomReset}" @click="${this.onZoomClick_}">
+-        ${this.zoomPercent_}%
+-      </button>
+-      <button class="navBtn" title="$i18n{visZoomIn}"
+-          data-command="${BrowserCommand.kZoomIn}" @click="${this.onZoomClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+-            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+-            stroke-linejoin="round"><circle cx="11" cy="11" r="8"/>
+-          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+-          <line x1="11" y1="8" x2="11" y2="14"/>
+-          <line x1="8" y1="11" x2="14" y2="11"/></svg>
+-      </button>
++        <button class="navBtn" title="$i18n{visHistory}"
++            data-command="${BrowserCommand.kHistory}" @click="${this.onCommandClick_}">
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
++        </button>
++        <button class="navBtn" title="$i18n{visDownloads}"
++            data-command="${BrowserCommand.kDownloads}" @click="${this.onCommandClick_}">
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
++        </button>
++        <button class="navBtn" title="$i18n{visExtensions}"
++            data-command="${BrowserCommand.kExtensions}" @click="${this.onCommandClick_}">
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.3"/></svg>
++        </button>
+ 
+-      <button id="avatarButton" class="navBtn" hidden
+-          @click="${this.onAvatarClick_}"></button>
+-      <button id="appMenuButton" class="navBtn" title="$i18n{appMenuTooltip}"
+-          @click="${this.onAppMenuClick_}">
+-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+-            aria-hidden="true"><circle cx="12" cy="5" r="1.8"/>
+-          <circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
+-      </button>
++        <button id="avatarButton" class="navBtn" hidden
++            @click="${this.onAvatarClick_}"></button>
++        <button id="appMenuButton" class="navBtn" title="$i18n{appMenuTooltip}"
++            @click="${this.onAppMenuClick_}">
++          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
++              aria-hidden="true"><circle cx="12" cy="5" r="1.8"/>
++            <circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
++        </button>
++      </div>
+     </div>
+     <webui-browser-bookmark-bar id="bookmarkBar" hidden>
+     </webui-browser-bookmark-bar>
+diff --git a/chrome/browser/resources/webui_browser/app.ts b/chrome/browser/resources/webui_browser/app.ts
+index 1803634..8367236 100644
+--- a/chrome/browser/resources/webui_browser/app.ts
++++ b/chrome/browser/resources/webui_browser/app.ts
+@@ -95,6 +95,7 @@ export class WebuiBrowserAppElement extends CrLitElement {
+       tabStripInset_: {state: true, type: Number},
+       zoomPercent_: {state: true, type: Number},
+       showHomeButton_: {state: true, type: Boolean},
++      vpnConnected_: {state: true, type: Boolean},
+       inactive_: {
+         type: Boolean,
+         reflect: true,
+@@ -125,6 +126,7 @@ export class WebuiBrowserAppElement extends CrLitElement {
+   protected accessor inactive_: boolean = false;
+   protected accessor zoomPercent_: number = 100;
+   protected accessor showHomeButton_: boolean = true;
++  protected accessor vpnConnected_: boolean = false;
+ 
+   constructor() {
+     super();
+@@ -451,6 +453,12 @@ export class WebuiBrowserAppElement extends CrLitElement {
+   protected onTabAdded_(event: CustomEvent<TabAdded>) {
+     this.$.contentRegion.createWebView(event.detail.id, event.detail.isActive);
+     this.refreshLayout();
++    // Visibility: a brand-new tab (e.g. the one launched at startup) never
++    // gets a separate tab-updated event of its own, so without this the
++    // address bar/security icon stayed blank until some later navigation.
++    if (event.detail.isActive) {
++      this.updateUrlForActiveTab_(event.detail.tabData);
++    }
+   }
+ 
+   protected onTabClosed_(event: CustomEvent<TabClosed>) {
+diff --git a/chrome/browser/resources/webui_browser/tab_strip/events.ts b/chrome/browser/resources/webui_browser/tab_strip/events.ts
+index 1dc449e..660c73d 100644
+--- a/chrome/browser/resources/webui_browser/tab_strip/events.ts
++++ b/chrome/browser/resources/webui_browser/tab_strip/events.ts
+@@ -12,4 +12,8 @@ export type TabUpdated = TabData;
+ export interface TabAdded {
+   id: NodeId;
+   isActive: boolean;
++  // Visibility: so the active tab's address bar/security icon can be
++  // populated right away -- a brand-new tab doesn't get a separate
++  // tab-updated event of its own to do that reactively.
++  tabData: TabData;
+ }
+diff --git a/chrome/browser/resources/webui_browser/tab_strip/tab.css b/chrome/browser/resources/webui_browser/tab_strip/tab.css
+index e4c2dd1..b11b7bb 100644
+--- a/chrome/browser/resources/webui_browser/tab_strip/tab.css
++++ b/chrome/browser/resources/webui_browser/tab_strip/tab.css
+@@ -7,27 +7,28 @@
+  * #scheme=relative
+  * #css_wrapper_metadata_end */
+ 
+-/* Visibility: compact tabs of Visibility 2.1 (30px, 8px top corners,
+- * a thin separator between inactive tabs). */
++/* Visibility 3.0: 2.1 tabs grown to 34px with 10px top corners; the active
++ * tab flows into the navigation row through concave bottom corners. */
+ :host {
+     --favicon-size: 16px;
+ 
+-    flex: 1 1 170px;
+-    max-width: 210px;
+-    min-width: 36px;
++    flex: 1 1 200px;
++    max-width: 220px;
++    min-width: 40px;
++    margin-right: 2px;
+ }
+ 
+ .tab {
+     color: #94a3b8;
+     background-color: transparent;
+-    border-radius: 8px 8px 0 0;
+-    height: 30px;
+-    padding: 0 8px 0 10px;
++    border-radius: 10px 10px 0 0;
++    height: 34px;
++    padding: 0 8px 0 12px;
+     display: flex;
+     align-items: center;
+-    gap: 7px;
++    gap: 8px;
+     position: relative;
+-    font-size: 11px;
++    font-size: 12px;
+     font-weight: 500;
+     cursor: default;
+     transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1),
+@@ -39,9 +40,9 @@
+ .tab::after {
+     content: '';
+     position: absolute;
+-    right: 0;
+-    top: 7px;
+-    bottom: 7px;
++    right: -2px;
++    top: 10px;
++    bottom: 10px;
+     width: 1px;
+     background: rgba(255, 255, 255, 0.12);
+     transition: opacity 100ms ease;
+@@ -60,7 +61,6 @@
+ :host([active]) .tab {
+     color: #f8fafc;
+     background-color: #15171e;
+-    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08) inset;
+     z-index: 5;
+ }
+ 
+@@ -84,9 +84,9 @@
+ .close {
+     border: none;
+     flex-shrink: 0;
+-    border-radius: 4px;
++    border-radius: 6px;
+     --cr-icon-button-icon-size: 12px;
+-    --cr-icon-button-size: 18px;
++    --cr-icon-button-size: 20px;
+     --cr-icon-button-margin-end: 0px;
+     --cr-icon-button-margin-start: 0px;
+     --cr-icon-button-fill-color: rgba(255, 255, 255, 0.45);
+@@ -107,9 +107,32 @@ cr-icon {
+     text-overflow: ellipsis;
+ }
+ 
+-/* 2.1 tabs have no flared bottom corners. */
++/* Concave corners at the foot of the active tab, in the nav row's color. */
+ #bottomCorners {
+-    display: none;
++    position: absolute;
++    left: -10px;
++    right: -10px;
++    bottom: 0;
++    height: 10px;
++    pointer-events: none;
++}
++
++.corner {
++    position: absolute;
++    bottom: 0;
++    width: 10px;
++    height: 10px;
++}
++
++#leftCorner {
++    left: 0;
++    background: radial-gradient(circle at 0 0, transparent 9.5px, #15171e 10px);
++}
++
++#rightCorner {
++    right: 0;
++    background: radial-gradient(circle at 100% 0, transparent 9.5px,
++        #15171e 10px);
+ }
+ 
+ @media (prefers-reduced-motion: reduce) {
+diff --git a/chrome/browser/resources/webui_browser/tab_strip/tab_strip.css b/chrome/browser/resources/webui_browser/tab_strip/tab_strip.css
+index e7d5569..46d14d1 100644
+--- a/chrome/browser/resources/webui_browser/tab_strip/tab_strip.css
++++ b/chrome/browser/resources/webui_browser/tab_strip/tab_strip.css
+@@ -20,7 +20,7 @@
+ 
+   display: flex;
+   align-items: flex-end;
+-  height: 30px;
++  height: 40px;
+ }
+ 
+ :host([drag-in-progress]) #tabstrip {
+@@ -36,10 +36,10 @@ webui-browser-tab {
+   -webkit-app-region: no-drag;
+ }
+ 
+-/* Visibility 2.1 "+" button: 30x28, rounded, right after the last tab. */
++/* Visibility 2.1 "+" button: 28x28, rounded, right after the last tab. */
+ #newTabButton {
+   flex-shrink: 0;
+-  margin: 0 0 1px 2px;
++  margin: 0 0 3px 4px;
+   border-radius: 8px;
+   --cr-icon-button-icon-size: 16px;
+   --cr-icon-button-size: 28px;
+diff --git a/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts b/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts
+index a4ebcf9..0b78854 100644
+--- a/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts
++++ b/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts
+@@ -162,6 +162,7 @@ export class TabStripElement extends CrLitElement implements
+         this.fire<TabAdded>('tab-added', {
+           id: item.id,
+           isActive: item.tabData.isActive,
++          tabData: item.tabData,
+         });
+       }
+     }
+@@ -347,6 +348,7 @@ export class TabStripElement extends CrLitElement implements
+     this.fire<TabAdded>('tab-added', {
+       id: tab.id,
+       isActive: tab.isActive,
++      tabData: tab,
+     });
+   }
+ 
+diff --git a/chrome/browser/resources/webui_browser/webui_browser_searchbox.css b/chrome/browser/resources/webui_browser/webui_browser_searchbox.css
+index e18eb94..f92b313 100644
+--- a/chrome/browser/resources/webui_browser/webui_browser_searchbox.css
++++ b/chrome/browser/resources/webui_browser/webui_browser_searchbox.css
+@@ -59,6 +59,8 @@
+   min-height: var(--cr-searchbox-height);
+   position: relative;
+   width: 100%;
++  transition: background-color 0.18s cubic-bezier(0.32, 0.72, 0, 1),
++              box-shadow 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+ }
+ 
+ /* The UA stylesheet hides [unbounded]:not(:unbounded) elements. The wrapper
+@@ -69,9 +71,35 @@
+   visibility: visible;
+ }
+ 
++cr-searchbox-input::part(input-inner-container) {
++  align-items: center;
++  display: flex;
++  height: var(--cr-searchbox-height);
++  min-height: var(--cr-searchbox-height);
++  padding: 0;
++}
++
+ cr-searchbox-input::part(searchbox-input) {
+   align-self: center;
+-  padding-top: 2px;
++  padding: 0 var(--vis-searchbox-trail, 8px) 0 2px;
++  margin: 0;
++  height: 100%;
++  line-height: var(--cr-searchbox-height);
++  font-family: inherit;
++  font-size: var(--cr-searchbox-font-size, 13px);
++  color: var(--color-searchbox-foreground);
++  box-sizing: border-box;
++}
++
++cr-searchbox-input::part(mirror) {
++  align-items: center;
++  display: flex;
++  font-family: inherit;
++  font-size: var(--cr-searchbox-font-size, 13px);
++  line-height: var(--cr-searchbox-height);
++  height: 100%;
++  padding: 0 var(--vis-searchbox-trail, 8px) 0 2px;
++  box-sizing: border-box;
+ }
+ 
+ :host([searchbox-chrome-refresh-theming]) cr-searchbox-input::part(searchbox-input)::selection {
+@@ -81,6 +109,9 @@ cr-searchbox-input::part(searchbox-input) {
+ 
+ cr-searchbox-input::part(icon) {
+   align-self: center;
++  display: flex;
++  align-items: center;
++  justify-content: center;
+ }
+ 
+ /* Visibility: when the page-info button sits over the field, the field's
+diff --git a/chrome/browser/resources/webui_browser/webui_browser_searchbox.html.ts b/chrome/browser/resources/webui_browser/webui_browser_searchbox.html.ts
+index a989d02..5f5aab4 100644
+--- a/chrome/browser/resources/webui_browser/webui_browser_searchbox.html.ts
++++ b/chrome/browser/resources/webui_browser/webui_browser_searchbox.html.ts
+@@ -14,7 +14,7 @@ export function getHtml(this: WebuiBrowserSearchboxElement) {
+     @keyup="${this.onInputWrapperKeyup_}"
+     @beforetoggle="${this.onInputWrapperBeforetoggle_}"
+     @toggle="${this.onInputWrapperToggle_}">
+-  <cr-searchbox-input id="input" exportparts="searchbox-input"
++  <cr-searchbox-input id="input" exportparts="searchbox-input, input-inner-container, icon, mirror"
+       ?dropdown-is-visible="${this.dropdownIsVisible}"
+       ?multi-line-enabled="${this.multiLineEnabled}"
+       placeholder-text="${this.computePlaceholderText_()}"
+diff --git a/chrome/browser/ui/webui_browser/webui_browser_ui.cc b/chrome/browser/ui/webui_browser/webui_browser_ui.cc
+index b854c7d..fc7b4b9 100644
+--- a/chrome/browser/ui/webui_browser/webui_browser_ui.cc
++++ b/chrome/browser/ui/webui_browser/webui_browser_ui.cc
+@@ -178,6 +178,11 @@ WebUIBrowserUI::WebUIBrowserUI(content::WebUI* web_ui)
+   source->AddInteger("tabStripInset",
+                      WebUIBrowserPageHandler::GetTabStripInsetWidth());
+ 
++  // Visibility: 2.1 showed a persistent "Инкогнито" pill in the title bar
++  // for incognito windows (see app.ts's incognitoPill_); this is fixed for
++  // the lifetime of the window, so a static loadTimeData value is enough.
++  source->AddBoolean("isIncognito", profile->IsOffTheRecord());
++
+   source->AddBoolean(
+       "enableSurfaceEmbed",
+       base::FeatureList::IsEnabled(surface_embed::features::kSurfaceEmbed));

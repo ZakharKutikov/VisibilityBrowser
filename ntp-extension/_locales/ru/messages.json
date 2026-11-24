@@ -1,0 +1,101 @@
+{
+  "extName": {
+    "message": "Новая вкладка Visibility"
+  },
+  "extDescription": {
+    "message": "Страница новой вкладки браузера Visibility: время, погода, ваши сайты."
+  },
+  "pageTitle": {
+    "message": "Новая вкладка"
+  },
+  "greetMorning": {
+    "message": "Доброе утро"
+  },
+  "greetDay": {
+    "message": "Добрый день"
+  },
+  "greetEvening": {
+    "message": "Добрый вечер"
+  },
+  "greetNight": {
+    "message": "Доброй ночи"
+  },
+  "searchPlaceholder": {
+    "message": "Поиск в интернете или URL..."
+  },
+  "searchLabel": {
+    "message": "Поиск в интернете"
+  },
+  "suggestTypeHistory": {
+    "message": "История"
+  },
+  "suggestTypeSearch": {
+    "message": "Поиск"
+  },
+  "shortcutsTitle": {
+    "message": "Часто посещаемые"
+  },
+  "starterTitle": {
+    "message": "С чего начать"
+  },
+  "recentTitle": {
+    "message": "Недавние посещения"
+  },
+  "weatherSet": {
+    "message": "Указать город для погоды"
+  },
+  "weatherChange": {
+    "message": "Изменить город"
+  },
+  "cityPlaceholder": {
+    "message": "Город"
+  },
+  "cityLabel": {
+    "message": "Город для погоды"
+  },
+  "citySave": {
+    "message": "Показать погоду"
+  },
+  "cityRemove": {
+    "message": "Не показывать погоду"
+  },
+  "cityNotFound": {
+    "message": "Город «$1» не найден. Проверьте название."
+  },
+  "weatherOffline": {
+    "message": "Погода не загрузилась. Проверьте соединение."
+  },
+  "wxClear": {
+    "message": "ясно"
+  },
+  "wxPartly": {
+    "message": "переменная облачность"
+  },
+  "wxOvercast": {
+    "message": "пасмурно"
+  },
+  "wxFog": {
+    "message": "туман"
+  },
+  "wxDrizzle": {
+    "message": "морось"
+  },
+  "wxFreezing": {
+    "message": "ледяной дождь"
+  },
+  "wxRain": {
+    "message": "дождь"
+  },
+  "wxSnow": {
+    "message": "снег"
+  },
+  "wxShowers": {
+    "message": "ливень"
+  },
+  "wxThunder": {
+    "message": "гроза"
+  },
+  "wxUnknown": {
+    "message": ""
+  }
+}

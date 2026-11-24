@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Visibility 3.0 — макет рамки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Tokens: 2.1 dark theme as-is (legacy-electron/index.html:14-43), plus 3.0 geometry. */
+:root {
+  --bg-titlebar: #121318;
+  --bg-primary: #0d0e12;
+  --bg-secondary: #15171e;
+  --bg-tertiary: #1e202a;
+  --bg-hover: rgba(255,255,255,.06);
+  --bg-active: rgba(255,255,255,.10);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: rgba(255,255,255,.45);
+  --accent: #818cf8;
+  --accent-dim: rgba(129,140,248,.15);
+  --accent-glow: rgba(129,140,248,.35);
+  --ok: #4ade80;
+  --danger: #ff5555;
+  --border: rgba(255,255,255,.08);
+  --border-bright: rgba(255,255,255,.14);
+  --shadow-md: 0 8px 24px rgba(0,0,0,.45);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,.6);
+  --ease: cubic-bezier(.32,.72,0,1);
+  --font: 'Inter', 'Segoe UI Variable Text', system-ui, sans-serif;
+  --row-tabs: 40px;
+  --row-nav: 44px;
+}
+body.montserrat { --font: 'Montserrat', 'Segoe UI', system-ui, sans-serif; }
+
+* { box-sizing: border-box; margin: 0; }
+html, body { height: 100%; }
+body {
+  background: #050608;
+  color: var(--text-primary);
+  font: 13px/1.4 var(--font);
+  -webkit-font-smoothing: antialiased;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  padding: 24px;
+}
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+svg { display: block; flex: none; }
+
+/* ── Window ─────────────────────────────────────────── */
+.window {
+  position: relative;
+  min-height: 620px;
+  background: var(--bg-titlebar);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: var(--row-tabs) var(--row-nav) 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ── Row 1: brand + tabs + window controls (2.1's titlebar and tab row merged) ── */
+.tabs-row { display: flex; align-items: flex-end; padding-left: 10px; }
+.brand { height: 100%; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 4px; }
+.incog { display: none; align-items: center; gap: 5px; height: 20px; padding: 0 8px; border-radius: 10px;
+  background: var(--accent-dim); color: var(--accent); font-size: 11px; font-weight: 500; }
+body.incognito .incog { display: inline-flex; }
+.tabs { flex: 1; min-width: 0; display: flex; align-items: flex-end; gap: 2px; height: 100%; padding-top: 6px; }
+.tab {
+  position: relative; display: flex; align-items: center; gap: 8px;
+  flex: 0 1 200px; min-width: 40px; height: 34px; padding: 0 8px 0 12px;
+  border-radius: 10px 10px 0 0; color: var(--text-secondary);
+  transition: background .15s var(--ease), color .15s var(--ease);
+}
+.tab:hover { background: var(--bg-hover); color: var(--text-primary); }
+.tab.active { background: var(--bg-secondary); color: var(--text-primary); }
+/* Concave feet so the active tab grows out of the nav row. */
+.tab.active::before, .tab.active::after {
+  content: ''; position: absolute; bottom: 0; width: 10px; height: 10px;
+  background: radial-gradient(circle at var(--c) , transparent 9.5px, var(--bg-secondary) 10px);
+}
+.tab.active::before { left: -10px; --c: 0 0; }
+.tab.active::after { right: -10px; --c: 100% 0; }
+.tab + .tab:not(.active):not(:hover)::before { content: ''; position: absolute; left: -1px; top: 10px; bottom: 10px; width: 1px; background: var(--border-bright); }
+.tab.active + .tab::before, .tab:hover + .tab::before { display: none; }
+.fav { width: 16px; height: 16px; display: grid; place-items: center; flex: none; color: var(--text-secondary); }
+.tab .title { flex: 1; min-width: 0; font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tab .x { width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; opacity: 0; color: var(--text-secondary); }
+.tab:hover .x, .tab.active .x { opacity: 1; }
+.tab .x:hover { background: var(--bg-active); color: var(--text-primary); }
+.tab .audio { color: var(--accent); }
+.tab.loading .fav { background: none !important; border: 2px solid var(--border-bright); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.new-tab { width: 28px; height: 28px; margin: 0 4px 3px; border-radius: 8px; display: grid; place-items: center; color: var(--text-secondary); flex: none; }
+.new-tab:hover { background: var(--bg-hover); color: var(--text-primary); }
+.wc { display: flex; align-self: stretch; }
+.wc button { width: 46px; display: grid; place-items: center; color: var(--text-secondary); }
+.wc button:hover { background: var(--bg-hover); color: var(--text-primary); }
+.wc button.close:hover { background: #e81123; color: #fff; }
+
+/* ── Row 2: navigation ─────────────────────────────── */
+.nav-row {
+  position: relative; display: flex; align-items: center; gap: 4px; padding: 0 8px;
+  background: var(--bg-secondary);
+}
+.ib { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; color: var(--text-secondary); position: relative;
+  transition: background .15s var(--ease), color .15s var(--ease), transform .15s var(--ease); }
+.ib:hover { background: var(--bg-hover); color: var(--text-primary); }
+.ib:active { transform: scale(.94); }
+.ib[disabled] { opacity: .35; pointer-events: none; }
+.omni {
+  flex: 1; min-width: 0; max-width: 860px; margin: 0 auto; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 6px 0 6px;
+  background: var(--bg-primary); border: 1px solid var(--border); border-radius: 17px; position: relative;
+  transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
+}
+.omni:hover { border-color: var(--border-bright); }
+.omni.focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); border-radius: 17px 17px 0 0; }
+.site { height: 24px; display: flex; align-items: center; gap: 6px; padding: 0 8px; border-radius: 12px; color: var(--ok); font-size: 12px; font-weight: 500; }
+.site:hover { background: var(--bg-hover); }
+.url { flex: 1; min-width: 0; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-muted); }
+.url b { color: var(--text-primary); font-weight: 400; }
+.omni input { flex: 1; min-width: 0; background: none; border: 0; color: var(--text-primary); font: inherit; font-size: 13px; outline: none; display: none; }
+.omni.focus .url { display: none; }
+.omni.focus input { display: block; }
+.chip { height: 22px; padding: 0 8px; border-radius: 11px; font-size: 11px; font-weight: 500; color: var(--text-secondary); background: var(--bg-hover); display: grid; place-items: center; }
+.chip:hover { background: var(--bg-active); color: var(--text-primary); }
+.omni .ib { width: 26px; height: 26px; border-radius: 13px; }
+.omni .ib.on { color: var(--accent); }
+.omni.focus 
+/* VPN: 2.1's shield button; connected = shield with a check in the accent color. */
+.vpn .on-i, .vpn.on .off-i { display: none; }
+.vpn.on .on-i { display: block; }
+.vpn.on { color: var(--accent); }
+.sep { width: 1px; height: 18px; background: var(--border-bright); margin: 0 4px; }
+.ring { position: absolute; inset: 3px; }
+.badge { position: absolute; top: 5px; right: 5px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg-secondary); box-sizing: content-box; }
+
+.loading-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; overflow: hidden; opacity: 0; transition: opacity .2s; }
+.loading-bar i { position: absolute; top: 0; bottom: 0; width: 30%; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: slide 1.1s var(--ease) infinite; }
+@keyframes slide { from { left: -30%; } to { left: 100%; } }
+body.loading .loading-bar { opacity: 1; }
+
+/* ── Suggestions ───────────────────────────────────── */
+.suggest {
+  position: absolute; left: -1px; right: -1px; top: 33px; z-index: 5; padding: 6px;
+  background: var(--bg-primary); border: 1px solid var(--accent); border-top-color: var(--border); border-radius: 0 0 17px 17px;
+  box-shadow: 0 0 0 3px var(--accent-dim), var(--shadow-lg); display: none;
+}
+.omni.focus .suggest { display: block; animation: drop .18s var(--ease); }
+@keyframes drop { from { opacity: 0; transform: translateY(-4px); } }
+.sg { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: 10px; color: var(--text-secondary); }
+.sg.sel, .sg:hover { background: var(--bg-hover); color: var(--text-primary); }
+.sg .t { flex: 1; min-width: 0; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sg .u { flex: none; color: var(--text-muted); font-size: 12px; }
+.sg-head { font-size: 11px; color: var(--text-muted); padding: 8px 10px 4px; }
+
+/* ── Page sheet ─────────────────────────────────────── */
+.stage { position: relative; background: var(--bg-secondary); padding: 0 6px 6px; min-height: 0; }
+.sheet {
+  height: 100%; border-radius: 10px; overflow: hidden; background: #fafafa; color: #1d1d1f;
+  border: 1px solid rgba(0,0,0,.4); box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+}
+.fake { max-width: 680px; margin: 0 auto; padding: 56px 32px; font-family: Georgia, serif; }
+.fake h1 { font-size: 34px; line-height: 1.15; margin-bottom: 14px; font-weight: 600; }
+.fake p { font-size: 17px; line-height: 1.6; color: #333; margin-bottom: 16px; }
+.fake a { color: #2852c4; }
+.fake .meta { font: 13px var(--font); color: #777; margin-bottom: 28px; }
+
+/* Floating surfaces share one recipe. */
+.float { position: absolute; z-index: 4; background: var(--bg-tertiary); border: 1px solid var(--border-bright); border-radius: 12px; box-shadow: var(--shadow-md); color: var(--text-primary); }
+.find { top: 10px; right: 18px; display: none; align-items: center; gap: 4px; height: 40px; padding: 0 4px 0 12px; width: 340px; }
+body.find-open .find { display: flex; animation: drop .18s var(--ease); }
+.find input { flex: 1; background: none; border: 0; outline: none; color: var(--text-primary); font: inherit; }
+.find .count { white-space: nowrap; font-size: 12px; color: var(--text-muted); padding: 0 6px; font-variant-numeric: tabular-nums; }
+.status { left: 14px; bottom: 14px; height: 26px; padding: 0 10px; display: flex; align-items: center; border-radius: 8px; font-size: 12px; color: var(--text-secondary); opacity: 0; transition: opacity .15s; }
+body.hovering .status { opacity: 1; }
+.toast { left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 8px 0 14px; font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s var(--ease), transform .25s var(--ease); }
+body.toast-open .toast { opacity: 1; transform: translate(-50%, -6px); pointer-events: auto; }
+.toast .ok { color: var(--ok); }
+.toast button { height: 28px; padding: 0 10px; border-radius: 8px; color: var(--accent); font-weight: 500; }
+.toast button:hover { background: var(--accent-dim); }
+
+/* ── Demo controls (not part of the design) ─────────── */
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; color: var(--text-secondary); font-size: 12px; }
+.controls button { height: 30px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border-bright); color: var(--text-secondary); }
+.controls button[aria-pressed="true"] { background: var(--accent-dim); border-color: var(--accent); color: var(--text-primary); }
+.controls span { margin-right: 4px; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="window" id="win">
+  <!-- Row 1 -->
+  <div class="tabs-row">
+    <div class="brand">
+      <!-- legacy-electron/icon.png redrawn as SVG so it stays sharp at 16px -->
+      <svg width="16" height="16" viewBox="0 0 512 512" role="img" aria-label="Visibility"><rect width="512" height="512" rx="112" fill="#22c55e"/><path d="M96 256Q256 150 416 256Q256 362 96 256Z" fill="#fff"/><circle cx="256" cy="256" r="78" fill="#16a34a"/><circle cx="256" cy="256" r="28" fill="#000"/><path d="M218 214 256 296 294 214" fill="none" stroke="#d1fae5" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="incog"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 15s3 4 10 4 10-4 10-4"/><circle cx="7" cy="10" r="3"/><circle cx="17" cy="10" r="3"/></svg>Инкогнито</span>
+    </div>
+    <div class="tabs" id="tabs">
+      <div class="tab active"><span class="fav"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span class="title">Как устроен рендеринг страниц</span><button class="x" aria-label="Закрыть вкладку"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="tab"><span class="fav"><svg width="16" height="16" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2.5" fill="#f8fafc"/><path d="M3 7l9 6.5L21 7" fill="none" stroke="#e5484d" stroke-width="2.4" stroke-linejoin="round"/></svg></span><span class="title">Почта — входящие (12)</span><button class="x" aria-label="Закрыть вкладку"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="tab"><span class="fav"><svg width="16" height="16" viewBox="0 0 24 24"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#e5484d"/><path d="M10 9v6l5.2-3z" fill="#fff"/></svg></span><span class="title">Лекция по сетям, часть 3</span><svg class="audio" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg><button class="x" aria-label="Закрыть вкладку"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="tab loading"><span class="fav"></span><span class="title">Загрузка…</span><button class="x" aria-label="Закрыть вкладку"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <button class="new-tab" aria-label="Новая вкладка"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    </div>
+    <div class="wc">
+      <button aria-label="Свернуть"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+      <button aria-label="Развернуть"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></button>
+      <button class="close" aria-label="Закрыть"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="nav-row">
+    <button class="ib" aria-label="Назад"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+    <button class="ib" aria-label="Вперёд" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    <button class="ib" aria-label="Обновить"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+
+    <div class="omni" id="omni">
+      <button class="site" aria-label="Сведения о сайте"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
+      <span class="url"><b>docs.example.org</b>/rendering/how-pages-are-painted</span>
+      <input id="omni-input" value="рендеринг страниц" aria-label="Адрес или запрос">
+      <button class="chip" title="Сбросить масштаб">110%</button>
+      <button class="ib on" aria-label="Убрать из закладок"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+      <div class="suggest">
+        <div class="sg sel"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="t">рендеринг страниц</span><span class="u">Поиск</span></div>
+        <div class="sg"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="t">рендеринг страниц в браузере по шагам</span></div>
+        <div class="sg-head">Из истории</div>
+        <div class="sg"><span class="fav"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span class="t">Как устроен рендеринг страниц</span><span class="u">docs.example.org</span></div>
+        <div class="sg"><span class="fav"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span class="t">Слои и композитинг</span><span class="u">dev.example.net</span></div>
+      </div>
+    </div>
+
+    <button class="ib vpn on" id="vpn" aria-pressed="true" title="VPN подключён: Нидерланды">
+      <svg class="off-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <svg class="on-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+    </button>
+    <span class="sep" aria-hidden="true"></span>
+    <button class="ib" aria-label="История и закладки"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></button>
+    <button class="ib" aria-label="Загрузки, идёт 1">
+      <svg class="ring" width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="11.5" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="72.3" stroke-dashoffset="26" stroke-linecap="round" transform="rotate(-90 13 13)"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 11l6 6 6-6M5 21h14"/></svg>
+    </button>
+    <button class="ib" aria-label="Расширения"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity=".3"/></svg></button>
+    <button class="ib" aria-label="Меню"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg><span class="badge" title="Есть обновление"></span></button>
+    <div class="loading-bar"><i></i></div>
+  </div>
+
+  <!-- Page -->
+  <div class="stage">
+    <div class="sheet">
+      <article class="fake">
+        <h1>Как браузер рисует страницу</h1>
+        <div class="meta">Документация, раздел «Рендеринг»</div>
+        <p>Браузер разбирает HTML в дерево документа, вычисляет стили, раскладывает блоки и рисует их слоями. Потом композитор собирает слои в кадр.</p>
+        <p>Если меняется только <a href="#" id="hover-link">трансформация или прозрачность</a>, раскладку можно не пересчитывать, и анимация остаётся плавной.</p>
+        <p>Всё остальное (шрифты, размеры, поток текста) запускает раскладку заново, и на больших страницах это заметно.</p>
+      </article>
+    </div>
+    <div class="float find">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input value="раскладк" aria-label="Найти на странице">
+      <span class="count">2 из 3</span>
+      <button class="ib" aria-label="Предыдущее"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m18 15-6-6-6 6"/></svg></button>
+      <button class="ib" aria-label="Следующее"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button>
+      <button class="ib" aria-label="Закрыть поиск" data-close="find-open"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="float status">https://docs.example.org/rendering/compositing</div>
+    <div class="float toast" role="status"><svg class="ok" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Закладка добавлена<button>Изменить</button></div>
+  </div>
+</div>
+
+<div class="controls">
+  <span>Показать:</span>
+  <button data-t="omni">Подсказки адреса</button>
+  <button data-t="find-open">Поиск на странице</button>
+  <button data-t="hovering">Ссылка под курсором</button>
+  <button data-t="loading">Загрузка</button>
+  <button data-t="toast-open">Уведомление</button>
+  <button data-t="vpn" aria-pressed="true">VPN включён</button>
+  <button data-t="incognito">Инкогнито</button>
+  <span style="margin-left:12px">Шрифт:</span>
+  <button data-font="inter" aria-pressed="true">Inter</button>
+  <button data-font="montserrat">Montserrat</button>
+</div>
+
+<script>
+const body = document.body, omni = document.getElementById('omni'), vpn = document.getElementById('vpn');
+const set = (t, on) => {
+  if (t === 'omni') omni.classList.toggle('focus', on);
+  else if (t === 'vpn') { vpn.classList.toggle('on', on); vpn.setAttribute('aria-pressed', on); vpn.title = on ? 'VPN подключён: Нидерланды' : 'VPN выключен'; }
+  else body.classList.toggle(t, on);
+  const b = document.querySelector(`[data-t="${t}"]`); if (b) b.setAttribute('aria-pressed', on);
+};
+const isOn = (t) => t === 'omni' ? omni.classList.contains('focus') : t === 'vpn' ? vpn.classList.contains('on') : body.classList.contains(t);
+document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => set(b.dataset.t, !isOn(b.dataset.t)));
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => set(b.dataset.close, false));
+document.querySelectorAll('[data-font]').forEach(b => b.onclick = () => {
+  body.classList.toggle('montserrat', b.dataset.font === 'montserrat');
+  document.querySelectorAll('[data-font]').forEach(x => x.setAttribute('aria-pressed', x === b));
+});
+vpn.onclick = () => set('vpn', !isOn('vpn'));
+omni.querySelector('.url').onclick = () => { set('omni', true); document.getElementById('omni-input').focus(); };
+document.addEventListener('mousedown', e => { if (!omni.contains(e.target) && !e.target.closest('[data-t="omni"]')) set('omni', false); });
+const link = document.getElementById('hover-link');
+link.onmouseenter = () => set('hovering', true); link.onmouseleave = () => set('hovering', false);
+document.querySelectorAll('.tab').forEach(t => t.onclick = e => { if (e.target.closest('.x')) return; document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t)); });
+document.addEventListener('keydown', e => { if (e.ctrlKey && e.key.toLowerCase() === 'f') { e.preventDefault(); set('find-open', true); } if (e.key === 'Escape') { set('find-open', false); set('omni', false); } });
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+diff --git a/ui/color/sys_color_mixer.cc b/ui/color/sys_color_mixer.cc
+index 688497bc97..1e750f600e 100644
+--- a/ui/color/sys_color_mixer.cc
++++ b/ui/color/sys_color_mixer.cc
+@@ -421,6 +421,87 @@ void AddSysColorMixer(ColorProvider* provider, const ColorProviderKey& key) {
+              key.user_color.has_value()) {
+     AddThemedSysColorOverrides(mixer, key);
+   }
++
++  // Visibility: the dark palette of Visibility 2.1 with its indigo accent. Applied to the default dark
++  // look only, so a user-picked theme colour still works.
++  const bool user_themed =
++      key.user_color_source == ColorProviderKey::UserColorSource::kAccent &&
++      key.user_color.has_value();
++  if (dark_mode && !user_themed) {
++    const SkColor matte = SkColorSetRGB(0x0D, 0x0E, 0x12);
++    const SkColor panel = SkColorSetRGB(0x15, 0x17, 0x1E);
++    const SkColor raised = SkColorSetRGB(0x1A, 0x1C, 0x24);
++    const SkColor raised2 = SkColorSetRGB(0x1E, 0x20, 0x2A);
++    const SkColor raised3 = SkColorSetRGB(0x26, 0x29, 0x36);
++    const SkColor line = SkColorSetRGB(0x23, 0x26, 0x2D);
++    const SkColor text = SkColorSetRGB(0xF8, 0xFA, 0xFC);
++    const SkColor text_soft = SkColorSetRGB(0xB4, 0xBE, 0xCC);
++    const SkColor text_muted = SkColorSetRGB(0x94, 0xA3, 0xB8);
++    const SkColor accent = SkColorSetRGB(0x81, 0x8C, 0xF8);
++    const SkColor accent_ink = SkColorSetRGB(0x0D, 0x0E, 0x12);
++    const SkColor accent_dim = SkColorSetRGB(0x26, 0x29, 0x4D);
++    const SkColor accent_soft = SkColorSetRGB(0xC7, 0xCB, 0xFB);
++
++    // Surfaces: menus, dialogs, bubbles and WebUI pages.
++    mixer[kColorSysSurface] = {panel};
++    mixer[kColorSysSurface1] = {raised};
++    mixer[kColorSysSurface2] = {SkColorSetRGB(0x17, 0x1A, 0x21)};
++    mixer[kColorSysSurface3] = {raised2};
++    mixer[kColorSysSurface4] = {SkColorSetRGB(0x1D, 0x21, 0x29)};
++    mixer[kColorSysSurface5] = {raised3};
++    mixer[kColorSysSurfaceContainerLowest] = {matte};
++    mixer[kColorSysSurfaceContainerLow] = {panel};
++    mixer[kColorSysSurfaceContainer] = {raised};
++    mixer[kColorSysSurfaceContainerHigh] = {raised2};
++    mixer[kColorSysSurfaceContainerHighest] = {raised3};
++    mixer[kColorSysSurfaceVariant] = {raised2};
++    mixer[kColorSysNeutralContainer] = {SkColorSetRGB(0x17, 0x1A, 0x21)};
++
++    // Browser chrome: frame, toolbar, address field.
++    mixer[kColorSysBase] = {panel};
++    mixer[kColorSysBaseContainer] = {matte};
++    mixer[kColorSysBaseContainerElevated] = {raised};
++    mixer[kColorSysBaseContainerOnSurface] = {raised};
++    mixer[kColorSysHeader] = {matte};
++    mixer[kColorSysHeaderInactive] = {SkColorSetRGB(0x0D, 0x0E, 0x12)};
++    mixer[kColorSysHeaderContainer] = {raised};
++    mixer[kColorSysHeaderContainerInactive] = {raised};
++    mixer[kColorSysOmniboxContainer] = {SkColorSetRGB(0x17, 0x1A, 0x21)};
++    mixer[kColorSysDivider] = {line};
++    mixer[kColorSysOnHeaderDivider] = {line};
++    mixer[kColorSysOnHeaderDividerInactive] = {line};
++    mixer[kColorSysOutline] = {SkColorSetRGB(0x4A, 0x50, 0x5C)};
++    mixer[kColorSysNeutralOutline] = {SkColorSetRGB(0x3A, 0x3F, 0x4A)};
++
++    // Text.
++    mixer[kColorSysOnSurface] = {text};
++    mixer[kColorSysOnSurfaceVariant] = {text_soft};
++    mixer[kColorSysOnSurfaceSecondary] = {text_soft};
++    mixer[kColorSysOnSurfaceSubtle] = {text_muted};
++    mixer[kColorSysOnSurfacePrimaryInactive] = {text};
++    mixer[kColorSysOnHeaderPrimary] = {text_muted};
++    mixer[kColorSysOnHeaderPrimaryInactive] = {text_muted};
++
++    // Accent: 2.1 indigo, used for what is active or focused.
++    mixer[kColorSysPrimary] = {accent};
++    mixer[kColorSysOnPrimary] = {accent_ink};
++    mixer[kColorSysPrimaryContainer] = {accent_dim};
++    mixer[kColorSysOnPrimaryContainer] = {accent_soft};
++    mixer[kColorSysOnSurfacePrimary] = {accent_soft};
++    mixer[kColorSysTonalContainer] = {accent_dim};
++    mixer[kColorSysOnTonalContainer] = {accent_soft};
++    mixer[kColorSysBaseTonalContainer] = {SkColorSetRGB(0x1A, 0x1C, 0x33)};
++    mixer[kColorSysOnBaseTonalContainer] = {accent_soft};
++    mixer[kColorSysTonalOutline] = {SkColorSetRGB(0x5B, 0x61, 0xB8)};
++    mixer[kColorSysInversePrimary] = {SkColorSetRGB(0x4F, 0x58, 0xD6)};
++    mixer[kColorSysStateFocusRing] = {accent};
++    mixer[kColorSysStateTextHighlight] = {accent};
++    mixer[kColorSysStateOnTextHighlight] = {accent_ink};
++    mixer[kColorSysStateRipplePrimary] = {SetAlpha({accent}, 0x40)};
++    mixer[kColorSysStateInactiveRing] = {SetAlpha({text_muted}, 0x8C)};
++    mixer[kColorSysStateHeaderHover] = {raised2};
++    mixer[kColorSysStateOnHeaderHover] = {text};
++  }
+ }
+ 
+ }  // namespace ui

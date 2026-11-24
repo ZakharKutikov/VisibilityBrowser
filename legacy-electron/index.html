@@ -1,0 +1,3638 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visibility Browser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="motion.css">
+  <style>
+    /* ── Core CSS Variables & Themes ── */
+    :root {
+      /* Base Theme (Modern iOS / Edge Dark Space Palette) */
+      --bg-titlebar: #121318;
+      --bg-primary: #0d0e12;
+      --bg-secondary: #15171e;
+      --bg-tertiary: #1e202a;
+      --bg-hover: rgba(255, 255, 255, 0.06);
+      --bg-active: rgba(255, 255, 255, 0.10);
+      
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: rgba(255, 255, 255, 0.45);
+      
+      --accent: #818cf8;
+      --accent-hover: #6366f1;
+      --accent-glow: rgba(129, 140, 248, 0.35);
+      --danger: #ff5555;
+      
+      --border: rgba(255, 255, 255, 0.08);
+      --border-bright: rgba(255, 255, 255, 0.14);
+      
+      --tab-width: 220px;
+      --status-h: 24px;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.6);
+      --accent-dim: rgba(129, 140, 248, 0.15);
+      --voice-accent: #6366f1;
+    }
+
+    /* Light Theme */
+    body.theme-light {
+      --bg-titlebar: #e8eaed;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f1f3f4;
+      --bg-tertiary: #ffffff;
+      --bg-hover: rgba(0, 0, 0, 0.06);
+      --bg-active: rgba(0, 0, 0, 0.1);
+      
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --text-muted: #9aa0a6;
+      
+      --accent: #1a73e8;
+      --accent-hover: #174ea6;
+      --danger: #d93025;
+      
+      --border: #dadce0;
+      --border-bright: #bdc1c6;
+    }
+
+    /* Dracula Theme */
+    body.theme-dracula {
+      --bg-titlebar: #282a36;
+      --bg-primary: #282a36;
+      --bg-secondary: #44475a;
+      --bg-tertiary: #6272a4;
+      --bg-hover: rgba(248, 248, 242, 0.1);
+      --bg-active: #6272a4;
+      
+      --text-primary: #f8f8f2;
+      --text-secondary: #E91E63;
+      --text-muted: #8be9fd;
+      
+      --accent: #bd93f9;
+      --accent-hover: #ff79c6;
+      --danger: #ff5555;
+      
+      --border: #6272a4;
+      --border-bright: #bd93f9;
+    }
+
+    /* Hacker Theme */
+    body.theme-hacker {
+      --bg-titlebar: #000000;
+      --bg-primary: #050505;
+      --bg-secondary: #0a0a0a;
+      --bg-tertiary: #111111;
+      --bg-hover: rgba(0, 255, 0, 0.15);
+      --bg-active: rgba(0, 255, 0, 0.25);
+      
+      --text-primary: #00ff00;
+      --text-secondary: #00cc00;
+      --text-muted: #006600;
+      
+      --accent: #00ff00;
+      --accent-hover: #00ffff;
+      --danger: #ff0000;
+      
+      --border: #004400;
+      --border-bright: #00ff00;
+    }
+
+    /* GOmp Studios Theme */
+    body.theme-gomp {
+      --bg-titlebar: #12141c;
+      --bg-primary: #0d0f16;
+      --bg-secondary: #151828;
+      --bg-tertiary: #1c2030;
+      --bg-hover: rgba(88, 101, 242, 0.12);
+      --bg-active: rgba(88, 101, 242, 0.2);
+      --text-primary: #eef0ff;
+      --text-secondary: #b4b9d9;
+      --text-muted: #7b82a8;
+      --accent: #5865f2;
+      --accent-hover: #7289ff;
+      --accent-glow: rgba(88, 101, 242, 0.35);
+      --danger: #ed4245;
+      --border: rgba(88, 101, 242, 0.18);
+      --border-bright: rgba(88, 101, 242, 0.32);
+    }
+
+    .tab-search-modal {
+      width: min(520px, 92vw);
+      padding: 0;
+      overflow: hidden;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-radius: 16px;
+    }
+    .tab-search-head {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-search-head input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+    .tab-search-head input:focus { border-color: var(--accent); }
+    #tab-search-list {
+      max-height: 360px;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    .tab-search-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .tab-search-item:hover, .tab-search-item.active {
+      background: var(--bg-hover);
+    }
+    .tab-search-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tab-search-item-url {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .setting-textarea {
+      width: 100%;
+      margin-top: 10px;
+      min-height: 72px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      resize: vertical;
+      outline: none;
+    }
+    body.theme-light .setting-textarea {
+      background: rgba(0,0,0,0.03);
+      border-color: rgba(0,0,0,0.1);
+    }
+    .setting-row-stack {
+      flex-direction: column;
+      align-items: stretch !important;
+    }
+
+    /* ── Compact & Modern Suggestions Dropdown ── */
+    #suggestions-dropdown {
+      position: fixed;
+      background: rgba(24, 24, 28, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      margin-top: 0;
+      z-index: 100000;
+      display: none;
+      overflow: hidden;
+      max-height: 380px;
+      overflow-y: auto;
+      padding: 6px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-sizing: border-box;
+    }
+    #suggestions-dropdown::-webkit-scrollbar { width: 4px; }
+    #suggestions-dropdown::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 10px; }
+
+    #extensions-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 16px;
+      width: 340px;
+      max-height: 540px;
+      height: auto;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      transform: translateY(-8px) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+      overflow: hidden;
+    }
+    #extensions-dropdown.show {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ext-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .ext-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #ext-tray { display: flex; gap: 4px; flex-wrap: wrap; padding: 4px 0; }
+    .ext-added-btn, .ext-nav-btn { 
+      background: rgba(255,255,255,0.06) !important; 
+      border: 1px solid rgba(255,255,255,0.08) !important;
+      border-radius: 8px !important;
+      width: 32px !important; height: 32px !important;
+      color: var(--text-primary) !important;
+      transition: all 0.15s ease !important;
+      font-size: 14px !important;
+    }
+    .ext-added-btn:hover, .ext-nav-btn:hover { background: rgba(255,255,255,0.12) !important; border-color: rgba(255,255,255,0.2) !important; }
+
+    #ext-list { flex: 1; overflow-y: auto; padding: 8px; }
+    #ext-list::-webkit-scrollbar { width: 4px; }
+    #ext-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+    .ext-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: transparent;
+      border: 1px solid transparent;
+      transition: background 0.15s ease, border-color 0.15s ease;
+      margin-bottom: 2px;
+      cursor: pointer;
+    }
+    .ext-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.06); }
+    .ext-icon-wrap {
+      width: 32px;
+      height: 32px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+      font-size: 15px;
+    }
+    .ext-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+    .ext-name { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 1px; }
+    .ext-desc { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ext-del { background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 6px; border-radius: 6px; transition: all 0.15s; display: flex; align-items: center; justify-content: center; opacity: 0.7; }
+    .ext-del:hover { background: rgba(255,76,76,0.15); color: #ff4c4c; opacity: 1; }
+    .ext-footer { padding: 10px 12px; border-top: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; display: flex; justify-content: flex-end; }
+    .ext-install-btn { padding: 12px; background: var(--accent); color: var(--bg-primary); border: none; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 13px; width: 100%; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .ext-install-btn:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15); }
+    .ext-badge { position: absolute; top: 2px; right: 2px; background: var(--danger); color: white; font-size: 9px; min-width: 12px; height: 12px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+      border-radius: 10px;
+      margin-bottom: 2px;
+      gap: 12px;
+    }
+
+    .suggestion-item:last-child { margin-bottom: 0; }
+    .suggestion-item:hover, .suggestion-item.selected {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(2px);
+    }
+
+    .suggestion-icon { 
+      font-size: 13px; 
+      color: var(--accent, #5865f2); 
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    .suggestion-item:hover .suggestion-icon,
+    .suggestion-item.selected .suggestion-icon {
+      transform: scale(1.06);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .suggestion-icon img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+    .suggestion-text { font-size: 13px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .suggestion-highlight { color: var(--accent, #a78bfa); font-weight: 700; }
+    .suggestion-url { font-size: 11px; color: var(--text-muted, rgba(255, 255, 255, 0.45)); opacity: 0.85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; font-weight: 400; }
+    
+    .suggestion-type { 
+      font-size: 10px; 
+      font-weight: 600; 
+      padding: 3px 8px; 
+      border-radius: 12px; 
+      flex-shrink: 0; 
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.15s ease;
+    }
+    .suggestion-type.type-history {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .suggestion-type.type-search {
+      background: rgba(88, 101, 242, 0.12);
+      color: #93c5fd;
+      border: 1px solid rgba(88, 101, 242, 0.22);
+    }
+
+    /* ── NTP Recent Visits ── */
+    #ntp-recent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 40px;
+    }
+    .ntp-recent-item {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .ntp-recent-item:hover {
+      transform: translateY(-5px);
+      background: var(--bg-hover);
+    }
+    .ntp-recent-favicon { font-size: 24px; margin-bottom: 10px; }
+    .ntp-recent-name { font-size: 13px; font-weight: 500; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+    .ntp-recent-title { color: var(--text-secondary); font-size: 14px; margin-top: 50px; font-weight: 600; }
+    /* Original variables that were not replaced, adjusted for new structure */
+    :root {
+      --incognito: #9c6ef5;
+      --incognito-dim: rgba(156,110,245,0.15);
+      --download-bg: #181820;
+      --titlebar-h: 28px;
+      --tabs-h: 30px;
+      --navbar-h: 36px;
+      --bookmarks-h: 30px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* ── Titlebar ───────────────────────────────────── */
+    #titlebar {
+      height: var(--titlebar-h);
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      -webkit-app-region: drag;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 100;
+    }
+    .tb-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 14px;
+    }
+    .tb-logo { font-size: 15px; }
+    .tb-brand {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+    .tb-incognito-pill {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: var(--incognito-dim);
+      border: 1px solid var(--incognito);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--incognito);
+    }
+    .tb-incognito-pill.show { display: flex; }
+
+    .window-controls {
+      display: flex;
+      -webkit-app-region: no-drag;
+      height: 100%;
+    }
+    .wc-btn {
+      width: 40px;
+      height: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 12px;
+      transition: background 0.15s, color 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wc-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .wc-btn.close:hover { background: var(--danger); color: #fff; }
+
+    /* ── Compact Tabs (Safari iOS style) ─────────────────────── */
+    #tabs-bar {
+      height: var(--tabs-h);
+      background: var(--bg-titlebar);
+      display: flex;
+      align-items: flex-end;
+      padding: 0 6px;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      overflow-y: hidden;
+      z-index: 10;
+    }
+    #tabs-bar::-webkit-scrollbar { display: none; }
+
+    .tab {
+      min-width: 36px;
+      max-width: 210px;
+      flex: 1 1 170px;
+      height: 30px;
+      border-radius: 8px 8px 0 0;
+      background: transparent;
+      border: none;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 7px;
+      cursor: pointer;
+      position: relative;
+      font-size: 12px;
+      transition: background 0.1s ease, color 0.1s ease;
+      margin: 0;
+    }
+    /* Vertical separator line */
+    .tab::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 7px;
+      bottom: 7px;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.12);
+      transition: opacity 0.1s ease;
+    }
+    body.theme-light .tab::after {
+      background: rgba(0, 0, 0, 0.12);
+    }
+    .tab:hover::after,
+    .tab.active::after,
+    .tab:hover + .tab::after,
+    .tab.active + .tab::after {
+      opacity: 0;
+    }
+    .tab:hover {
+      background: var(--bg-hover);
+    }
+    .tab.active {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      z-index: 5;
+      box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08) inset;
+    }
+    .tab.incognito-tab { border-top: 2px solid var(--incognito); }
+    .tab.voice-tab .tab-title::after {
+      content: 'VOICE';
+      display: inline-block;
+      margin-left: 5px;
+      padding: 1px 5px;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: #fff;
+      background: var(--voice-accent);
+      border-radius: 4px;
+      vertical-align: middle;
+    }
+    .tab-favicon { width: 16px; height: 16px; flex-shrink: 0; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+    .tab-favicon img { width: 16px; height: 16px; object-fit: contain; }
+    .tab-title {
+      flex: 1;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text-secondary);
+    }
+    .narrow-tab .tab-title { display: none; }
+    .tab.active .tab-title { color: var(--text-primary); }
+    .tab-audio { display: none; color: var(--accent); flex-shrink: 0; cursor: pointer; padding: 2px; border-radius: 4px; transition: background 0.15s, color 0.2s; line-height: 0; }
+    .tab-audio:hover { background: rgba(255,255,255,0.15); }
+    .tab-audio.muted { color: var(--text-muted); }
+    .tab-audio.muted svg { stroke: var(--text-muted); }
+    .tab-close {
+      width: 18px; height: 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 15px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tab-close:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+    .new-tab-btn {
+      min-width: 30px; height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 3px;
+      margin-left: 2px;
+      transition: background 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .new-tab-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    /* ── Compact Navbar ─────────────────────────────────────── */
+    #navbar {
+      height: var(--navbar-h);
+      background: var(--bg-tertiary);
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .nav-btn {
+      width: 28px; height: 28px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .nav-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .nav-btn:active { transform: scale(0.92); }
+    .nav-btn:disabled { opacity: 0.3; pointer-events: none; color: var(--text-muted); }
+    .nav-btn.active { color: var(--accent); background: var(--bg-active); }
+
+    .ext-nav-btn {
+      width: 28px !important;
+      height: 28px !important;
+      background: rgba(255, 255, 255, 0.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-radius: 8px !important;
+      transition: all 0.18s cubic-bezier(0.32, 0.72, 0, 1) !important;
+      color: var(--text-primary) !important;
+    }
+    .ext-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.12) !important;
+      border-color: rgba(255, 255, 255, 0.18) !important;
+      color: #fff !important;
+      transform: translateY(-1px);
+    }
+    .ext-nav-btn:active {
+      transform: scale(0.92) !important;
+    }
+
+    /* Compact URL Bar */
+    #url-bar-wrap {
+      flex: 1;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    #url-bar-wrap:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+    #url-bar-wrap:focus-within {
+      background: var(--bg-primary);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.25);
+    }
+    #url-bar-wrap.incognito { border-color: var(--incognito); }
+    #url-bar-wrap.incognito:focus-within { box-shadow: 0 0 0 3px var(--incognito-dim); }
+
+    #security-icon {
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      cursor: pointer;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      transition: background 0.15s, color 0.2s, transform 0.2s;
+    }
+    #security-icon:hover { background: var(--bg-hover); }
+    #security-icon.ssl-secure { color: #4caf50; }
+    #security-icon.ssl-secure svg { stroke: #4caf50; }
+    #security-icon.ssl-warning { color: #ff9800; }
+    #security-icon.ssl-warning svg { stroke: #ff9800; }
+    #security-icon.ssl-danger { color: #ff4c4c; }
+    #security-icon.ssl-danger svg { stroke: #ff4c4c; }
+    #security-icon.ssl-incognito { color: #a78bfa; }
+    #security-icon.ssl-incognito svg { stroke: #a78bfa; }
+    #security-icon.ssl-verified { color: #5865f2; }
+    #security-icon.ssl-verified svg { stroke: #5865f2; }
+    #url-bar.ssl-strikethrough {
+      text-decoration: line-through;
+      text-decoration-color: #ff4c4c;
+      text-decoration-thickness: 2px;
+    }
+
+    /* ─── Permission popup — fixed overlay, no page dimming ─── */
+    #permission-popup {
+      position: fixed;
+      z-index: 9999;
+      width: 340px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+      overflow: hidden;
+      transform-origin: 28px 0;
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity, border-radius;
+    }
+    #permission-popup.show {
+      pointer-events: auto;
+    }
+    .perm-header {
+      padding: 16px 18px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .perm-icon-circle {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .perm-header-text { flex: 1; min-width: 0; }
+    .perm-title {
+      font-size: 13px; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 4px;
+    }
+    .perm-origin {
+      font-size: 11px; color: var(--text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .perm-desc {
+      padding: 0 18px 14px;
+      font-size: 12px; color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .perm-actions {
+      padding: 0 14px 14px;
+      display: flex; gap: 8px;
+    }
+    .perm-btn {
+      flex: 1; padding: 9px 0; border-radius: 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--border); transition: all 0.15s;
+      text-align: center;
+    }
+    .perm-btn-allow {
+      background: var(--accent); color: var(--bg-primary); border-color: var(--accent);
+    }
+    .perm-btn-allow:hover { background: var(--accent-hover); }
+    .perm-btn-deny {
+      background: transparent; color: var(--text-secondary);
+    }
+    .perm-btn-deny:hover { background: var(--bg-hover); color: var(--text-primary); }
+    #url-bar {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+    }
+    #url-bar::placeholder { color: var(--text-muted); }
+    #url-reading-progress {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Zoom display */
+    #zoom-display {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      cursor: pointer;
+      padding: 2px 5px;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    #zoom-display:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    /* Divider */
+    .nav-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-bright);
+      flex-shrink: 0;
+    }
+
+    /* ── Bookmarks Bar ───────────────────────────────── */
+    #bookmarks-bar {
+      height: var(--bookmarks-h);
+      background: var(--bg-titlebar);
+      display: flex;
+      align-items: stretch;
+      padding: 0;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: height 0.2s, opacity 0.2s;
+    }
+    #bookmarks-bar.hidden { height: 0; opacity: 0; overflow: hidden; border-bottom: none; }
+
+    .bookmarks-bar-edge {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 0 4px;
+      border-right: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+    .bookmarks-bar-btn {
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+    .bookmarks-bar-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .bookmarks-scroll {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      overflow-x: auto;
+      overflow-y: hidden;
+      min-width: 0;
+      scroll-behavior: smooth;
+    }
+    .bookmarks-scroll::-webkit-scrollbar { height: 0; }
+
+    .bookmark-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 12px;
+      min-width: 0;
+      max-width: 200px;
+      height: 100%;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+      background: transparent;
+      border: none;
+      border-right: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      transition: color 0.12s, background 0.12s;
+    }
+    .bookmark-item::after {
+      content: '';
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transition: transform 0.15s ease;
+    }
+    .bookmark-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-primary);
+    }
+    .bookmark-item:hover::after { transform: scaleX(1); }
+
+    .bookmark-favicon {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.85;
+    }
+    .bookmark-favicon img { width: 14px; height: 14px; object-fit: contain; }
+    .bookmark-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .bookmarks-empty-hint {
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .bookmarks-empty-hint kbd {
+      font-size: 10px;
+      padding: 1px 5px;
+      border: 1px solid var(--border-bright);
+      border-radius: 4px;
+      background: var(--bg-hover);
+      margin: 0 3px;
+      font-family: inherit;
+    }
+
+    /* Bookmark context menu */
+    .bm-ctx-menu {
+      position: fixed;
+      z-index: 600;
+      min-width: 180px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 4px;
+      display: block;
+      opacity: 0;
+      transform: scale(0.96) translateY(-4px);
+      pointer-events: none;
+      transition: opacity 0.18s cubic-bezier(0.32, 0.72, 0, 1), transform 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+      transform-origin: top left;
+    }
+    .bm-ctx-menu.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+    .bm-ctx-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 12px;
+      font-family: inherit;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+    .bm-ctx-item:hover { background: var(--bg-hover); }
+    .bm-ctx-item.danger { color: var(--danger); }
+    .bm-ctx-sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+    /* ── Content Area ───────────────────────────────── */
+    #content {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bm-remove:hover { background: rgba(224,85,85,0.2); color: var(--danger); }
+
+    /* ── Sidebar (overlay — does NOT push content) ──── */
+    #sidebar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 380px;
+      height: 100%;
+      background: var(--bg-secondary);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 50;
+      transform: translateX(100%);
+      transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: -8px 0 32px rgba(0,0,0,0.3);
+    }
+    #sidebar.open { transform: translateX(0); }
+    #sidebar.closing { transform: translateX(100%); }
+
+    #sidebar-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 49;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.32s ease;
+    }
+    #sidebar-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sidebar-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .sidebar-close-btn {
+      width: 28px; height: 28px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar-close-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    .sidebar-tabs {
+      padding: 10px 16px;
+      flex-shrink: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    #sidebar-segments.ios-segmented {
+      margin: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .ios-segmented {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      padding: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 11px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    body.theme-light .ios-segmented {
+      background: rgba(0,0,0,0.06);
+      border-color: rgba(0,0,0,0.08);
+    }
+
+    .ios-seg-indicator {
+      position: absolute;
+      top: 3px;
+      left: 0;
+      height: calc(100% - 6px);
+      width: 0;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.28), 0 0 0 0.5px rgba(255,255,255,0.12);
+      transition: transform 0.42s cubic-bezier(0.34, 1.25, 0.64, 1), width 0.42s cubic-bezier(0.34, 1.25, 0.64, 1), opacity 0.15s ease;
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform, width;
+      opacity: 0;
+    }
+    .ios-seg-indicator.is-ready {
+      opacity: 1;
+    }
+    .ios-seg-indicator.no-transition {
+      transition: none !important;
+    }
+    body.theme-light .ios-seg-indicator {
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.06);
+    }
+
+    .ios-seg-btn {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      padding: 9px 12px;
+      background: transparent !important;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: color 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .ios-seg-btn.active {
+      color: var(--text-primary) !important;
+      opacity: 1 !important;
+    }
+    .ios-seg-btn:not(.active) {
+      color: var(--text-secondary) !important;
+      opacity: 0.92;
+    }
+    .ios-seg-btn:not(.active):hover {
+      color: var(--text-primary) !important;
+      opacity: 1;
+    }
+    .ios-seg-btn svg { opacity: 0.75; flex-shrink: 0; }
+    .ios-seg-btn.active svg { opacity: 1; }
+
+    .ios-segmented-scroll {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .ios-segmented-scroll .ios-seg-btn { flex: 0 0 auto; min-width: 0; padding: 8px 14px; }
+
+    .sidebar-tab-btn { /* legacy alias */ }
+
+    .sidebar-panels-viewport,
+    .settings-panels-viewport {
+      flex: 1 1 auto;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+      height: 0;
+    }
+
+    .sidebar-panel {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      opacity: 0;
+      transform: translateX(18px);
+      pointer-events: none;
+      transition:
+        opacity 0.36s cubic-bezier(0.32, 0.72, 0, 1),
+        transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .settings-panel {
+      position: absolute;
+      inset: 0;
+      display: block;
+      overflow-y: auto;
+      overflow-x: hidden;
+      opacity: 0;
+      transform: translateX(18px);
+      pointer-events: none;
+      transition:
+        opacity 0.36s cubic-bezier(0.32, 0.72, 0, 1),
+        transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+
+    .sidebar-panel.active,
+    .settings-panel.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    .sidebar-panel.ios-exit-left,
+    .settings-panel.ios-exit-left {
+      transform: translateX(-18px);
+      opacity: 0;
+    }
+    .sidebar-panel.ios-exit-right,
+    .settings-panel.ios-exit-right {
+      transform: translateX(18px);
+      opacity: 0;
+    }
+    .sidebar-panel.ios-enter-right,
+    .settings-panel.ios-enter-right {
+      transform: translateX(18px);
+      opacity: 0;
+    }
+    .sidebar-panel.ios-enter-left,
+    .settings-panel.ios-enter-left {
+      transform: translateX(-18px);
+      opacity: 0;
+    }
+
+    .sidebar-panel {
+      overflow: hidden;
+    }
+
+    .sidebar-search {
+      margin: 12px 16px 12px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.05);
+      border: none;
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      width: calc(100% - 32px);
+    }
+    body.theme-light .sidebar-search { background: rgba(0,0,0,0.05); }
+    .sidebar-search:focus { border-color: var(--accent); }
+    .sidebar-search::placeholder { color: var(--text-muted); }
+
+    .sidebar-list {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 0 8px;
+    }
+    .sidebar-list::-webkit-scrollbar { width: 5px; }
+    .sidebar-list::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+    .history-item, .bm-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      margin: 0;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: background 0.15s ease;
+    }
+    .ios-list-group {
+      margin: 0 14px 12px;
+      background: rgba(255,255,255,0.035);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    body.theme-light .ios-list-group {
+      background: rgba(0,0,0,0.03);
+      border-color: rgba(0,0,0,0.06);
+    }
+    .ios-list-group .history-item,
+    .ios-list-group .bm-item {
+      margin: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      border-radius: 0;
+    }
+    body.theme-light .ios-list-group .history-item,
+    body.theme-light .ios-list-group .bm-item {
+      border-bottom-color: rgba(0,0,0,0.06);
+    }
+    .ios-list-group .history-item:last-child,
+    .ios-list-group .bm-item:last-child {
+      border-bottom: none;
+    }
+    .history-item:hover, .bm-item:hover {
+      background: rgba(255,255,255,0.07);
+    }
+    .bm-item-icon, .hi-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      color: var(--accent);
+      font-size: 14px;
+    }
+    .bm-item-icon img, .hi-icon img { width: 16px; height: 16px; object-fit: contain; }
+    .hi-content { flex: 1; min-width: 0; }
+    .hi-title, .bm-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .hi-url, .bm-url {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      opacity: 0.8;
+    }
+    .hi-time { font-size: 10px; color: var(--text-muted); opacity: 0.6; margin-top: 2px; }
+    .hi-delete {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      opacity: 0.5;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hi-delete:hover {
+      opacity: 1;
+      background: rgba(255,76,76,0.15);
+      color: #ff4c4c;
+    }
+
+    .hi-delete, .bm-remove {
+      width: 26px; height: 26px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: background 0.15s, opacity 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .history-item:hover .hi-delete, .bm-item:hover .bm-remove { opacity: 1; }
+    .hi-delete:hover, .bm-remove:hover { background: rgba(224,85,85,0.2); color: var(--danger); }
+
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .sidebar-action-btn {
+      width: 100%;
+      padding: 9px;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s;
+    }
+    .btn-danger { background: rgba(224,85,85,0.15); color: var(--danger); }
+    .btn-danger:hover { background: rgba(224,85,85,0.25); }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      gap: 10px;
+      text-align: center;
+      animation: ios-group-in var(--motion-normal) var(--ease-ios) backwards;
+    }
+    .empty-state-icon { font-size: 40px; opacity: 0.3; }
+    .empty-state-text { font-size: 13px; }
+
+    /* ── Downloads Flyout (Edge-style Floating Popover) ──── */
+    #downloads-panel {
+      position: absolute;
+      top: calc(var(--titlebar-h) + var(--navbar-h) + 6px);
+      right: 16px;
+      width: 360px;
+      max-height: 540px;
+      height: auto;
+      background: rgba(22, 22, 26, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.92) translateY(-12px);
+      transform-origin: top right;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10000;
+      overflow: hidden;
+      transition: transform 0.32s cubic-bezier(0.34, 1.28, 0.64, 1), opacity 0.22s ease;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+    #downloads-panel.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .dl-header {
+      padding: 14px 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .dl-title {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+    }
+    .dl-header .nav-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .dl-header .nav-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+    .dl-list {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 460px;
+      padding: 12px 14px;
+    }
+    .dl-list::-webkit-scrollbar { width: 4px; }
+    .dl-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
+    .dl-item {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .dl-item:hover { 
+      background: rgba(255, 255, 255, 0.06); 
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+    .dl-item-header { display: flex; align-items: center; gap: 12px; }
+    .dl-icon {
+      width: 38px; height: 38px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+      transition: transform 0.2s ease;
+    }
+    .dl-item:hover .dl-icon {
+      transform: scale(1.06);
+    }
+    .dl-info { flex: 1; min-width: 0; }
+    .dl-filename {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+    .dl-status { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+    .dl-progress-bar { 
+      height: 4px; 
+      background: rgba(255, 255, 255, 0.08); 
+      border-radius: 6px; 
+      overflow: hidden; 
+      position: relative;
+    }
+    .dl-progress-fill { 
+      height: 100%; 
+      background: linear-gradient(90deg, var(--accent), #a78bfa); 
+      border-radius: 6px;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px rgba(88, 101, 242, 0.4);
+    }
+    .dl-actions { display: flex; gap: 8px; margin-top: 2px; width: 100%; }
+    .dl-action-btn {
+      flex: 1;
+      width: 100%;
+      padding: 7px 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      border-radius: 20px;
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .dl-action-btn:hover { 
+      background: rgba(255,255,255,0.12); 
+      color: #fff; 
+      border-color: rgba(255,255,255,0.22);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+    .dl-action-btn:active {
+      transform: translateY(0) scale(0.96);
+    }
+    .dl-sha256-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
+      padding: 3px 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 600;
+      font-family: monospace;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .dl-sha256-badge:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ── WebViews ────────────────────────────────────── */
+    #webviews-wrap {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-primary);
+      outline: none !important;
+      border: none !important;
+    }
+    webview {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 1;
+      pointer-events: none;
+      outline: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    webview:focus {
+      outline: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    webview.active { 
+      opacity: 1;
+      visibility: visible;
+      z-index: 10;
+      pointer-events: auto;
+      outline: none !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+
+    /* Loading bar */
+    #loading-bar {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+      z-index: 50;
+      transition: transform 0.3s, opacity 0.4s;
+      opacity: 0;
+      border-radius: 0 1px 1px 0;
+      transform-origin: left;
+      transform: scaleX(0);
+    }
+    #loading-bar.active { opacity: 1; } /* Removed infinite pulse animation to save CPU */
+
+    /* ── New Tab Page ────────────────────────────────── */
+    #new-tab-page {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background: radial-gradient(ellipse at 50% 25%, #181a28 0%, var(--bg-primary) 70%);
+      gap: 0;
+      z-index: 10;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 20px 40px;
+    }
+    #new-tab-page.active { display: flex; }
+
+    /* Hero: Clock + Greeting */
+    .ntp-hero-section {
+      text-align: center;
+      padding-top: 12vh;
+      margin-bottom: 32px;
+    }
+    .ntp-time {
+      font-size: 72px;
+      font-weight: 200;
+      color: var(--text-primary);
+      letter-spacing: -2px;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .ntp-greeting {
+      font-size: 20px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-top: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    /* Search */
+    .ntp-search {
+      display: flex;
+      align-items: center;
+      width: 580px;
+      max-width: 90vw;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 0 20px;
+      gap: 12px;
+      transition: all 0.22s cubic-bezier(0.32, 0.72, 0, 1);
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .ntp-search:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 10px 36px rgba(0, 0, 0, 0.5);
+    }
+    .ntp-search:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.3), 0 12px 40px rgba(0, 0, 0, 0.6);
+      background: rgba(22, 22, 28, 0.95);
+    }
+    .ntp-search input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+    }
+    .ntp-search input::placeholder { color: var(--text-muted); }
+    .ntp-search-icon { color: var(--text-muted); font-size: 16px; flex-shrink: 0; }
+
+    /* Shortcuts — Chrome-style circular icons */
+    .ntp-shortcuts {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 800px;
+      margin-bottom: 32px;
+    }
+    .ntp-shortcut {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: transform 0.15s;
+      text-decoration: none;
+      width: 72px;
+    }
+    .ntp-shortcut:hover { transform: scale(1.08); }
+    .ntp-shortcut-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .ntp-shortcut:hover .ntp-shortcut-icon {
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    }
+    .ntp-shortcut-name {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 72px;
+      text-align: center;
+    }
+
+    /* Weather widget — glassmorphism card */
+    .ntp-weather-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      margin-bottom: 40px;
+      min-width: 280px;
+      max-width: 360px;
+      transition: background 0.2s;
+    }
+    .ntp-weather-card:hover {
+      background: rgba(255, 255, 255, 0.09);
+    }
+    .ntp-weather-icon {
+      font-size: 40px;
+      flex-shrink: 0;
+    }
+    .ntp-weather-info { display: flex; flex-direction: column; gap: 2px; }
+    .ntp-weather-temp {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .ntp-weather-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .ntp-weather-city {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    .ntp-footer {
+      margin-top: auto;
+      padding: 20px 0;
+      font-size: 11px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    #status-bar { display: none; }
+
+    /* ── VPN Panel (iOS-style) ───────────────────────────────── */
+    #overlay-vpn .vpn-modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      width: 500px;
+      max-width: 95vw;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+    }
+    .vpn-modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .vpn-modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .vpn-hero {
+      margin: 16px 20px 0;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .vpn-hero.connected {
+      background: rgba(76, 175, 80, 0.08);
+      border-color: rgba(76, 175, 80, 0.3);
+    }
+    .vpn-hero-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+    .vpn-hero.connected .vpn-hero-icon { color: #4caf50; }
+    .vpn-hero-main { flex: 1; min-width: 0; }
+    .vpn-status-text { font-size: 14px; font-weight: 600; margin-bottom: 2px; color: var(--text-primary); }
+    .vpn-status-sub { font-size: 11.5px; color: var(--text-muted); line-height: 1.35; }
+    .vpn-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--text-muted); flex-shrink: 0;
+      display: inline-block; margin-right: 6px;
+    }
+    .vpn-dot.connected { background: #4caf50; }
+    .vpn-dot.connecting { background: #ff9800; }
+    #btn-tog-v3 {
+      padding: 8px 18px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    #btn-tog-v3.connect { background: var(--accent); color: #fff; }
+    #btn-tog-v3.connect:hover { opacity: 0.9; }
+    #btn-tog-v3.disconnect { background: var(--danger); color: #fff; }
+    #btn-tog-v3.disconnect:hover { opacity: 0.9; }
+    #btn-tog-v3:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .vpn-warning-disclaimer {
+      margin: 10px 20px 0;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .vpn-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .vpn-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .vpn-card-head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .vpn-card-head {
+      margin: 0 0 6px 4px;
+      padding: 0;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .vpn-head-actions { display: flex; gap: 6px; }
+    .vpn-mini-btn {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s, color 0.15s;
+    }
+    .vpn-mini-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    .vpn-card-body { padding: 0 14px 14px; }
+    .vpn-xray-notice {
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 152, 0, 0.08);
+      border: 1px solid rgba(255, 152, 0, 0.25);
+    }
+    .vpn-xray-notice-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffb74d;
+      margin-bottom: 6px;
+    }
+    .vpn-xray-notice-desc {
+      font-size: 11.5px;
+      line-height: 1.45;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .vpn-app-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .vpn-app-chip {
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 152, 0, 0.12);
+      color: #ffe0b2;
+      border: 1px solid rgba(255, 152, 0, 0.2);
+    }
+    .vpn-xray-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .vpn-row { display: flex; gap: 8px; align-items: stretch; width: 100%; }
+    .vpn-input {
+      width: 100%;
+      flex: 1;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      box-sizing: border-box;
+    }
+    .vpn-input:focus { border-color: var(--accent); background: rgba(255, 255, 255, 0.08); }
+    .vpn-input::placeholder { color: var(--text-muted); }
+    textarea.vpn-input { display: block; width: 100%; resize: vertical; min-height: 70px; line-height: 1.45; box-sizing: border-box; }
+    .vpn-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: opacity 0.15s;
+    }
+    .vpn-btn:hover { opacity: 0.9; }
+    .vpn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .vpn-btn.secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-bright);
+    }
+    .vpn-btn.secondary:hover { background: var(--bg-hover); }
+    .vpn-btn.download {
+      width: 100%;
+      background: #f59e0b;
+      color: #111;
+      font-weight: 700;
+    }
+    .vpn-server-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .vpn-server-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .vpn-server-item:hover { background: var(--bg-hover); }
+    .vpn-server-item.active {
+      border-color: rgba(76, 175, 80, 0.4);
+      background: rgba(76, 175, 80, 0.06);
+    }
+    .vpn-server-item.selected {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.08);
+    }
+    .vpn-server-type {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .vpn-server-name {
+      flex: 1;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vpn-server-info { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+    .vpn-server-del {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 3px 6px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+    .vpn-server-del:hover { background: rgba(224, 85, 85, 0.15); color: var(--danger); }
+    .vpn-empty {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 18px 8px;
+      line-height: 1.45;
+    }
+    .vpn-progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 10px;
+      display: none;
+    }
+    .vpn-progress.show { display: block; }
+    .vpn-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffb74d, #ff9800);
+      transition: width 0.3s;
+      width: 0%;
+    }
+    .vpn-ping-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .vpn-ping-badge.good { background: rgba(76, 175, 80, 0.18); color: #4caf50; }
+    .vpn-ping-badge.medium { background: rgba(255, 152, 0, 0.18); color: #ff9800; }
+    .vpn-ping-badge.bad { background: rgba(244, 67, 54, 0.18); color: var(--danger); }
+    .vpn-card-head-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 6px;
+      padding: 0 4px;
+    }
+    .vpn-mini-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .vpn-mini-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.2); }
+    .vpn-warning-disclaimer {
+      margin: 10px 18px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(255, 152, 0, 0.1);
+      border: 1px dashed rgba(255, 152, 0, 0.3);
+      color: #ffb74d;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+
+    body.theme-light #downloads-panel {
+      background: rgba(245, 245, 247, 0.95);
+      box-shadow: -8px 0 40px rgba(0, 0, 0, 0.12);
+    }
+    body.theme-light .dl-item {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.08);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    body.theme-light .dl-item:hover {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+    body.theme-light .dl-icon {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.06);
+    }
+    body.theme-light .dl-action-btn {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.08);
+      color: #1d1d1f;
+    }
+    body.theme-light .dl-action-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    body.theme-light .dl-sha256-badge {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.08);
+      color: #6e6e73;
+    }
+    body.theme-light .dl-sha256-badge:hover {
+      background: rgba(0, 0, 0, 0.08);
+      color: #1d1d1f;
+    }
+
+    body.theme-light #suggestions-dropdown {
+      background: rgba(255, 255, 255, 0.94);
+      border-color: rgba(0, 0, 0, 0.12);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    }
+    body.theme-light .suggestion-item:hover, body.theme-light .suggestion-item.selected {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    body.theme-light .suggestion-icon {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.06);
+    }
+    body.theme-light .suggestion-text {
+      color: #1d1d1f;
+    }
+    body.theme-light .suggestion-type.type-history {
+      background: rgba(0, 0, 0, 0.05);
+      color: #6e6e73;
+      border-color: rgba(0, 0, 0, 0.08);
+    }
+    body.theme-light .suggestion-type.type-search {
+      background: rgba(88, 101, 242, 0.12);
+      color: #4f46e5;
+      border-color: rgba(88, 101, 242, 0.2);
+    }
+
+
+
+    /* ── Find in Page ──────────────────────────────────── */
+    #find-bar {
+      position: fixed;
+      top: calc(var(--titlebar-h) + var(--tabs-h) + var(--navbar-h));
+      right: 0; width: 320px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-top: none; border-right: none;
+      border-radius: 0 0 0 10px;
+      padding: 7px 10px;
+      display: none; align-items: center; gap: 6px;
+      z-index: 8500;
+      box-shadow: -4px 4px 20px rgba(0,0,0,0.35);
+    }
+    #find-bar.show { display: flex; }
+    #find-input {
+      flex: 1; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;
+      padding: 4px 8px; color: var(--text-primary); font-size: 13px; outline: none;
+    }
+    #find-input:focus { border-color: var(--accent); }
+    #find-count { font-size: 11px; color: var(--text-muted); white-space: nowrap; min-width: 50px; text-align: center; }
+    .find-nav-btn {
+      width: 24px; height: 24px; background: transparent;
+      border: none; color: var(--text-secondary); cursor: pointer;
+      border-radius: 4px; font-size: 13px; display: flex; align-items: center; justify-content: center;
+    }
+    .find-nav-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    /* ── Safari / Edge Modern Tab Preview ──── */
+    #tab-preview {
+      position: fixed;
+      z-index: 100000;
+      width: 240px;
+      background: rgba(22, 22, 26, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+      display: none;
+      overflow: hidden;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+    .tab-preview-header {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tab-preview-fav {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tab-preview-fav img {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+    .tab-preview-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .tab-preview-title-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tab-preview-domain-text {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+    .tab-preview-body {
+      width: 100%;
+      height: 135px;
+      position: relative;
+      background: rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+    #tab-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .tab-preview-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      opacity: 0.4;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* ── Overlays (visibility handled by motion.css) ── */
+    .overlay {
+      /* position/z-index in motion.css */
+    }
+
+    .cert-modal {
+      width: 400px;
+      max-width: 92vw;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.55);
+    }
+    .cert-modal-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary);
+    }
+    .cert-modal-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    #cert-content {
+      max-height: min(70vh, 520px);
+      overflow-y: auto;
+      background: var(--bg-secondary);
+    }
+    #cert-content::-webkit-scrollbar { width: 6px; }
+    #cert-content::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+    #settings-modal {
+      --settings-inset: 22px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      width: 680px;
+      max-width: 95vw;
+      min-height: 560px;
+      max-height: 85vh;
+      height: min(720px, 85vh);
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 20px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .modal-title { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .modal-close-btn {
+      width: 32px; height: 32px;
+      background: var(--bg-hover);
+      border: none;
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    #settings-modal .modal-header {
+      padding: 26px var(--settings-inset) 18px;
+      border-bottom: none;
+    }
+
+    .settings-nav-wrap {
+      padding: 0 var(--settings-inset) 22px;
+      flex-shrink: 0;
+    }
+
+    #settings-segments.ios-segmented {
+      display: flex;
+      width: 100%;
+      min-height: 42px;
+      padding: 4px;
+      border-radius: 13px;
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.09);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    body.theme-light #settings-segments.ios-segmented {
+      background: rgba(0,0,0,0.05);
+      border-color: rgba(0,0,0,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+
+    #settings-segments .ios-seg-btn {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 10px 6px;
+      font-size: 11px;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+    #settings-segments .ios-seg-indicator {
+      top: 4px;
+      height: calc(100% - 8px);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.24);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 0.5px rgba(255,255,255,0.14);
+    }
+    body.theme-light #settings-segments .ios-seg-indicator {
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.06);
+    }
+
+    .settings-body {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 0;
+      overflow: hidden;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .settings-panels-viewport {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 0;
+      position: relative;
+    }
+
+    .settings-panel {
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 12px var(--settings-inset) 60px;
+    }
+    .settings-panel::-webkit-scrollbar { width: 6px; }
+    .settings-panel::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+    .setting-group {
+      margin-bottom: 28px;
+      padding: 0;
+      border: none;
+      background: transparent;
+    }
+    .setting-group:last-child {
+      margin-bottom: 8px;
+    }
+    .setting-group-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin: 0 0 6px 4px;
+      padding: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .setting-group-card {
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.09);
+      box-shadow:
+        0 1px 0 rgba(255,255,255,0.04) inset,
+        0 12px 32px rgba(0,0,0,0.18);
+    }
+    body.theme-light .setting-group-card {
+      background: #fff;
+      border-color: rgba(0,0,0,0.08);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+    }
+    .setting-group-card .setting-row,
+    .setting-group-card > #row-custom-ua {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin: 0;
+      border-radius: 0;
+      min-height: 54px;
+      transition: background 0.18s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    body.theme-light .setting-group-card .setting-row,
+    body.theme-light .setting-group-card > #row-custom-ua {
+      border-bottom-color: rgba(0,0,0,0.06);
+    }
+    .setting-group-card .setting-row:last-child,
+    .setting-group-card > #row-custom-ua:last-child {
+      border-bottom: none;
+    }
+    .setting-group-card .setting-row:active {
+      background: rgba(255,255,255,0.05);
+    }
+    body.theme-light .setting-group-card .setting-row:active {
+      background: rgba(0,0,0,0.035);
+    }
+    .setting-group-card .setting-select,
+    .setting-group-card .setting-input {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.1);
+    }
+    body.theme-light .setting-group-card .setting-select,
+    body.theme-light .setting-group-card .setting-input {
+      background: rgba(0,0,0,0.03);
+      border-color: rgba(0,0,0,0.1);
+    }
+    .setting-group-card .setting-row kbd {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 6px 11px;
+      font-size: 11px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: var(--text-secondary);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.05);
+    }
+    body.theme-light .setting-group-card .setting-row kbd {
+      background: rgba(0,0,0,0.04);
+      border-color: rgba(0,0,0,0.1);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.8);
+    }
+    body.theme-light .tab-close:hover {
+      background: rgba(0,0,0,0.1);
+      color: #333;
+    }
+    body.theme-light #new-tab-page {
+      background: #f5f5f7;
+    }
+    body.theme-light .history-item:hover,
+    body.theme-light .bm-item:hover {
+      background: rgba(0,0,0,0.04);
+    }
+    .setting-status {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .setting-status.muted {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .setting-status.success {
+      color: #57f287;
+    }
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 18px;
+      gap: 16px;
+      min-height: 54px;
+    }
+    .setting-row > div:first-child {
+      flex: 1;
+      min-width: 0;
+      padding-right: 8px;
+    }
+    .setting-label { font-size: 13px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
+    .setting-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .setting-input {
+      flex: 0 1 260px;
+      width: 260px;
+      max-width: 46%;
+      min-width: 140px;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 12px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .setting-input:focus { border-color: rgba(255,255,255,0.35); background: rgba(255, 255, 255, 0.1); }
+
+    .setting-select {
+      flex: 0 1 auto;
+      min-width: 140px;
+      max-width: 46%;
+      padding: 9px 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .setting-select:focus { border-color: rgba(255,255,255,0.35); background: rgba(255, 255, 255, 0.1); }
+    .setting-select option { background: var(--bg-secondary); color: var(--text-primary); }
+
+    .setting-row .btn-ghost,
+    .setting-row .vpn-btn,
+    .setting-row kbd {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-hover);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border: 1.5px solid var(--border-bright);
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      left: 3px; top: 2px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { background: var(--accent-dim); border-color: var(--accent); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(18px); background: var(--accent); }
+
+    .settings-footer {
+      padding: 18px var(--settings-inset);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+      min-height: 68px;
+      background: rgba(255,255,255,0.02);
+    }
+    .settings-about-line {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .settings-about-line strong { color: var(--text-secondary); font-weight: 600; }
+    .btn-primary {
+      padding: 9px 22px;
+      background: var(--accent);
+      border: none;
+      color: var(--bg-primary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { background: #4a7de0; box-shadow: 0 4px 16px var(--accent-glow); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-ghost {
+      padding: 9px 18px;
+      background: var(--bg-tertiary);
+      border: 1.5px solid var(--border-bright);
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    /* ── Delete history modal ────────────────────────── */
+    #delete-modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      width: 420px;
+      max-width: 95vw;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .dm-body { padding: 24px; }
+    .dm-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .dm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .dm-btn {
+      padding: 11px;
+      background: var(--bg-tertiary);
+      border: 1.5px solid var(--border-bright);
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.15s, border-color 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .dm-btn:hover { background: var(--bg-hover); border-color: var(--accent); }
+    .dm-btn.danger { background: rgba(224,85,85,0.12); border-color: transparent; color: var(--danger); grid-column: 1/-1; }
+    .dm-btn.danger:hover { background: rgba(224,85,85,0.22); }
+    .dm-cancel {
+      width: 100%;
+      padding: 10px;
+      background: var(--bg-tertiary);
+      border: none;
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dm-cancel:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    /* ── Notification / Toast ───────────────────────── */
+    #toast-container {
+      position: fixed;
+      bottom: calc(var(--status-h) + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-md);
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      box-shadow: var(--shadow-md);
+      pointer-events: auto;
+      transform-origin: 50% 100%;
+      opacity: 0;
+      transform: scale(0.92) translateY(10px);
+    }
+
+    /* ── Banner Notifications (Top Alerts) ───────────── */
+    /* ── Banner Notifications (Native Apple Glass Pill) ── */
+    #banner-container {
+      position: fixed;
+      top: calc(var(--titlebar-h) + var(--navbar-h) + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 100000;
+      pointer-events: none;
+      width: auto;
+      max-width: 440px;
+      padding: 0 16px;
+    }
+    .banner {
+      background: rgba(22, 24, 32, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 9px 12px;
+      font-size: 13px;
+      color: #f1f5f9;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      max-width: 100%;
+      pointer-events: auto;
+      animation: banner-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .banner-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .banner-icon svg {
+      width: 15px;
+      height: 15px;
+    }
+    .banner.success .banner-icon { color: #34d399; }
+    .banner.error .banner-icon { color: #f87171; }
+    .banner.warning .banner-icon { color: #fbbf24; }
+    .banner.info .banner-icon { color: #818cf8; }
+
+    .banner-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+    .banner-title {
+      font-weight: 600;
+      font-size: 12.5px;
+      color: #f8fafc;
+      line-height: 1.25;
+    }
+    .banner-message {
+      font-size: 11.5px;
+      color: #94a3b8;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+    .banner-close {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      cursor: pointer;
+      border-radius: 6px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: color 0.15s, background 0.15s;
+    }
+    .banner-close:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #f1f5f9;
+    }
+    .banner-close:active {
+      transform: scale(0.92);
+    }
+    @keyframes banner-in { 
+      0% { opacity: 0; transform: translateY(-16px) scale(0.92); } 
+      100% { opacity: 1; transform: translateY(0) scale(1); } 
+    }
+    @keyframes banner-out { 
+      0% { opacity: 1; transform: translateY(0) scale(1); } 
+      100% { opacity: 0; transform: translateY(-12px) scale(0.94); } 
+    }
+    .banner.persistent {
+      animation: banner-in 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ── Scrollbars ─────────────────────────────────── */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #404050; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ TITLEBAR ═══════════════════════ -->
+<div id="titlebar">
+  <div class="tb-left">
+    <span class="tb-logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+    <span class="tb-brand">Visibility</span>
+    <div class="tb-incognito-pill" id="incognito-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M2 15s3 4 10 4 10-4 10-4"/><circle cx="7" cy="10" r="3"/><circle cx="17" cy="10" r="3"/></svg>Инкогнито</div>
+  </div>
+  <div class="window-controls">
+    <button class="wc-btn" id="btn-minimize" title="Свернуть"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    <button class="wc-btn" id="btn-maximize" title="Развернуть"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg></button>
+    <button class="wc-btn close" id="btn-close" title="Закрыть"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TABS ═══════════════════════════ -->
+<div id="tabs-bar">
+  <button class="new-tab-btn" id="new-tab-btn" title="Новая вкладка (Ctrl+T)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+</div>
+
+<!-- ═══════════════════════ NAVBAR ═════════════════════════ -->
+<div id="navbar">
+  <button class="nav-btn" id="btn-back" title="Назад (Alt+←)" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+  <button class="nav-btn" id="btn-forward" title="Вперёд (Alt+→)" disabled><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  <button class="nav-btn" id="btn-reload" title="Обновить (F5)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+  <button class="nav-btn" id="btn-home" title="Домой"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></button>
+
+  <div id="url-bar-wrap" style="position:relative;">
+    <span id="security-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+    <input type="text" id="url-bar" placeholder="Поиск или введите URL..." autocomplete="off" spellcheck="false">
+    <span id="url-reading-progress"></span>
+  </div>
+  <div id="suggestions-dropdown"></div>
+  <div id="extensions-dropdown">
+    <div class="ext-header">
+      <div class="ext-title" id="ext-dropdown-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Расширения
+      </div>
+      <button class="nav-btn" id="btn-close-extensions"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div id="ext-list">
+      <div class="empty-state" style="padding:50px 20px;">
+        <div class="empty-state-icon" style="opacity:0.2;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        </div>
+        <div class="empty-state-text" id="ext-empty-text">Нет расширений</div>
+        <div id="ext-install-hint" style="font-size:11px; color:var(--text-muted); opacity:0.5; margin-top:4px;">Установите .visibility файл</div>
+      </div>
+    </div>
+    <div class="ext-footer">
+      <button class="ext-install-btn" id="btn-ext-install">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Установить из файла
+      </button>
+    </div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <button class="nav-btn" id="btn-bookmark" title="Добавить закладку (Ctrl+D)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>
+  <button class="nav-btn" id="btn-incognito" title="Инкогнито (Ctrl+Shift+N)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button>
+  <button class="nav-btn" id="btn-vpn" title="VPN"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></button>
+  <button class="nav-btn" id="btn-sidebar" title="История / Закладки (Ctrl+H)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></button>
+  <button class="nav-btn" id="btn-downloads" title="Загрузки (Ctrl+J)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+  <button class="nav-btn" id="btn-extensions" title="Расширения"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.3"/></svg></button>
+  <button class="nav-btn" id="btn-settings" title="Настройки"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+
+  <div class="nav-divider"></div>
+
+  <button class="nav-btn" id="btn-zoom-out" title="Уменьшить (Ctrl+-)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+  <span id="zoom-display" title="Сбросить масштаб (Ctrl+0)">100%</span>
+  <button class="nav-btn" id="btn-zoom-in" title="Увеличить (Ctrl+=)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
+</div>
+
+<!-- ═══════════════════════ BOOKMARKS BAR ═════════════════ -->
+<div id="bookmarks-bar">
+  <div class="bookmarks-bar-edge">
+    <button class="bookmarks-bar-btn" id="btn-bookmarks-all" title="Все закладки"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+    <button class="bookmarks-bar-btn" id="btn-bookmarks-add" title="Добавить текущую страницу (Ctrl+D)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+  </div>
+  <div class="bookmarks-scroll" id="bookmarks-scroll"></div>
+</div>
+<div class="bm-ctx-menu" id="bm-ctx-menu"></div>
+
+<!-- ═══════════════════════ CONTENT ════════════════════════ -->
+<div id="content">
+  <!-- WebViews -->
+  <div id="webviews-wrap">
+    <div id="loading-bar"></div>
+    <!-- New Tab Page -->
+    <div id="new-tab-page" class="active">
+      <!-- Clock + Greeting -->
+      <div class="ntp-hero-section">
+        <div class="ntp-time" id="ntp-clock">--:--</div>
+        <div class="ntp-greeting" id="ntp-greeting">Добрый день</div>
+      </div>
+
+      <!-- Search -->
+      <div class="ntp-search">
+        <span class="ntp-search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        <input type="text" id="ntp-search-input" placeholder="Поиск в интернете или URL...">
+      </div>
+
+      <!-- Shortcuts -->
+      <div class="ntp-shortcuts" id="ntp-shortcuts-grid">
+        <div class="ntp-shortcut" data-url="https://google.com">
+          <span class="ntp-shortcut-icon" style="background:#fff"><svg width="22" height="22" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.998 23.998 0 0 0 0 24c0 3.77.9 7.35 2.56 10.51l7.97-5.92z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.92C6.51 42.62 14.62 48 24 48z"/></svg></span>
+          <span class="ntp-shortcut-name">Google</span>
+        </div>
+        <div class="ntp-shortcut" data-url="https://youtube.com">
+          <span class="ntp-shortcut-icon" style="background:#FF0000"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.87.55 9.38.55 9.38.55s7.5 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></span>
+          <span class="ntp-shortcut-name">YouTube</span>
+        </div>
+        <div class="ntp-shortcut" data-url="https://github.com">
+          <span class="ntp-shortcut-icon" style="background:#24292f"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span>
+          <span class="ntp-shortcut-name">GitHub</span>
+        </div>
+        <div class="ntp-shortcut" data-url="https://vk.com">
+          <span class="ntp-shortcut-icon" style="background:#0077FF"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12.77 18.15h1.21s.37-.04.55-.24c.18-.18.17-.53.17-.53s-.02-1.63.73-1.87c.74-.24 1.7 1.59 2.71 2.3.77.53 1.35.41 1.35.41l2.72-.04s1.42-.09.75-1.2c-.06-.09-.39-.82-2.01-2.32-1.7-1.57-1.47-1.31.57-4.02 1.24-1.65 1.74-2.65 1.59-3.08-.15-.41-1.05-.3-1.05-.3l-3.06.02s-.23-.03-.4.07c-.16.1-.27.33-.27.33s-.48 1.28-1.12 2.37c-1.35 2.3-1.89 2.42-2.12 2.28-.52-.33-.39-1.34-.39-2.06 0-2.24.34-3.17-.66-3.41-.33-.08-.57-.13-1.42-.14-.57 0-1.83.02-2.3.3-.32.18-.56.59-.41.61.19.03.62.12.84.43.29.41.28 1.3.28 1.3s.17 2.63-.39 2.96c-.38.23-.91-.24-2.04-2.38-.58-1.09-1.01-2.3-1.01-2.3s-.08-.2-.23-.31c-.18-.13-.44-.17-.44-.17l-2.91.02s-.44.01-.6.2c-.14.17-.01.52-.01.52s2.24 5.24 4.78 7.88c2.33 2.42 4.97 2.26 4.97 2.26z"/></svg></span>
+          <span class="ntp-shortcut-name">VK</span>
+        </div>
+        <div class="ntp-shortcut" data-url="https://web.telegram.org">
+          <span class="ntp-shortcut-icon" style="background:#26A5E4"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span>
+          <span class="ntp-shortcut-name">Telegram</span>
+        </div>
+        <div class="ntp-shortcut" data-url="https://reddit.com">
+          <span class="ntp-shortcut-icon" style="background:#FF4500"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 0-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.203-.094z"/></svg></span>
+          <span class="ntp-shortcut-name">Reddit</span>
+        </div>
+        <div class="ntp-shortcut" data-url="https://wikipedia.org">
+          <span class="ntp-shortcut-icon" style="background:#fff"><svg width="22" height="22" viewBox="0 0 24 24" fill="#000"><path d="M12.09 13.12h-.09v-.07c1.47-4.07 2.18-6.11 3.57-9.77h.88l.07.15c-.42.08-.61.42-.76.85L12.54 14h-.06l-1.62-3.84L9.1 14.1h-.06L5.77 4.28c-.14-.39-.37-.8-.84-.83l.07-.15h2.97l.07.15c-.42.04-.7.27-.55.76L9.5 9.94l1.4-3.52-.59-1.58a1.39 1.39 0 0 0-.75-.56l.07-.15h3l.06.15c-.42.08-.67.35-.56.77l.96 2.5zm-3.23 6.36h-.08l-.07-.15c.44-.05.73-.29.56-.77l-.15-.38c-.41-1.02-.55-1.38-.75-1.92L6.79 20.1h-.06L3.18 10.62c-.11-.31-.35-.59-.67-.64l.07-.16h2.86l.06.15c-.43.08-.72.3-.56.77l2.46 7.16 1.05-2.66-1.24-3.18-.17-.41c-.12-.34-.36-.63-.7-.68l.07-.16h2.84l.06.15c-.45.03-.66.32-.55.73l.97 2.62 1.02-2.62c.12-.36-.06-.62-.53-.73l.06-.15h1.77l.07.16c-.31.05-.53.33-.64.62L8.86 19.48zm10.26-6.36h-.07v-.07c1.47-4.07 2.22-6.15 3.62-9.84h.81l.07.15c-.42.08-.62.42-.77.85l-3.22 9.72h-.06l-1.62-3.84L16.11 14.1h-.06l-1.08-2.87c-.12-.33-.36-.62-.69-.68l.06-.15h2.85l.06.15c-.44.04-.67.32-.55.73l.6 1.6 1.03-2.64c.13-.38-.04-.62-.54-.69l.06-.15h1.78l.07.16c-.31.05-.53.33-.65.62l-1.36 3.52.93 2.33z"/></svg></span>
+          <span class="ntp-shortcut-name">Wikipedia</span>
+        </div>
+        <div class="ntp-shortcut" data-url="https://dinorunner.com/ru/">
+          <span class="ntp-shortcut-icon" style="background:#535353"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M21 17h-2v-2h-2v2h-2v-4h-2v4h-2V9h-2v8H7V7H5v10H3v2h18v-2zM17 5h2v2h2v2h-2v2h-2V9h-2V7h2V5z"/></svg></span>
+          <span class="ntp-shortcut-name" id="ntp-dino-name">Dino</span>
+        </div>
+      </div>
+
+      <!-- Weather -->
+      <div class="ntp-weather-card" id="ntp-weather">
+        <div class="ntp-weather-icon" id="ntp-weather-icon">🌤️</div>
+        <div class="ntp-weather-info">
+          <div class="ntp-weather-temp" id="ntp-weather-temp">--°C</div>
+          <div class="ntp-weather-desc" id="ntp-weather-desc">Загрузка погоды...</div>
+          <div class="ntp-weather-city" id="ntp-weather-city"></div>
+        </div>
+      </div>
+
+      <!-- Recent Visits -->
+      <div class="ntp-recent-title">Недавние посещения</div>
+      <div id="ntp-recent-grid"></div>
+
+      <!-- Footer -->
+      <div class="ntp-footer">Visibility Browser v2.1.0</div>
+    </div>
+    <!-- webviews injected by JS -->
+  </div>
+
+  <!-- ═══ SIDEBAR ═══════════════════════════════════ -->
+  <div id="sidebar-backdrop"></div>
+  <div id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>История и закладки</div>
+      <button class="sidebar-close-btn" id="btn-close-sidebar" title="Закрыть"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="sidebar-tabs">
+      <div class="ios-segmented" id="sidebar-segments">
+        <button class="sidebar-tab-btn ios-seg-btn active" data-panel="history"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>История</button>
+        <button class="sidebar-tab-btn ios-seg-btn" data-panel="bookmarks"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Закладки</button>
+      </div>
+    </div>
+
+    <div class="sidebar-panels-viewport">
+    <!-- History Panel -->
+    <div class="sidebar-panel active" id="panel-history">
+      <input type="text" class="sidebar-search" id="history-search" placeholder="Поиск в истории...">
+      <div class="sidebar-list" id="history-list"></div>
+      <div class="sidebar-footer">
+        <button class="sidebar-action-btn btn-danger" id="btn-clear-history"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>Очистить историю</button>
+      </div>
+    </div>
+
+    <!-- Bookmarks Panel -->
+    <div class="sidebar-panel" id="panel-bookmarks">
+      <input type="text" class="sidebar-search" id="bookmarks-search" placeholder="Поиск в закладках...">
+      <div class="sidebar-list" id="bookmarks-list"></div>
+      <div class="sidebar-footer">
+        <span id="bookmarks-count-label" style="font-size:11px;color:var(--text-muted);padding:0 4px;">0 закладок</span>
+      </div>
+    </div>
+    </div><!-- sidebar-panels-viewport -->
+  </div><!-- sidebar -->
+</div><!-- content -->
+<div id="status-bar">
+  <span id="status-url"></span>
+  <span id="status-incognito" class="status-incognito"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M2 15s3 4 10 4 10-4 10-4"/><circle cx="7" cy="10" r="3"/><circle cx="17" cy="10" r="3"/></svg>Инкогнито</span>
+  <span id="status-zoom">100%</span>
+</div>
+
+<!-- ═══════════════════════ DOWNLOADS PANEL ════════════════ -->
+<div id="downloads-panel">
+  <div class="dl-header">
+    <div class="dl-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Загрузки
+    </div>
+    <button class="nav-btn" id="btn-close-downloads"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="dl-list" id="dl-list">
+    <div class="empty-state" style="padding:50px 20px;">
+      <div class="empty-state-icon" style="opacity:0.2;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </div>
+      <div class="empty-state-text">Нет загрузок</div>
+      <div style="font-size:11px; color:var(--text-muted); opacity:0.5; margin-top:4px;">Загруженные файлы появятся здесь</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ OVERLAYS ═══════════════════════ -->
+<!-- Settings -->
+<div class="overlay" id="overlay-settings">
+  <div id="settings-modal" class="overlay-card">
+    <div class="modal-header">
+      <div class="modal-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Настройки</div>
+      <button class="modal-close-btn" id="btn-close-settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="settings-nav-wrap">
+      <div class="ios-segmented" id="settings-segments">
+        <button class="stab ios-seg-btn active" data-stab="general">Основные</button>
+        <button class="stab ios-seg-btn" data-stab="privacy">Приватность</button>
+        <button class="stab ios-seg-btn" data-stab="appearance">Вид</button>
+        <button class="stab ios-seg-btn" data-stab="shortcuts">Клавиши</button>
+        <button class="stab ios-seg-btn" data-stab="vpn">VPN</button>
+      </div>
+    </div>
+    <div class="settings-body">
+      <div class="settings-panels-viewport">
+      <!-- General -->
+      <div class="settings-panel active" id="stab-general">
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-nav-title">Навигация</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label">Language / Язык</div><div class="setting-desc">Browser language / Язык интерфейса</div></div>
+              <select class="setting-select" id="set-language">
+                <option value="ru">Русский</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <div class="setting-row" id="row-default-browser">
+              <div><div class="setting-label">Браузер по умолчанию</div><div class="setting-desc">Использовать Visibility для открытия всех ссылок</div></div>
+              <button class="vpn-btn ghost" id="set-default-browser">Сделать основным</button>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label">Домашняя страница</div><div class="setting-desc">URL, открываемый по кнопке «Домой»</div></div>
+              <input type="text" class="setting-input" id="set-homepage" placeholder="https://google.com">
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label">Недавние на новой вкладке</div><div class="setting-desc">Отображать последние посещенные сайты</div></div>
+              <label class="toggle"><input type="checkbox" id="set-ntp-recent" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label">Ярлыки на новой вкладке</div><div class="setting-desc">Отображать быстрые ссылки</div></div>
+              <label class="toggle"><input type="checkbox" id="set-ntp-shortcuts" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label">Поисковая система</div></div>
+              <select class="setting-select" id="set-search-engine">
+                <option value="https://www.google.com/search?q=">Google</option>
+                <option value="https://www.bing.com/search?q=">Bing</option>
+                <option value="https://duckduckgo.com/?q=">DuckDuckGo</option>
+                <option value="https://yandex.ru/search/?text=">Яндекс</option>
+                <option value="https://search.brave.com/search?q=">Brave Search</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-restore-session-label">Восстанавливать вкладки</div><div class="setting-desc" id="set-restore-session-desc">Открывать вкладки с прошлого сеанса при запуске</div></div>
+              <label class="toggle"><input type="checkbox" id="set-restore-session" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-ua-title">User Agent</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label">Режим User Agent</div></div>
+              <select class="setting-select" id="set-ua-mode">
+                <option value="chrome">Chrome (по умолчанию)</option>
+                <option value="firefox">Firefox</option>
+                <option value="safari">Safari</option>
+                <option value="custom">Свой...</option>
+              </select>
+            </div>
+            <div class="setting-row" id="row-custom-ua" style="display:none;">
+              <div><div class="setting-label">Свой User Agent</div></div>
+              <input type="text" class="setting-input" id="set-custom-ua" placeholder="Mozilla/5.0 ...">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Privacy -->
+      <div class="settings-panel" id="stab-privacy">
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-privacy-title">История и данные</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label">Очистить cookies и кэш</div><div class="setting-desc">Удалит данные основной сессии</div></div>
+              <button class="btn-ghost" id="btn-clear-cookies">Очистить</button>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-clear-history-label">Очистить всю историю</div></div>
+              <button class="btn-ghost" style="color:var(--danger);" id="btn-clear-all-history">Удалить</button>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-export-bookmarks-label">Экспорт закладок</div><div class="setting-desc" id="set-export-bookmarks-desc">Сохранить закладки в JSON-файл</div></div>
+              <button class="btn-ghost" id="btn-export-bookmarks">Экспорт</button>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-import-bookmarks-label">Импорт закладок</div><div class="setting-desc" id="set-import-bookmarks-desc">Загрузить закладки из JSON-файла</div></div>
+              <button class="btn-ghost" id="btn-import-bookmarks">Импорт</button>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-import-chrome-label">Импорт из Chrome</div><div class="setting-desc" id="set-import-chrome-desc">Загрузить закладки из профиля Google Chrome</div></div>
+              <button class="btn-ghost" id="btn-import-chrome">Chrome</button>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-adblock-label">Блокировка рекламы</div><div class="setting-desc" id="set-adblock-desc">Блокировать известные рекламные домены</div></div>
+              <label class="toggle"><input type="checkbox" id="set-adblock"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-trusted-title">GOmp SSL</div>
+          <div class="setting-group-card">
+            <div class="setting-row setting-row-stack">
+              <div><div class="setting-label" id="set-trusted-label">Доверенные домены</div><div class="setting-desc" id="set-trusted-desc">Дополнительные домены для бейджа GOmp Studios (по одному на строку)</div></div>
+              <textarea class="setting-textarea" id="set-trusted-domains" placeholder="example.com"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-webrtc-title">Голос и видео (WebRTC)</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-webrtc-label">Режим голосовых вкладок</div><div class="setting-desc" id="set-webrtc-desc">Discord, Meet, Zoom и другие открываются с полной поддержкой микрофона и камеры</div></div>
+              <span class="setting-status success" id="set-webrtc-status">Активен</span>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-permissions-title">Разрешения сайтов</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label">Камера и микрофон</div><div class="setting-desc">Запрашивать разрешение при обращении</div></div>
+              <span class="setting-status perm-on-request-label">По запросу</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label">Геолокация</div><div class="setting-desc">Запрашивать разрешение при обращении</div></div>
+              <span class="setting-status perm-on-request-label">По запросу</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label">Уведомления</div><div class="setting-desc">Запрашивать разрешение при обращении</div></div>
+              <span class="setting-status perm-on-request-label">По запросу</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-permissions-screenshare">Демонстрация экрана</div><div class="setting-desc" id="set-permissions-screenshare-desc">Запрашивать разрешение при обращении</div></div>
+              <span class="setting-status perm-on-request-label">По запросу</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-permissions-reset">Сбросить все разрешения</div><div class="setting-desc" id="set-permissions-reset-desc">Все сайты будут запрашивать разрешения заново</div></div>
+              <button class="btn-ghost" id="btn-reset-permissions">Сбросить</button>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-incognito-title">Инкогнито</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-incognito-tabs">Инкогнито-вкладки</div><div class="setting-desc" id="set-incognito-desc">Отдельная сессия, без истории, без cookies</div></div>
+              <span class="setting-status muted">Ctrl+Shift+N</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Appearance -->
+      <div class="settings-panel" id="stab-appearance">
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-appearance-title">Внешний вид</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-theme-label">Тема оформления</div><div class="setting-desc" id="set-theme-desc">Управляйте цветами браузера</div></div>
+              <select class="setting-select" id="set-theme">
+                <option value="dark">Тёмная (по умолчанию)</option>
+                <option value="light">Светлая</option>
+                <option value="dracula">Dracula</option>
+                <option value="hacker">Хакер</option>
+                <option value="gomp">GOmp Studios</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-bookmarks-bar-label">Панель закладок</div><div class="setting-desc" id="set-bookmarks-bar-desc">Отображать под адресной строкой</div></div>
+              <label class="toggle"><input type="checkbox" id="set-bookmarks-bar" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-zoom-title">Масштаб по умолчанию</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-zoom-label">Масштаб страниц</div><div class="setting-desc" id="set-zoom-desc">Масштаб содержимого веб-страниц</div></div>
+              <select class="setting-select" id="set-zoom">
+                <option value="0.75">75%</option>
+                <option value="0.9">90%</option>
+                <option value="1.0" selected>100%</option>
+                <option value="1.1">110%</option>
+                <option value="1.25">125%</option>
+                <option value="1.5">150%</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-ui-scale-label">Масштаб интерфейса</div><div class="setting-desc" id="set-ui-scale-desc">Размер элементов браузера (вкладки, панели, кнопки)</div></div>
+              <select class="setting-select" id="set-ui-scale">
+                <option value="0.8">80%</option>
+                <option value="0.9">90%</option>
+                <option value="1.0" selected>100%</option>
+                <option value="1.1">110%</option>
+                <option value="1.2">120%</option>
+                <option value="1.3">130%</option>
+                <option value="1.5">150%</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-about-title">О браузере</div>
+          <div class="setting-group-card">
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-about-name">Visibility Browser</div><div class="setting-desc" id="set-about-desc">Современный браузерный движок на Electron + Chromium</div></div>
+              <span id="settings-version-badge" style="font-size:12px;font-weight:700;color:var(--accent);">v2.1.0</span>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-label" id="set-updates-label">Обновления</div><div class="setting-desc" id="set-updates-desc">Проверить наличие новой версии</div></div>
+              <button class="btn-ghost" id="btn-check-updates">Проверить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Shortcuts -->
+      <div class="settings-panel" id="stab-shortcuts">
+        <div class="setting-group">
+          <div class="setting-group-title" id="sh-tabs">Вкладки</div>
+          <div class="setting-group-card">
+            <div class="setting-row"><div class="setting-label" id="sh-new-tab">Новая вкладка</div><kbd>Ctrl+T</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-close-tab">Закрыть вкладку</div><kbd>Ctrl+W</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-next-tab">Следующая вкладка</div><kbd>Ctrl+Tab</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-reopen-tab">Восстановить закрытую</div><kbd>Ctrl+Shift+T</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-tab-search">Поиск вкладок</div><kbd>Ctrl+Shift+A</kbd></div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="sh-nav">Навигация</div>
+          <div class="setting-group-card">
+            <div class="setting-row"><div class="setting-label" id="sh-url-bar">Адресная строка</div><kbd>Ctrl+L</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-reload">Обновить</div><kbd>F5 / Ctrl+R</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-force-reload">Принудительно обновить</div><kbd>Ctrl+Shift+R</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-back-forward">Назад / Вперёд</div><kbd>Alt+←/→</kbd></div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="sh-tools">Инструменты</div>
+          <div class="setting-group-card">
+            <div class="setting-row"><div class="setting-label" id="sh-history">История</div><kbd>Ctrl+H</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-downloads">Загрузки</div><kbd>Ctrl+J</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-incognito">Инкогнито</div><kbd>Ctrl+Shift+N</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-bookmark">Закладка</div><kbd>Ctrl+D</kbd></div>
+            <div class="setting-row"><div class="setting-label" id="sh-zoom">Масштаб +/−/сброс</div><kbd>Ctrl+= / Ctrl+- / Ctrl+0</kbd></div>
+          </div>
+        </div>
+      </div>
+      <!-- VPN -->
+      <div class="settings-panel" id="stab-vpn">
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-vpn-title">VPN и маршрутизация</div>
+          <div class="setting-group-card">
+            <div class="setting-row setting-row-stack">
+              <div>
+                <div class="setting-label" id="set-vpn-sub-label">URL подписки</div>
+                <div class="setting-desc" id="set-vpn-sub-desc">Clash / V2Ray subscription — импорт серверов</div>
+              </div>
+              <div style="display:flex;gap:8px;width:100%;">
+                <input type="text" class="setting-input" id="set-vpn-sub-url" placeholder="https://..." style="flex:1;">
+                <button class="btn-ghost" id="btn-set-vpn-import-sub">Импорт</button>
+              </div>
+            </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label" id="set-vpn-routing-label">Режим маршрутизации</div>
+              <div class="setting-desc" id="set-vpn-routing-desc">Раздельный: заблокированные в РФ сервисы через VPN, остальное напрямую</div>
+            </div>
+            <select class="setting-select" id="set-vpn-routing-mode">
+              <option value="split-ru">Раздельный (РФ)</option>
+              <option value="full">Весь трафик через VPN</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label" id="set-vpn-autoconnect-label">Подключать при запуске</div>
+              <div class="setting-desc" id="set-vpn-autoconnect-desc">Автоматически включать VPN после старта браузера</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="set-vpn-auto-connect"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label" id="set-vpn-panel-label">Управление серверами</div>
+              <div class="setting-desc" id="set-vpn-panel-desc">Подключение, список серверов и загрузка Xray-core</div>
+            </div>
+            <input type="hidden" id="set-vpn-panel" value="">
+            <button class="btn-ghost" id="btn-open-vpn-from-settings">Открыть VPN</button>
+          </div>
+          </div>
+        </div>
+        <div class="setting-group">
+          <div class="setting-group-title" id="set-vpn-custom-title">Дополнительные домены</div>
+          <div class="setting-group-card">
+            <div class="setting-row setting-row-stack">
+              <div>
+                <div class="setting-label" id="set-vpn-custom-label">Свои домены для VPN</div>
+                <div class="setting-desc" id="set-vpn-custom-desc">По одному на строку — только в режиме «Раздельный (РФ)»</div>
+              </div>
+              <textarea class="setting-textarea" id="set-vpn-custom-domains" placeholder="example.org"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="settings-footer">
+      <div class="settings-about-line" id="settings-footer-about"><strong>Visibility Browser</strong> · <span id="settings-footer-version">v2.1.0</span></div>
+      <div style="display:flex;gap:10px;">
+      <button class="btn-ghost" id="btn-settings-cancel">Отмена</button>
+      <button class="btn-primary" id="btn-settings-save"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete History Modal -->
+<div class="overlay" id="overlay-delete">
+      <div id="delete-modal" class="overlay-card">
+    <div class="dm-body">
+      <div class="dm-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>Удалить историю</div>
+      <div class="dm-grid">
+        <button class="dm-btn" onclick="clearHistoryPeriod('hour')">За последний час</button>
+        <button class="dm-btn" onclick="clearHistoryPeriod('day')">За последний день</button>
+        <button class="dm-btn" onclick="clearHistoryPeriod('week')">За последнюю неделю</button>
+        <button class="dm-btn" onclick="clearHistoryPeriod('month')">За последний месяц</button>
+        <button class="dm-btn danger" onclick="clearAllHistory()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Удалить всё</button>
+      </div>
+      <button class="dm-cancel" onclick="closeDeleteModal()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SSL Certificate Modal ─────────────────────────────────────── -->
+<div id="overlay-cert" class="overlay">
+  <div class="overlay-card cert-modal">
+    <div class="cert-modal-header">
+      <div class="cert-modal-header-top">
+        <h2 id="ssl-title" style="font-size: 17px; font-weight: 600; color: var(--text-primary); margin: 0; display:flex; align-items:center; gap:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Сведения о сайте</h2>
+        <button id="btn-close-cert" class="modal-close-btn" style="width: 28px; height: 28px; display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>
+    <div id="cert-content">
+      <!-- Filled by renderer.js -->
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="permission-popup"></div>
+<div id="toast-container"></div>
+
+<!-- Banner Notifications (top alerts like "Wrong password") -->
+<div id="banner-container"></div>
+
+<style>
+  kbd {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-bright);
+    border-radius: 4px;
+    padding: 3px 7px;
+    font-size: 11px;
+    font-family: monospace;
+    color: var(--text-secondary);
+  }
+</style>
+
+<!-- VPN Overlay -->
+<div class="overlay" id="overlay-vpn">
+  <div class="vpn-modal overlay-card">
+    <div class="vpn-modal-head">
+      <div class="vpn-modal-title" id="vpn-modal-title">VPN</div>
+      <button class="modal-close-btn" id="btn-close-vpn" title="Закрыть"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+
+    <div class="vpn-hero" id="vpn-hero">
+      <div class="vpn-hero-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="vpn-hero-main">
+        <div class="vpn-status-text" id="vpn-stat-v3"><span class="vpn-dot" id="vpn-dot-v3"></span><span id="vpn-stat-label">VPN Отключен</span></div>
+        <div class="vpn-status-sub" id="vpn-info-v3">Выберите сервер и нажмите Подключить</div>
+      </div>
+      <button id="btn-tog-v3" class="connect" disabled>Подключить</button>
+    </div>
+
+    <div class="vpn-warning-disclaimer">
+      * Данная функция может работать нестабильно, советуем использовать Happ, v2raytun, Hiddify и др. приложения
+    </div>
+
+    <div class="vpn-body">
+
+      <div class="vpn-group" style="margin-top: 2px;">
+        <div class="vpn-card">
+          <div class="vpn-card-body" style="padding: 10px 14px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="font-size: 13px; font-weight: 600; color: var(--text-primary);" id="vpn-modal-routing-label">Маршрутизация:</div>
+            <select class="setting-select" id="vpn-modal-routing-mode" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;">
+              <option value="split-ru">Раздельный (РФ)</option>
+              <option value="full">Весь трафик</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="vpn-card" id="vpn-no-binary" style="display:none">
+        <div class="vpn-card-body" style="padding-top:14px">
+          <div class="vpn-xray-notice">
+            <div class="vpn-xray-notice-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 1 1.71 3h16.94a2 2 0 0 1 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span id="vpn-xray-title">Xray-core не установлен</span>
+            </div>
+            <div class="vpn-xray-notice-desc" id="vpn-xray-desc">Для загрузки ядра может потребоваться VPN — включите Happ, Hiddify, v2rayN или другой клиент.</div>
+            <div class="vpn-app-chips" id="vpn-app-chips">
+              <span class="vpn-app-chip">Happ</span>
+              <span class="vpn-app-chip">Hiddify</span>
+              <span class="vpn-app-chip">v2rayN</span>
+              <span class="vpn-app-chip">Clash Verge</span>
+              <span class="vpn-app-chip">Nekoray</span>
+            </div>
+            <div class="vpn-xray-hint" id="vpn-xray-hint">Сначала подключитесь к VPN в другом приложении, затем нажмите «Загрузить».</div>
+            <button class="vpn-btn download" id="btn-download-xray">Загрузить Xray Core</button>
+            <div class="vpn-progress" id="vpn-dl-progress"><div class="vpn-progress-fill" id="vpn-dl-fill"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vpn-group">
+        <div class="vpn-card-head-row">
+          <div class="vpn-card-head" id="vpn-servers-head">Серверы</div>
+          <div class="vpn-head-actions">
+            <button class="vpn-mini-btn" id="btn-vpn-ping" title="Проверить задержку серверов">⚡ Ping</button>
+            <button class="vpn-mini-btn" id="btn-vpn-test" title="Проверить внешнее подключение">🌐 Тест IP</button>
+          </div>
+        </div>
+        <div class="vpn-card">
+          <div class="vpn-card-body" style="padding: 10px 12px;">
+            <div class="vpn-server-list" id="vpn-list-v3">
+              <div class="vpn-empty">Нет серверов</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vpn-group">
+        <div class="vpn-card-head" id="vpn-sub-head">Ссылка на подписку (Clash/V2Ray)</div>
+        <div class="vpn-card">
+          <div class="vpn-card-body" style="padding: 12px;">
+            <div class="vpn-row">
+              <input type="text" class="vpn-input" id="vpn-url-v3" placeholder="https://... (ссылка на подписку)">
+              <button class="vpn-btn" id="btn-sub-v3">Импорт</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vpn-group">
+        <div class="vpn-card-head" id="vpn-manual-head">Добавить ссылку вручную</div>
+        <div class="vpn-card">
+          <div class="vpn-card-body" style="padding: 12px;">
+            <textarea class="vpn-input" id="vpn-link-input" placeholder="Вставьте ссылку vless://, vmess://, trojan:// или ss://"></textarea>
+            <div class="vpn-row" style="margin-top:10px; justify-content:flex-end">
+              <button class="vpn-btn secondary" id="btn-add-v3">Добавить ссылку</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+<!-- ── Find in Page ──────────────────────────────── -->
+<div id="find-bar">
+  <input id="find-input" type="text" placeholder="Найти на странице...">
+  <span id="find-count"></span>
+  <button class="find-nav-btn" id="find-btn-prev" title="Назад (Shift+Enter)">↑</button>
+  <button class="find-nav-btn" id="find-btn-next" title="Вперёд (Enter)">↓</button>
+  <button class="find-nav-btn" id="find-btn-close" title="Закрыть (Esc)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+</div>
+
+<!-- ── Tab Search ───────────────────────────────── -->
+<div class="overlay" id="overlay-tab-search">
+  <div class="overlay-card tab-search-modal">
+    <div class="tab-search-head">
+      <input type="text" id="tab-search-input" placeholder="Поиск вкладки..." autocomplete="off">
+    </div>
+    <div id="tab-search-list"></div>
+  </div>
+</div>
+
+<!-- ── Tab Preview ──────────────────────────────── -->
+<div id="tab-preview">
+  <div class="tab-preview-header">
+    <span id="tab-preview-favicon" class="tab-preview-fav"></span>
+    <div class="tab-preview-info">
+      <div id="tab-preview-title" class="tab-preview-title-text"></div>
+      <div id="tab-preview-domain" class="tab-preview-domain-text"></div>
+    </div>
+  </div>
+  <div class="tab-preview-body">
+    <img id="tab-preview-img" src="" alt="" style="display:none;">
+    <div id="tab-preview-placeholder" class="tab-preview-placeholder" style="display:none;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    </div>
+  </div>
+</div>
+
+<script src="lang-manager.js"></script>
+<script src="gomp-trusted.js"></script>
+<script src="icons.js"></script>
+<script src="overlay-utils.js"></script>
+<script src="ios-ui.js"></script>
+<script src="renderer.js"></script>
+<script src="vpn-v2.js"></script>
+<script src="extensions.js"></script>
+<script src="_webview-window-fix.js"></script>
+<script src="features.js"></script>
+
+</body>
+</html>

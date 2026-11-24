@@ -1,0 +1,99 @@
+{
+  "name": "visibility-browser",
+  "version": "2.1.0",
+  "description": "Full-featured modern browser by GOmp Studios",
+  "main": "main.js",
+  "author": "Zakhar Kutikov (GOmp Studios)",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "gen-icon": "node scripts/gen-icon.js",
+    "prebuild": "node scripts/gen-icon.js",
+    "build": "electron-builder build --win --x64 && node scripts/apply-icon.js",
+    "postbuild": "node scripts/apply-icon.js",
+    "build:dir": "electron-builder --dir",
+    "test": "node tests/smoke.test.js"
+  },
+  "build": {
+    "afterPack": "scripts/after-pack.js",
+    "appId": "com.gompstudios.visibility",
+    "productName": "Visibility Browser",
+    "copyright": "Copyright © 2026 GOmp Studios (Zakhar Kutikov)",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "icon.ico",
+      "executableName": "Visibility Browser",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Visibility Browser",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "artifactName": "${productName}_v${version}_Installer.${ext}"
+    },
+    "directories": {
+      "output": "build-output"
+    },
+    "protocols": [
+      {
+        "name": "Visibility Browser",
+        "schemes": [
+          "http",
+          "https",
+          "mailto"
+        ]
+      }
+    ],
+    "fileAssociations": [
+      {
+        "ext": "htm",
+        "name": "HTML Document"
+      },
+      {
+        "ext": "html",
+        "name": "HTML Document"
+      },
+      {
+        "ext": "shtml",
+        "name": "HTML Document"
+      },
+      {
+        "ext": "xht",
+        "name": "HTML Document"
+      },
+      {
+        "ext": "xhtml",
+        "name": "HTML Document"
+      }
+    ],
+    "files": [
+      "**/*",
+      "!node_modules/**",
+      "!build-output/**",
+      "!docs/**",
+      "!dist/**",
+      "!.git/**",
+      "!upload-update.js",
+      "!_renderer_utf8.js",
+      "!_vpn_append.js",
+      "!renderer_debug.txt",
+      "!vpn-ui.js"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^24.6.4",
+    "png-to-ico": "^3.0.1"
+  }
+}

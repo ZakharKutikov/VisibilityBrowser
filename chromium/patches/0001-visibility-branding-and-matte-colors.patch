@@ -1,0 +1,50 @@
+diff --git a/chrome/app/chromium_strings.grd b/chrome/app/chromium_strings.grd
+index dea90cd..73d5669 100644
+--- a/chrome/app/chromium_strings.grd
++++ b/chrome/app/chromium_strings.grd
+@@ -294,10 +294,10 @@ If you update this file, be sure also to update google_chrome_strings.grd. -->
+         </then>
+         <else>
+           <message name="IDS_PRODUCT_NAME" desc="The Chrome application name" translateable="false">
+-            Chromium
++            Visibility Browser
+           </message>
+           <message name="IDS_SHORT_PRODUCT_NAME" desc="The Chrome application short name." translateable="false">
+-            Chromium
++            Visibility
+           </message>
+         </else>
+       </if>
+diff --git a/chrome/browser/ui/color/material_chrome_color_mixer.cc b/chrome/browser/ui/color/material_chrome_color_mixer.cc
+index 17b8d40512..11e4138c00 100644
+--- a/chrome/browser/ui/color/material_chrome_color_mixer.cc
++++ b/chrome/browser/ui/color/material_chrome_color_mixer.cc
+@@ -557,7 +557,8 @@ void AddMaterialChromeColorMixer(ui::ColorProvider* provider,
+       ui::kColorSysOnSurfaceSubtle};
+ 
+   // Toolbar colors.
+-  mixer[kColorToolbar] = {ui::kColorSysBase};
++  // Visibility: matte toolbar, fixed value instead of the tonal palette.
++  mixer[kColorToolbar] = {SkColorSetRGB(0x0f, 0x11, 0x15)};
+   mixer[kColorToolbarButtonBackgroundHighlightedDefault] = {
+       ui::kColorSysStateHoverOnSubtle};
+   mixer[kColorToolbarButtonBorder] = {ui::kColorSysOutline};
+diff --git a/chrome/browser/ui/color/material_tab_strip_color_mixer.cc b/chrome/browser/ui/color/material_tab_strip_color_mixer.cc
+index e6dda9bdbd..e7f4f8428f 100644
+--- a/chrome/browser/ui/color/material_tab_strip_color_mixer.cc
++++ b/chrome/browser/ui/color/material_tab_strip_color_mixer.cc
+@@ -26,11 +26,12 @@ void AddMaterialTabStripColorMixer(ui::ColorProvider* provider,
+   ui::ColorMixer& mixer = provider->AddMixer();
+   mixer[kColorDetachedTabBackgroundActiveFrameActive] = {
+       dark_mode ? ui::kColorSysSurfaceVariant : ui::kColorSysBase};
+-  mixer[kColorTabBackgroundActiveFrameActive] = {ui::kColorSysBase};
++  // Visibility: the selected tab is the glass pane, the inactive ones sit on the matte frame.
++  mixer[kColorTabBackgroundActiveFrameActive] = {SkColorSetRGB(0x14, 0x17, 0x1d)};
+   mixer[kColorTabBackgroundActiveFrameInactive] = {
+       kColorTabBackgroundActiveFrameActive};
+ 
+-  mixer[kColorTabBackgroundInactiveFrameActive] = {ui::kColorSysHeader};
++  mixer[kColorTabBackgroundInactiveFrameActive] = {SkColorSetRGB(0x0a, 0x0b, 0x0e)};
+   mixer[kColorTabBackgroundInactiveFrameInactive] = {
+       ui::kColorSysHeaderInactive};
+   mixer[kColorTabBackgroundInactiveHoverFrameActive] = {

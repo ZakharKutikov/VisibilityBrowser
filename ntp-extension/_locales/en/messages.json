@@ -1,0 +1,101 @@
+{
+  "extName": {
+    "message": "Visibility New Tab"
+  },
+  "extDescription": {
+    "message": "The new tab page of Visibility Browser: time, weather and your sites."
+  },
+  "pageTitle": {
+    "message": "New tab"
+  },
+  "greetMorning": {
+    "message": "Good morning"
+  },
+  "greetDay": {
+    "message": "Good afternoon"
+  },
+  "greetEvening": {
+    "message": "Good evening"
+  },
+  "greetNight": {
+    "message": "Good night"
+  },
+  "searchPlaceholder": {
+    "message": "Search the web or enter a URL..."
+  },
+  "searchLabel": {
+    "message": "Search the web"
+  },
+  "suggestTypeHistory": {
+    "message": "History"
+  },
+  "suggestTypeSearch": {
+    "message": "Search"
+  },
+  "shortcutsTitle": {
+    "message": "Most visited"
+  },
+  "starterTitle": {
+    "message": "Places to start"
+  },
+  "recentTitle": {
+    "message": "Recent visits"
+  },
+  "weatherSet": {
+    "message": "Set a city for weather"
+  },
+  "weatherChange": {
+    "message": "Change city"
+  },
+  "cityPlaceholder": {
+    "message": "City"
+  },
+  "cityLabel": {
+    "message": "City for weather"
+  },
+  "citySave": {
+    "message": "Show weather"
+  },
+  "cityRemove": {
+    "message": "Hide weather"
+  },
+  "cityNotFound": {
+    "message": "No city called “$1”. Check the spelling."
+  },
+  "weatherOffline": {
+    "message": "Weather did not load. Check your connection."
+  },
+  "wxClear": {
+    "message": "clear"
+  },
+  "wxPartly": {
+    "message": "partly cloudy"
+  },
+  "wxOvercast": {
+    "message": "overcast"
+  },
+  "wxFog": {
+    "message": "fog"
+  },
+  "wxDrizzle": {
+    "message": "drizzle"
+  },
+  "wxFreezing": {
+    "message": "freezing rain"
+  },
+  "wxRain": {
+    "message": "rain"
+  },
+  "wxSnow": {
+    "message": "snow"
+  },
+  "wxShowers": {
+    "message": "showers"
+  },
+  "wxThunder": {
+    "message": "thunderstorm"
+  },
+  "wxUnknown": {
+    "message": ""
+  }
+}

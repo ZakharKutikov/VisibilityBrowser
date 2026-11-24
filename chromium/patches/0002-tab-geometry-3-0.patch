@@ -1,0 +1,73 @@
+diff --git a/chrome/browser/ui/tabs/tab_style.cc b/chrome/browser/ui/tabs/tab_style.cc
+index 52d26ae7db..1377a987b6 100644
+--- a/chrome/browser/ui/tabs/tab_style.cc
++++ b/chrome/browser/ui/tabs/tab_style.cc
+@@ -24,8 +24,8 @@ constexpr int kSeparatorHorizontalMargin = 2;
+ constexpr int kSeparatorHeight = 16;
+ 
+ 
+-// The standard tab width is 232 DIP, excluding separators and overlap.
+-constexpr int kTabWidth = 232;
++// The standard tab width is 170 DIP, excluding separators and overlap (Visibility 3.0).
++constexpr int kTabWidth = 170;
+ 
+ }  // namespace
+ 
+@@ -95,7 +95,7 @@ int TabStyle::GetMinimumInactiveWidth() const {
+ }
+ 
+ int TabStyle::GetTopCornerRadius() const {
+-  return 10;
++  return 12;
+ }
+ 
+ int TabStyle::GetBottomCornerRadius() const {
+diff --git a/chrome/browser/ui/views/tabs/common/horizontal_tab_style_views.cc b/chrome/browser/ui/views/tabs/common/horizontal_tab_style_views.cc
+index cd28bdde26..a6a2043eb3 100644
+--- a/chrome/browser/ui/views/tabs/common/horizontal_tab_style_views.cc
++++ b/chrome/browser/ui/views/tabs/common/horizontal_tab_style_views.cc
+@@ -12,6 +12,7 @@
+ #include "base/memory/raw_ptr.h"
+ #include "base/numerics/safe_conversions.h"
+ #include "cc/paint/paint_flags.h"
++#include "cc/paint/paint_shader.h"
+ #include "chrome/browser/themes/theme_properties.h"
+ #include "chrome/browser/ui/browser_window/public/browser_window_interface.h"
+ #include "chrome/browser/ui/color/chrome_color_id.h"
+@@ -790,9 +791,33 @@ void HorizontalTabStyleViews::PaintTabBackgroundFill(
+     flags.setAntiAlias(true);
+ 
+     flags.setColor(GetCurrentTabBackgroundColor(selection_state, false));
+-    canvas->DrawRect(gfx::ScaleToEnclosingRect(
+-                         delegate_->GetView()->GetLocalBounds(), scale),
+-                     flags);
++    const gfx::Rect bounds = gfx::ScaleToEnclosingRect(
++        delegate_->GetView()->GetLocalBounds(), scale);
++    canvas->DrawRect(bounds, flags);
++
++    // Visibility: the active tab reads as a pane of glass, a soft light that
++    // fades from the top edge, plus a thin bright rim along the top.
++    if (selection_state == TabStyle::TabSelectionState::kActive &&
++        !fill_id.has_value()) {
++      const SkPoint points[] = {SkPoint(bounds.x(), bounds.y()),
++                                SkPoint(bounds.x(), bounds.bottom())};
++      const SkColor4f colors[] = {SkColor4f{1.f, 1.f, 1.f, 0.10f},
++                                  SkColor4f{1.f, 1.f, 1.f, 0.03f},
++                                  SkColor4f{1.f, 1.f, 1.f, 0.f}};
++      const SkScalar positions[] = {0.f, 0.55f, 1.f};
++      cc::PaintFlags glass;
++      glass.setAntiAlias(true);
++      glass.setShader(cc::PaintShader::MakeLinearGradient(
++          points, colors, positions, 3, SkTileMode::kClamp));
++      canvas->DrawRect(bounds, glass);
++
++      cc::PaintFlags rim;
++      rim.setAntiAlias(true);
++      rim.setColor(SkColorSetARGB(0x2E, 0xFF, 0xFF, 0xFF));
++      canvas->DrawRect(gfx::Rect(bounds.x(), bounds.y(), bounds.width(),
++                                 std::max(1, base::ClampRound(scale))),
++                       rim);
++    }
+   }
+ 
+   if (fill_id.has_value()) {

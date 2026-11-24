@@ -1,0 +1,13 @@
+node_modules/
+build-output/
+dist/
+__pycache__/
+*.log
+.DS_Store
+Thumbs.db
+
+# Browser test profiles and build state written by the dev scripts
+chromium/progress/test-profile/
+chromium/progress/dev-profile/
+chromium/progress/profile-fresh-*/
+chromium/progress/state/

@@ -1,0 +1,8 @@
+{
+  "id": "demo_v2_customizer",
+  "name": "VISIB Ultra Customizer V2",
+  "version": "2.0.0",
+  "description": "Демонстрация функций Extensions V2: темы, настройки с бейджиками, NTP виджеты.",
+  "author": "GOmp Studios",
+  "script": "const api = visibExt.api('demo_v2_customizer');\n\n// 1. Регистрируем тему Neon Cyber\napi.themes.register({\n  id: 'theme_neon_cyber',\n  name: 'Neon Cyberpunk 🌌',\n  cssVars: {\n    '--bg-primary': '#0a0a12',\n    '--bg-secondary': '#121220',\n    '--accent': '#00f0ff',\n    '--border': 'rgba(0, 240, 255, 0.25)',\n    '--text-primary': '#ffffff'\n  }\n});\n\n// 2. Добавляем свою опцию в Настройки -> Основные с бэйджиком\napi.settings.addControl('main', {\n  id: 'ext_cyber_glow',\n  groupTitle: 'Персонализация от Ultra Customizer',\n  label: 'Анимированное неоновое свечение',\n  desc: 'Добавляет неоновый градиент на панель навигации',\n  type: 'toggle',\n  value: true,\n  onChange: (val) => {\n    if (val) {\n      api.ui.injectCSS('#navbar { box-shadow: 0 0 15px rgba(0,240,255,0.4) !important; }');\n      api.notifications.success('Неоновое свечение включено');\n    } else {\n      api.notifications.info('Свечение отключено');\n    }\n  }\n});\n\n// 3. Добавляем виджет на главную страницу\napi.ui.addNTPWidget('<div style=\"text-align:center; padding: 12px; background: rgba(0,240,255,0.05); border: 1px dashed rgba(0,240,255,0.3); border-radius: 12px; margin-bottom: 20px;\">✨ <b>VISIB Extensions V2 Активен</b> — Браузер полностью кастомизирован!</div>');\n\napi.addButton('🌌', 'Neon Theme', () => api.themes.apply('theme_neon_cyber'));"
+}

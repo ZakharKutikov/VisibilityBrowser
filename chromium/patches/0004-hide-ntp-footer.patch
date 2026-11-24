@@ -1,0 +1,14 @@
+diff --git a/components/search/ntp_features.cc b/components/search/ntp_features.cc
+index 18cbb7e915..d399886bed 100644
+--- a/components/search/ntp_features.cc
++++ b/components/search/ntp_features.cc
+@@ -280,7 +280,8 @@ BASE_FEATURE(kNtpStarterChip, base::FEATURE_ENABLED_BY_DEFAULT);
+ BASE_FEATURE(kNtpOneGoogleBarAsyncBarParts, base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ // If enabled, a footer will show on the NTP.
+-BASE_FEATURE(kNtpFooter, base::FEATURE_ENABLED_BY_DEFAULT);
++// Visibility: off, the new tab page is ours and needs no attribution bar.
++BASE_FEATURE(kNtpFooter, base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ // If enabled, tab groups module will be shown.
+ BASE_FEATURE(kNtpTabGroupsModule,

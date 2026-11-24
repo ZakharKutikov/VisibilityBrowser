@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New tab</title>
+  <link rel="stylesheet" href="newtab.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <time class="clock" id="clock"></time>
+      <p class="greeting" id="greeting"></p>
+    </section>
+
+    <form class="search" id="search-form" role="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search-input" type="text" autocomplete="off" spellcheck="false"
+             data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchLabel">
+    </form>
+    <div class="suggestions" id="suggestions" hidden></div>
+
+    <nav class="shortcuts" id="shortcuts" data-i18n-aria="shortcutsTitle">
+      <a class="shortcut" href="https://google.com"><span class="shortcut-icon" style="background:#fff"><svg width="22" height="22" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.5 24c0-1.59.28-3.14.76-4.59l-7.98-6.19A23.998 23.998 0 0 0 0 24c0 3.77.9 7.35 2.56 10.51l7.97-5.92z"/><path fill="#34A853" d="M24 48c6.48 0 11.930-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 5.92C6.51 42.62 14.62 48 24 48z"/></svg></span><span class="shortcut-name">Google</span></a>
+      <a class="shortcut" href="https://youtube.com"><span class="shortcut-icon" style="background:#FF0000"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.87.55 9.38.55 9.38.55s7.5 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg></span><span class="shortcut-name">YouTube</span></a>
+      <a class="shortcut" href="https://github.com"><span class="shortcut-icon" style="background:#24292f"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></span><span class="shortcut-name">GitHub</span></a>
+      <a class="shortcut" href="https://vk.com"><span class="shortcut-icon" style="background:#0077FF"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12.77 18.15h1.21s.37-.04.55-.24c.18-.18.17-.53.17-.53s-.02-1.63.73-1.87c.74-.24 1.7 1.59 2.710 2.3.77.53 1.35.41 1.35.41l2.72-.04s1.42-.09.75-1.2c-.06-.09-.39-.82-2.01-2.32-1.7-1.57-1.47-1.31.57-4.02 1.24-1.65 1.74-2.65 1.59-3.08-.15-.41-1.05-.3-1.05-.3l-3.06.02s-.23-.03-.4.07c-.16.1-.27.33-.27.33s-.48 1.28-1.12 2.37c-1.35 2.3-1.89 2.42-2.12 2.28-.52-.33-.39-1.34-.39-2.06 0-2.24.34-3.17-.66-3.41-.33-.08-.57-.13-1.42-.14-.57 0-1.83.02-2.3.3-.32.18-.56.59-.41.61.19.03.62.12.84.43.29.41.28 1.3.28 1.3s.17 2.63-.39 2.96c-.38.23-.91-.24-2.04-2.38-.58-1.09-1.01-2.3-1.01-2.3s-.08-.2-.23-.31c-.18-.13-.44-.17-.44-.17l-2.91.02s-.44.01-.6.2c-.14.17-.01.52-.01.52s2.24 5.24 4.78 7.88c2.33 2.42 4.97 2.26 4.97 2.26z"/></svg></span><span class="shortcut-name">VK</span></a>
+      <a class="shortcut" href="https://web.telegram.org"><span class="shortcut-icon" style="background:#26A5E4"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span><span class="shortcut-name">Telegram</span></a>
+      <a class="shortcut" href="https://reddit.com"><span class="shortcut-icon" style="background:#FF4500"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.870 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 0-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.203-.094z"/></svg></span><span class="shortcut-name">Reddit</span></a>
+      <a class="shortcut" href="https://wikipedia.org"><span class="shortcut-icon" style="background:#fff"><svg width="22" height="22" viewBox="0 0 24 24" fill="#000"><path d="M12.09 13.12h-.09v-.07c1.47-4.07 2.18-6.11 3.57-9.77h.88l.07.15c-.42.08-.61.42-.76.85L12.54 14h-.06l-1.62-3.84L9.1 14.1h-.06L5.77 4.28c-.14-.39-.37-.8-.84-.83l.07-.15h2.97l.07.15c-.42.04-.7.27-.55.76L9.5 9.94l1.4-3.52-.59-1.58a1.39 1.39 0 0 0-.75-.56l.07-.15h3l.06.15c-.42.08-.67.35-.56.77l.96 2.5zm-3.23 6.36h-.08l-.07-.15c.44-.05.73-.29.56-.77l-.15-.38c-.41-1.02-.55-1.38-.75-1.92L6.79 20.1h-.06L3.18 10.62c-.11-.31-.35-.59-.67-.64l.07-.16h2.86l.06.15c-.43.08-.72.3-.56.77l2.46 7.16 1.05-2.66-1.24-3.18-.17-.41c-.12-.34-.36-.63-.7-.68l.07-.16h2.84l.06.15c-.45.03-.66.32-.55.73l.97 2.62 1.02-2.62c.12-.36-.06-.62-.53-.73l.06-.15h1.77l.07.16c-.31.05-.53.33-.64.62L8.86 19.48z"/></svg></span><span class="shortcut-name">Wikipedia</span></a>
+      <a class="shortcut" href="https://dinorunner.com/ru/"><span class="shortcut-icon" style="background:#535353"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M21 17h-2v-2h-2v2h-2v-4h-2v4h-2V9h-2v8H7V7H5v10H3v2h18v-2zM17 5h2v2h2v2h-2v2h-2V9h-2V7h2V5z"/></svg></span><span class="shortcut-name">Dino</span></a>
+    </nav>
+
+    <section class="weather-card" id="weather-card">
+      <button class="weather-main" id="weather-now" type="button">
+        <span class="weather-icon" id="weather-icon" aria-hidden="true">🌤️</span>
+        <span class="weather-info">
+          <span class="weather-temp" id="weather-temp">--°C</span>
+          <span class="weather-desc" id="weather-text" data-i18n="weatherSet"></span>
+        </span>
+      </button>
+      <form class="city" id="city-form" hidden>
+        <input id="city-input" type="text" autocomplete="off" maxlength="60"
+               data-i18n-placeholder="cityPlaceholder" data-i18n-aria="cityLabel">
+        <div class="city-actions">
+          <button class="btn-primary" type="submit" data-i18n="citySave"></button>
+          <button class="btn-text" type="button" id="city-remove" data-i18n="cityRemove"></button>
+        </div>
+      </form>
+      <p class="weather-error" id="weather-error" role="status" hidden></p>
+    </section>
+
+    <section class="recent-section" id="recent-section" hidden>
+      <h2 class="recent-title" data-i18n="recentTitle"></h2>
+      <ul class="recent" id="recent"></ul>
+    </section>
+
+    <footer class="footer" id="footer"></footer>
+  </main>
+
+  <script type="module" src="newtab.js"></script>
+</body>
+</html>

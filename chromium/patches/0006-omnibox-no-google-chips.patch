@@ -1,0 +1,17 @@
+diff --git a/components/omnibox/browser/omnibox_prefs.cc b/components/omnibox/browser/omnibox_prefs.cc
+index 4f601dc39f..5f13fb0cd5 100644
+--- a/components/omnibox/browser/omnibox_prefs.cc
++++ b/components/omnibox/browser/omnibox_prefs.cc
+@@ -24,10 +24,10 @@ void RegisterProfilePrefs(PrefRegistrySimple* registry) {
+       kKeywordSpaceTriggeringEnabled, true,
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+-      kShowGoogleLensShortcut, true,
++      kShowGoogleLensShortcut, false,  // Visibility: no Google Lens chip.
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+-      kShowAiModeOmniboxButton, true,
++      kShowAiModeOmniboxButton, false,  // Visibility: no Google AI Mode chip.
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+       kShowSearchTools, true, user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);

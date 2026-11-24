@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl5/vYoZkYaVt5ZH1BH9d3FYa7EAjI045C7mMXnT8uc84i2jN4LSBNoLBb074jr5Lxq49GVdZrXTlw+FZyiSifmbyl3VIeyB/MINy3ses91dDvWQOeL8VhP1KgztNqJJPFvyUyU9FGJRNW0FVJ2DYhdmpJSQlxHuxvT1OwM+EmRVZ8RKgpkhGVoMASuDehub0lW5GTZTNOwCiUhcGWPSY1ImIOYLkxkujwaBxyXjYfQqDhGHQuFG9AnKOdeYvUXOsK5buDl4M1ihIWIbdYYuBhJe8m6q23z5ztdMJZl9teS/VkX+2DGdEkyHLlbNR83ZBg5UmWacmZ/uF6yWLALHoIQIDAQAB",
+  "name": "__MSG_extName__",
+  "description": "__MSG_extDescription__",
+  "version": "3.0.0",
+  "default_locale": "ru",
+  "minimum_chrome_version": "120",
+  "icons": {
+    "128": "icons/icon.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "incognito": "split",
+  "permissions": [
+    "topSites",
+    "history",
+    "favicon",
+    "storage",
+    "search"
+  ],
+  "host_permissions": [
+    "https://api.open-meteo.com/*",
+    "https://geocoding-api.open-meteo.com/*",
+    "https://ipwhois.app/*",
+    "https://wttr.in/*",
+    "https://suggestqueries.google.com/*"
+  ]
+}
