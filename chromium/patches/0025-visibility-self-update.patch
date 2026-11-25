@@ -1,0 +1,821 @@
+diff --git a/chrome/browser/resources/webui_browser/BUILD.gn b/chrome/browser/resources/webui_browser/BUILD.gn
+index e5d6601..fb1e714 100644
+--- a/chrome/browser/resources/webui_browser/BUILD.gn
++++ b/chrome/browser/resources/webui_browser/BUILD.gn
+@@ -52,6 +52,8 @@ build_webui("build") {
+     "vis_find.ts",
+     "vis_tab_search.html.ts",
+     "vis_tab_search.ts",
++    "vis_update.html.ts",
++    "vis_update.ts",
+     "vis_menu.html.ts",
+     "vis_menu.ts",
+     "vis_extensions.html.ts",
+@@ -90,6 +92,7 @@ build_webui("build") {
+     "vis_downloads.css",
+     "vis_find.css",
+     "vis_tab_search.css",
++    "vis_update.css",
+     "vis_menu.css",
+     "vis_extensions.css",
+     "vis_vpn.css",
+diff --git a/chrome/browser/resources/webui_browser/app.html.ts b/chrome/browser/resources/webui_browser/app.html.ts
+index 6c77868..15b8d4a 100644
+--- a/chrome/browser/resources/webui_browser/app.html.ts
++++ b/chrome/browser/resources/webui_browser/app.html.ts
+@@ -198,6 +198,7 @@ export function getHtml(this: WebuiBrowserAppElement) {
+   <vis-downloads id="visDownloads"></vis-downloads>
+   <vis-find id="visFind"></vis-find>
+   <vis-tab-search id="visTabSearch"></vis-tab-search>
++  <vis-update id="visUpdate"></vis-update>
+   <vis-extensions id="visExtensions" @open-url="${this.onOpenUrl_}">
+   </vis-extensions>
+   <vis-menu id="visMenu" @menu-item="${this.onMenuItem_}"></vis-menu>
+diff --git a/chrome/browser/resources/webui_browser/app.ts b/chrome/browser/resources/webui_browser/app.ts
+index f98968e..58816f7 100644
+--- a/chrome/browser/resources/webui_browser/app.ts
++++ b/chrome/browser/resources/webui_browser/app.ts
+@@ -13,6 +13,7 @@ import './webview.js';
+ import './vis_downloads.js';
+ import './vis_find.js';
+ import './vis_tab_search.js';
++import './vis_update.js';
+ import './vis_extensions.js';
+ import './vis_vpn.js';
+ import './vis_permission.js';
+@@ -41,6 +42,7 @@ import type {TabAdded, TabClosed, TabUpdated} from './tab_strip/events.js';
+ import type {VisDownloadsElement} from './vis_downloads.js';
+ import type {VisFindElement} from './vis_find.js';
+ import type {VisTabSearchElement} from './vis_tab_search.js';
++import type {VisUpdateElement} from './vis_update.js';
+ import type {VisExtensionsElement} from './vis_extensions.js';
+ import type {VisVpnElement} from './vis_vpn.js';
+ import type {VisPermissionElement} from './vis_permission.js';
+@@ -64,6 +66,7 @@ export interface WebuiBrowserAppElement {
+     visDownloads: VisDownloadsElement,
+     visFind: VisFindElement,
+     visTabSearch: VisTabSearchElement,
++    visUpdate: VisUpdateElement,
+     visExtensions: VisExtensionsElement,
+     visVpn: VisVpnElement,
+     visPermission: VisPermissionElement,
+@@ -158,6 +161,10 @@ export class WebuiBrowserAppElement extends CrLitElement {
+     callbackRouter.setFindResult.addListener(
+         (active: number, total: number) =>
+             this.$.visFind.setResult(active, total));
++    callbackRouter.onUpdateProgress.addListener(
++        (percent: number) => this.$.visUpdate.setProgress(percent));
++    callbackRouter.onUpdateInstalled.addListener(
++        (ok: boolean) => this.$.visUpdate.setInstalled(ok));
+     callbackRouter.showTabSearch.addListener(() => {
+       this.$.visFind.hide();
+       this.$.visTabSearch.show(
+@@ -186,6 +193,8 @@ export class WebuiBrowserAppElement extends CrLitElement {
+         this.$.contentRegion, 'kContentsContainerViewElementId');
+     this.setUpLongPress_(this.$.backButton, /*isBack=*/ true);
+     this.setUpLongPress_(this.$.forwardButton, /*isBack=*/ false);
++    // Visibility: look for a newer release a little after the window is up.
++    setTimeout(() => this.$.visUpdate.check(), 8000);
+     const {width} =
+         await browserProxyFactory.getInstance().handler.getTabStripInset();
+     this.tabStripInset_ = width;
+diff --git a/chrome/browser/resources/webui_browser/vis_settings.ts b/chrome/browser/resources/webui_browser/vis_settings.ts
+index d831c26..e3ce8e0 100644
+--- a/chrome/browser/resources/webui_browser/vis_settings.ts
++++ b/chrome/browser/resources/webui_browser/vis_settings.ts
+@@ -47,6 +47,13 @@ const TEXT: Record<string, [string, string]> = {
+   tabSearchPlaceholder: ['Поиск по открытым вкладкам', 'Search open tabs'],
+   tabSearchEmpty: ['Ничего не найдено', 'Nothing found'],
+   tabSearchCurrent: ['Текущая', 'Current'],
++  updateTitle: ['Доступна версия', 'Version available:'],
++  updateNow: ['Обновить', 'Update'],
++  updateLater: ['Позже', 'Later'],
++  updateInstalling: ['Скачиваем и ставим', 'Downloading and installing'],
++  updateReady: ['Готово. Перезапустите браузер.', 'Done. Restart the browser.'],
++  updateRestart: ['Перезапустить', 'Restart'],
++  updateFailed: ['Не удалось обновиться. Попробуйте позже.', 'Update failed. Try again later.'],
+   restoreDesc: [
+     'Открывать вкладки с прошлого сеанса при запуске',
+     'Reopen the tabs of the last session on start',
+diff --git a/chrome/browser/resources/webui_browser/vis_update.css b/chrome/browser/resources/webui_browser/vis_update.css
+new file mode 100644
+index 0000000..587273e
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_update.css
+@@ -0,0 +1,100 @@
++/* Copyright 2026 The Chromium Authors
++ * Use of this source code is governed by a BSD-style license that can be
++ * found in the LICENSE file. */
++
++/* #css_wrapper_metadata_start
++ * #type=style-lit
++ * #scheme=relative
++ * #css_wrapper_metadata_end */
++
++:host {
++  position: fixed;
++  right: 20px;
++  bottom: 20px;
++  z-index: 970;
++  display: none;
++  font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui,
++      sans-serif;
++  font-size: 13px;
++  color: #f8fafc;
++}
++
++:host([state='available']),
++:host([state='installing']),
++:host([state='ready']),
++:host([state='failed']) {
++  display: block;
++}
++
++.card {
++  width: 280px;
++  padding: 14px 16px;
++  background: #1e202a;
++  border: 1px solid rgba(255, 255, 255, 14%);
++  border-radius: 14px;
++  box-shadow: 0 16px 40px rgba(0, 0, 0, 55%);
++}
++
++.title {
++  font-weight: 600;
++  margin-bottom: 10px;
++}
++
++.text {
++  color: #94a3b8;
++  margin-bottom: 8px;
++}
++
++.text.fail {
++  color: #f55;
++}
++
++.row {
++  display: flex;
++  gap: 8px;
++}
++
++button {
++  padding: 7px 14px;
++  border: none;
++  border-radius: 9px;
++  font: inherit;
++  cursor: pointer;
++}
++
++.primary {
++  background: #818cf8;
++  color: #0d0e12;
++  font-weight: 600;
++}
++
++.primary:hover {
++  background: #939dfa;
++}
++
++.ghost {
++  background: rgba(255, 255, 255, 8%);
++  color: #f8fafc;
++}
++
++.ghost:hover {
++  background: rgba(255, 255, 255, 14%);
++}
++
++.bar {
++  height: 6px;
++  border-radius: 3px;
++  background: rgba(255, 255, 255, 10%);
++  overflow: hidden;
++}
++
++.fill {
++  height: 100%;
++  background: #818cf8;
++  transition: width 0.2s linear;
++}
++
++:focus-visible {
++  outline: 2px solid #818cf8;
++  outline-offset: 2px;
++}
+diff --git a/chrome/browser/resources/webui_browser/vis_update.html.ts b/chrome/browser/resources/webui_browser/vis_update.html.ts
+new file mode 100644
+index 0000000..fb4c0aa
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_update.html.ts
+@@ -0,0 +1,40 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++import {html} from '//resources/lit/v3_0/lit.rollup.js';
++
++import type {VisUpdateElement} from './vis_update.js';
++
++export function getHtml(this: VisUpdateElement) {
++  return html`<!--_html_template_start_-->
++<section class="card" role="status">
++  <div class="title">${this.t('updateTitle')} ${this.version}</div>
++  ${this.state === 'available' ? html`
++    <div class="row">
++      <button class="primary" @click="${this.onInstallClick}">
++        ${this.t('updateNow')}</button>
++      <button class="ghost" @click="${this.onLaterClick}">
++        ${this.t('updateLater')}</button>
++    </div>` : html``}
++  ${this.state === 'installing' ? html`
++    <div class="text">${this.t('updateInstalling')} ${this.percent}%</div>
++    <div class="bar"><div class="fill"
++        style="width: ${this.percent}%"></div></div>` : html``}
++  ${this.state === 'ready' ? html`
++    <div class="text">${this.t('updateReady')}</div>
++    <div class="row">
++      <button class="primary" @click="${this.onRestartClick}">
++        ${this.t('updateRestart')}</button>
++      <button class="ghost" @click="${this.onLaterClick}">
++        ${this.t('updateLater')}</button>
++    </div>` : html``}
++  ${this.state === 'failed' ? html`
++    <div class="text fail">${this.t('updateFailed')}</div>
++    <div class="row">
++      <button class="ghost" @click="${this.onLaterClick}">
++        ${this.t('close')}</button>
++    </div>` : html``}
++</section>
++<!--_html_template_end_-->`;
++}
+diff --git a/chrome/browser/resources/webui_browser/vis_update.ts b/chrome/browser/resources/webui_browser/vis_update.ts
+new file mode 100644
+index 0000000..08b9b39
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_update.ts
+@@ -0,0 +1,83 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++// Visibility: self-update. A small card in the corner: "version X is out",
++// download progress, then "restart".
++
++import {CrLitElement} from '//resources/lit/v3_0/lit.rollup.js';
++
++import {browserProxyFactory} from './browser.mojom-webui.js';
++import {getCss} from './vis_update.css.js';
++import {getHtml} from './vis_update.html.js';
++import {t} from './vis_settings.js';
++
++export type UpdateState = 'hidden'|'available'|'installing'|'ready'|'failed';
++
++export class VisUpdateElement extends CrLitElement {
++  static get is() {
++    return 'vis-update';
++  }
++
++  static override get styles() {
++    return getCss();
++  }
++
++  override render() {
++    return getHtml.bind(this)();
++  }
++
++  static override get properties() {
++    return {
++      state: {type: String, reflect: true},
++      version: {state: true, type: String},
++      percent: {state: true, type: Number},
++    };
++  }
++
++  accessor state: UpdateState = 'hidden';
++  accessor version: string = '';
++  accessor percent: number = 0;
++
++  readonly t = t;
++
++  // Called once the window is up; shows the card only when a newer release
++  // exists on GitHub.
++  async check() {
++    const {info} = await browserProxyFactory.getInstance().handler.checkForUpdate();
++    if (info) {
++      this.version = info.version;
++      this.state = 'available';
++    }
++  }
++
++  setProgress(percent: number) {
++    this.percent = percent;
++  }
++
++  setInstalled(ok: boolean) {
++    this.state = ok ? 'ready' : 'failed';
++  }
++
++  protected onInstallClick() {
++    this.state = 'installing';
++    this.percent = 0;
++    browserProxyFactory.getInstance().handler.installUpdate();
++  }
++
++  protected onLaterClick() {
++    this.state = 'hidden';
++  }
++
++  protected onRestartClick() {
++    browserProxyFactory.getInstance().handler.restartBrowser();
++  }
++}
++
++declare global {
++  interface HTMLElementTagNameMap {
++    'vis-update': VisUpdateElement;
++  }
++}
++
++customElements.define(VisUpdateElement.is, VisUpdateElement);
+diff --git a/chrome/browser/ui/webui_browser/BUILD.gn b/chrome/browser/ui/webui_browser/BUILD.gn
+index 7e618b0..0fdf901 100644
+--- a/chrome/browser/ui/webui_browser/BUILD.gn
++++ b/chrome/browser/ui/webui_browser/BUILD.gn
+@@ -65,6 +65,8 @@ source_set("impl") {
+     "find_bar_owner_webui_browser.cc",
+     "vis_find_bar.cc",
+     "vis_find_bar.h",
++    "vis_updater.cc",
++    "vis_updater.h",
+     "webui_browser.cc",
+     "webui_browser_client_view.cc",
+     "webui_browser_client_view.h",
+@@ -146,6 +148,9 @@ source_set("impl") {
+     "//chrome/browser/ui/views/toolbar",
+     "//chrome/browser/ui/views/translate",
+     "//chrome/browser/ui/views/zoom",
++    "//crypto",
++    "//net/traffic_annotation",
++    "//services/network/public/cpp",
+     "//chrome/browser/ui/web_applications",
+     "//chrome/browser/ui/webui:favicon_source",
+     "//chrome/browser/ui/webui/searchbox",
+diff --git a/chrome/browser/ui/webui_browser/browser.mojom b/chrome/browser/ui/webui_browser/browser.mojom
+index 24b4d11..289fa53 100644
+--- a/chrome/browser/ui/webui_browser/browser.mojom
++++ b/chrome/browser/ui/webui_browser/browser.mojom
+@@ -84,6 +84,10 @@ interface Page {
+   // Visibility: show our tab search overlay.
+   ShowTabSearch();
+ 
++  // Visibility: update progress (0..100) and the result of the installer.
++  OnUpdateProgress(int32 percent);
++  OnUpdateInstalled(bool ok);
++
+   // Visibility: the user clicked the location bar's lock/info icon
+   // (GuestHandler.OpenPageInfoMenu); show the 2.1-style site info panel
+   // instead of the native PageInfoBubbleView. Purely informational -- unlike
+@@ -137,6 +141,12 @@ struct PageInfoDetails {
+   string fingerprint_sha256;
+ };
+ 
++// Visibility: a newer release found by PageHandler.CheckForUpdate.
++struct UpdateInfo {
++  string version;
++  string notes;
++};
++
+ // Visibility: see Page.ShowVisibilityPanel.
+ enum VisibilityPanel {
+   kHistory,
+@@ -165,6 +175,13 @@ interface PageHandler {
+   // Visibility: the find card was closed; `activate` follows a focused link.
+   CloseFindBar(bool activate);
+ 
++  // Visibility: asks GitHub for a newer release; null when there is none.
++  CheckForUpdate() => (UpdateInfo? info);
++  // Downloads and runs the installer found by CheckForUpdate().
++  InstallUpdate();
++  // Restarts the browser to finish an update.
++  RestartBrowser();
++
+   // Visibility: the 2.1-style tab hover preview. Replies with the cached
+   // thumbnail as a data: URL if one is already available; otherwise kicks
+   // off a capture and replies with null right away -- if the capture
+diff --git a/chrome/browser/ui/webui_browser/vis_updater.cc b/chrome/browser/ui/webui_browser/vis_updater.cc
+new file mode 100644
+index 0000000..c7ea482
+--- /dev/null
++++ b/chrome/browser/ui/webui_browser/vis_updater.cc
+@@ -0,0 +1,233 @@
++#include "chrome/browser/ui/webui_browser/vis_updater.h"
++
++#include <array>
++#include <utility>
++
++#include "base/command_line.h"
++#include "base/files/file.h"
++#include "base/files/file_path.h"
++#include "base/files/file_util.h"
++#include "base/functional/bind.h"
++#include "base/json/json_reader.h"
++#include "base/process/launch.h"
++#include "base/process/process.h"
++#include "base/strings/string_number_conversions.h"
++#include "base/strings/string_util.h"
++#include "base/task/thread_pool.h"
++#include "base/time/time.h"
++#include "base/values.h"
++#include "base/version.h"
++#include "chrome/browser/profiles/profile.h"
++#include "content/public/browser/storage_partition.h"
++#include "crypto/hash.h"
++#include "net/traffic_annotation/network_traffic_annotation.h"
++#include "services/network/public/cpp/resource_request.h"
++#include "services/network/public/cpp/shared_url_loader_factory.h"
++#include "services/network/public/cpp/simple_url_loader.h"
++#include "services/network/public/mojom/fetch_api.mojom.h"
++#include "url/gurl.h"
++
++namespace {
++
++constexpr char kVersion[] = "3.0.3";
++constexpr char kLatestReleaseUrl[] =
++    "https://api.github.com/repos/ZakharKutikov/VisibilityBrowser/releases/"
++    "latest";
++constexpr char kDownloadPrefix[] =
++    "https://github.com/ZakharKutikov/VisibilityBrowser/releases/download/";
++constexpr char kSha256Prefix[] = "sha256:";
++// Testing hooks: pretend to be another version, and stop after the checksum
++// instead of running the installer.
++constexpr char kSwitchVersionOverride[] = "vis-version-override";
++constexpr char kSwitchDryRun[] = "vis-update-dry-run";
++constexpr size_t kMaxReleaseJsonBytes = 1024 * 1024;
++
++const net::NetworkTrafficAnnotationTag kUpdateAnnotation =
++    net::DefineNetworkTrafficAnnotation("visibility_update", R"(
++      semantics {
++        sender: "Visibility update check"
++        description:
++          "Asks GitHub for the latest Visibility Browser release and, when "
++          "the user agrees, downloads its installer."
++        trigger: "Browser start, and the user pressing the update button."
++        data: "None. The request carries no user data."
++        destination: OTHER
++        destination_other: "GitHub servers"
++      }
++      policy {
++        cookies_allowed: NO
++        setting: "No setting; the check cannot be turned off yet."
++        policy_exception_justification: "Not implemented."
++      })");
++
++// Runs on a worker thread: checks the SHA-256 and runs the installer.
++bool VerifyAndRun(const base::FilePath& path,
++                  const std::string& expected_sha256) {
++  base::File file(path, base::File::FLAG_OPEN | base::File::FLAG_READ);
++  std::array<uint8_t, crypto::hash::kSha256Size> digest;
++  if (!crypto::hash::HashFile(crypto::hash::kSha256, &file, digest)) {
++    return false;
++  }
++  const std::string hex = base::ToLowerASCII(base::HexEncode(digest));
++  file.Close();
++  if (hex != expected_sha256) {
++    base::DeleteFile(path);
++    return false;
++  }
++  if (base::CommandLine::ForCurrentProcess()->HasSwitch(kSwitchDryRun)) {
++    base::DeleteFile(path);
++    return true;
++  }
++  base::CommandLine command(path);
++  command.AppendSwitch("do-not-launch-chrome");
++  base::Process process = base::LaunchProcess(command, base::LaunchOptions());
++  if (!process.IsValid()) {
++    base::DeleteFile(path);
++    return false;
++  }
++  int exit_code = -1;
++  process.WaitForExit(&exit_code);
++  base::DeleteFile(path);
++  return exit_code == 0;
++}
++
++}  // namespace
++
++VisUpdater::VisUpdater(Profile* profile) : profile_(profile) {}
++
++VisUpdater::~VisUpdater() = default;
++
++// static
++std::string VisUpdater::CurrentVersion() {
++  const base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
++  if (command_line->HasSwitch(kSwitchVersionOverride)) {
++    return command_line->GetSwitchValueASCII(kSwitchVersionOverride);
++  }
++  return kVersion;
++}
++
++void VisUpdater::Check(
++    base::OnceCallback<void(std::optional<Info>)> callback) {
++  auto request = std::make_unique<network::ResourceRequest>();
++  request->url = GURL(kLatestReleaseUrl);
++  request->credentials_mode = network::mojom::CredentialsMode::kOmit;
++  request->headers.SetHeader("Accept", "application/vnd.github+json");
++  loader_ = network::SimpleURLLoader::Create(std::move(request),
++                                             kUpdateAnnotation);
++  loader_->SetTimeoutDuration(base::Seconds(15));
++  loader_->DownloadToString(
++      profile_->GetDefaultStoragePartition()
++          ->GetURLLoaderFactoryForBrowserProcess()
++          .get(),
++      base::BindOnce(&VisUpdater::OnChecked, weak_factory_.GetWeakPtr(),
++                     std::move(callback)),
++      kMaxReleaseJsonBytes);
++}
++
++void VisUpdater::OnChecked(
++    base::OnceCallback<void(std::optional<Info>)> callback,
++    std::optional<std::string> body) {
++  loader_.reset();
++  info_.reset();
++  if (!body) {
++    std::move(callback).Run(std::nullopt);
++    return;
++  }
++  std::optional<base::DictValue> release = base::JSONReader::ReadDict(*body, base::JSON_PARSE_RFC);
++  const std::string* tag = release ? release->FindString("tag_name") : nullptr;
++  if (!tag) {
++    std::move(callback).Run(std::nullopt);
++    return;
++  }
++  std::string version = *tag;
++  if (!version.empty() && version[0] == 'v') {
++    version.erase(0, 1);
++  }
++  const base::Version latest(version);
++  const base::Version current(CurrentVersion());
++  if (!latest.IsValid() || !current.IsValid() ||
++      latest.CompareTo(current) <= 0) {
++    std::move(callback).Run(std::nullopt);
++    return;
++  }
++  const base::ListValue* assets = release->FindList("assets");
++  if (assets) {
++    for (const base::Value& item : *assets) {
++      const base::DictValue* asset = item.GetIfDict();
++      const std::string* name = asset ? asset->FindString("name") : nullptr;
++      const std::string* url =
++          asset ? asset->FindString("browser_download_url") : nullptr;
++      const std::string* digest = asset ? asset->FindString("digest") : nullptr;
++      if (!name || !url || !digest ||
++          !base::EndsWith(*name, "-Setup.exe") ||
++          !base::StartsWith(*url, kDownloadPrefix) ||
++          !base::StartsWith(*digest, kSha256Prefix)) {
++        continue;
++      }
++      Info info;
++      info.version = version;
++      const std::string* notes = release->FindString("body");
++      info.notes = notes ? notes->substr(0, 600) : std::string();
++      info.download_url = *url;
++      info.sha256 = base::ToLowerASCII(digest->substr(sizeof(kSha256Prefix) - 1));
++      info.size = static_cast<uint64_t>(asset->FindDouble("size").value_or(0));
++      info_ = info;
++      break;
++    }
++  }
++  std::move(callback).Run(info_);
++}
++
++void VisUpdater::Install(base::RepeatingCallback<void(int)> progress,
++                         base::OnceCallback<void(bool)> done) {
++  if (!info_ || loader_) {
++    std::move(done).Run(false);
++    return;
++  }
++  progress_ = std::move(progress);
++  done_ = std::move(done);
++  auto request = std::make_unique<network::ResourceRequest>();
++  request->url = GURL(info_->download_url);
++  request->credentials_mode = network::mojom::CredentialsMode::kOmit;
++  loader_ = network::SimpleURLLoader::Create(std::move(request),
++                                             kUpdateAnnotation);
++  loader_->SetOnDownloadProgressCallback(base::BindRepeating(
++      &VisUpdater::OnProgress, weak_factory_.GetWeakPtr()));
++  loader_->DownloadToFile(
++      profile_->GetDefaultStoragePartition()
++          ->GetURLLoaderFactoryForBrowserProcess()
++          .get(),
++      base::BindOnce(&VisUpdater::OnDownloaded, weak_factory_.GetWeakPtr()),
++      profile_->GetPath().AppendASCII("Visibility-Update.exe"));
++}
++
++void VisUpdater::OnProgress(uint64_t received) {
++  if (info_ && info_->size > 0 && progress_) {
++    progress_.Run(static_cast<int>(
++        std::min<uint64_t>(99, received * 100 / info_->size)));
++  }
++}
++
++void VisUpdater::OnDownloaded(base::FilePath path) {
++  loader_.reset();
++  if (path.empty() || !info_) {
++    OnInstalled(false);
++    return;
++  }
++  base::ThreadPool::PostTaskAndReplyWithResult(
++      FROM_HERE,
++      {base::MayBlock(), base::WithBaseSyncPrimitives(),
++       base::TaskPriority::USER_VISIBLE,
++       base::TaskShutdownBehavior::SKIP_ON_SHUTDOWN},
++      base::BindOnce(&VerifyAndRun, path, info_->sha256),
++      base::BindOnce(&VisUpdater::OnInstalled, weak_factory_.GetWeakPtr()));
++}
++
++void VisUpdater::OnInstalled(bool ok) {
++  if (progress_ && ok) {
++    progress_.Run(100);
++  }
++  if (done_) {
++    std::move(done_).Run(ok);
++  }
++}
+diff --git a/chrome/browser/ui/webui_browser/vis_updater.h b/chrome/browser/ui/webui_browser/vis_updater.h
+new file mode 100644
+index 0000000..2381fec
+--- /dev/null
++++ b/chrome/browser/ui/webui_browser/vis_updater.h
+@@ -0,0 +1,69 @@
++// Visibility: checks GitHub for a newer release, downloads its installer,
++// verifies the SHA-256 that GitHub lists for the asset and runs it. The page
++// handler drives it and shows the progress in the WebUI frame.
++
++#ifndef CHROME_BROWSER_UI_WEBUI_BROWSER_VIS_UPDATER_H_
++#define CHROME_BROWSER_UI_WEBUI_BROWSER_VIS_UPDATER_H_
++
++#include <cstdint>
++#include <memory>
++#include <optional>
++#include <string>
++
++#include "base/functional/callback.h"
++#include "base/memory/raw_ptr.h"
++#include "base/memory/weak_ptr.h"
++
++class Profile;
++
++namespace base {
++class FilePath;
++}
++
++namespace network {
++class SimpleURLLoader;
++}
++
++class VisUpdater {
++ public:
++  struct Info {
++    std::string version;
++    std::string notes;
++    std::string download_url;
++    std::string sha256;
++    uint64_t size = 0;
++  };
++
++  explicit VisUpdater(Profile* profile);
++  VisUpdater(const VisUpdater&) = delete;
++  VisUpdater& operator=(const VisUpdater&) = delete;
++  ~VisUpdater();
++
++  // The version this build reports. Bump it for every release.
++  static std::string CurrentVersion();
++
++  // Runs `callback` with the newest release if it is newer than this build,
++  // or with nullopt (no update, or the check failed).
++  void Check(base::OnceCallback<void(std::optional<Info>)> callback);
++
++  // Downloads and runs the installer found by Check(). `progress` gets
++  // 0..100, `done` gets whether the installer finished successfully.
++  void Install(base::RepeatingCallback<void(int)> progress,
++               base::OnceCallback<void(bool)> done);
++
++ private:
++  void OnChecked(base::OnceCallback<void(std::optional<Info>)> callback,
++                 std::optional<std::string> body);
++  void OnProgress(uint64_t received);
++  void OnDownloaded(base::FilePath path);
++  void OnInstalled(bool ok);
++
++  raw_ptr<Profile> profile_;
++  std::optional<Info> info_;
++  std::unique_ptr<network::SimpleURLLoader> loader_;
++  base::RepeatingCallback<void(int)> progress_;
++  base::OnceCallback<void(bool)> done_;
++  base::WeakPtrFactory<VisUpdater> weak_factory_{this};
++};
++
++#endif  // CHROME_BROWSER_UI_WEBUI_BROWSER_VIS_UPDATER_H_
+diff --git a/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc b/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc
+index 1fe70bd..028be12 100644
+--- a/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc
++++ b/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc
+@@ -5,6 +5,8 @@
+ #include "chrome/browser/ui/webui_browser/webui_browser_page_handler.h"
+ #include "base/strings/utf_string_conversions.h"
+ #include "chrome/browser/ui/find_bar/find_bar_controller.h"
++#include "chrome/browser/lifetime/application_lifetime.h"
++#include "chrome/browser/ui/webui_browser/vis_updater.h"
+ #include "chrome/browser/ui/webui_browser/vis_find_bar.h"
+ #include "components/find_in_page/find_tab_helper.h"
+ #include "components/find_in_page/find_types.h"
+@@ -933,3 +935,46 @@ void WebUIBrowserPageHandler::CloseFindBar(bool activate) {
+                  : find_in_page::ResultAction::kKeep);
+   }
+ }
++
++void WebUIBrowserPageHandler::CheckForUpdate(
++    CheckForUpdateCallback callback) {
++  if (!updater_) {
++    updater_ = std::make_unique<VisUpdater>(GetBrowser()->GetProfile());
++  }
++  updater_->Check(base::BindOnce(
++      [](CheckForUpdateCallback callback,
++         std::optional<VisUpdater::Info> info) {
++        if (!info) {
++          std::move(callback).Run(nullptr);
++          return;
++        }
++        std::move(callback).Run(
++            webui_browser::mojom::UpdateInfo::New(info->version, info->notes));
++      },
++      std::move(callback)));
++}
++
++void WebUIBrowserPageHandler::InstallUpdate() {
++  if (!updater_) {
++    return;
++  }
++  updater_->Install(
++      base::BindRepeating(
++          [](base::WeakPtr<WebUIBrowserPageHandler> self, int percent) {
++            if (self && self->Page()) {
++              self->Page()->OnUpdateProgress(percent);
++            }
++          },
++          update_weak_factory_.GetWeakPtr()),
++      base::BindOnce(
++          [](base::WeakPtr<WebUIBrowserPageHandler> self, bool ok) {
++            if (self && self->Page()) {
++              self->Page()->OnUpdateInstalled(ok);
++            }
++          },
++          update_weak_factory_.GetWeakPtr()));
++}
++
++void WebUIBrowserPageHandler::RestartBrowser() {
++  chrome::AttemptRestart();
++}
+diff --git a/chrome/browser/ui/webui_browser/webui_browser_page_handler.h b/chrome/browser/ui/webui_browser/webui_browser_page_handler.h
+index 9d07ac1..fee06f4 100644
+--- a/chrome/browser/ui/webui_browser/webui_browser_page_handler.h
++++ b/chrome/browser/ui/webui_browser/webui_browser_page_handler.h
+@@ -24,6 +24,7 @@ class AppMenuModel;
+ class BackForwardMenuModel;
+ class BrowserWindowInterface;
+ class Profile;
++class VisUpdater;
+ 
+ namespace views {
+ class MenuModelAdapter;
+@@ -101,6 +102,9 @@ class WebUIBrowserPageHandler
+                   bool match_case,
+                   bool find_next) override;
+   void CloseFindBar(bool activate) override;
++  void CheckForUpdate(CheckForUpdateCallback callback) override;
++  void InstallUpdate() override;
++  void RestartBrowser() override;
+ 
+  private:
+   ~WebUIBrowserPageHandler() override;
+@@ -117,6 +121,9 @@ class WebUIBrowserPageHandler
+   raw_ptr<Profile> vpn_profile_ = nullptr;
+   webui_browser::mojom::Page* Page();
+ 
++  // Visibility: self-update (vis_updater.h).
++  std::unique_ptr<VisUpdater> updater_;
++
+   std::unique_ptr<AppMenuModel> menu_model_;
+   std::unique_ptr<AppMenu> menu_;
+ 
+@@ -144,6 +151,9 @@ class WebUIBrowserPageHandler
+   // services, causing a raw_ptr of BrowserUI dangling here, so use a weak ptr
+   // instead.
+   base::WeakPtr<WebUIBrowserUI> controller_;
++
++  // Visibility: must stay the last member.
++  base::WeakPtrFactory<WebUIBrowserPageHandler> update_weak_factory_{this};
+ };
+ 
+ #endif  // CHROME_BROWSER_UI_WEBUI_BROWSER_WEBUI_BROWSER_PAGE_HANDLER_H_

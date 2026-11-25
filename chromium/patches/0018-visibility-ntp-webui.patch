@@ -3358,7 +3358,7 @@ index 0000000..d2281cd
 +      <ul class="recent" id="recent"></ul>
 +    </section>
 +
-+    <footer class="footer" id="footer">Visibility Browser v3.0.2</footer>
++    <footer class="footer" id="footer">Visibility Browser v3.0.3</footer>
 +  </main>
 +
 +  <script type="module" src="strings.m.js"></script>
