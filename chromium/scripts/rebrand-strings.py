@@ -43,6 +43,8 @@ RU_CHROME = [
 ]
 KEEP = ['Интернет-магазин Chrome', 'Интернет-магазине Chrome',
         'Интернет-магазина Chrome', 'Интернет-магазином Chrome',
+        'интернет-магазин Chrome', 'интернет-магазине Chrome',
+        'интернет-магазина Chrome', 'интернет-магазином Chrome',
         'Google Chrome', 'Chrome Web Store']
 
 
@@ -153,7 +155,45 @@ def fix_authors():
     write(ru, xtb)
     print('authors: %d message ids changed' % len(changed))
 
+    # "Developer Build" next to the version number reads as an unfinished
+    # product; it is a plain translation edit, ids do not change.
+    path = 'components/strings/components_strings_ru.xtb'
+    text = read(path)
+    write(path, text.replace(
+        '<translation id="988159990683914416">Сборка для '
+        'разработчиков</translation>',
+        '<translation id="988159990683914416">Сборка Visibility</translation>'))
+
+
+def fix_license():
+    """The About page links Chromium's own project page: the link text must
+    say Chromium, not Visibility. Changes the English text (so the message id
+    changes) and moves the Russian translation to the new id."""
+    grd = 'components/components_chromium_strings.grd'
+    old = dict(message_ids(grd))
+    text = read(grd)
+    marker = '</ph>Visibility<ph name="END_LINK_CHROMIUM">'
+    start = text.index('name="IDS_VERSION_UI_LICENSE"')
+    end = text.index('</message>', start)
+    text = (text[:start] + text[start:end].replace(
+        marker, '</ph>Chromium<ph name="END_LINK_CHROMIUM">', 1) + text[end:])
+    write(grd, text)
+    new = dict(message_ids(grd))
+    changed = {old[k]: new[k] for k in old if old[k] != new[k]}
+    ru = 'components/strings/components_chromium_strings_ru.xtb'
+    xtb = read(ru)
+    for old_id, new_id in changed.items():
+        def fix(m):
+            body = re.sub(r'(<ph name="BEGIN_LINK_CHROMIUM" />)Visibility',
+                          r'\1Chromium', m.group(0))
+            return body.replace('id="%s"' % old_id, 'id="%s"' % new_id, 1)
+        xtb = re.sub(r'<translation id="%s">.*?</translation>' % old_id,
+                     fix, xtb, flags=re.S)
+    write(ru, xtb)
+    print('license: %d message ids changed' % len(changed))
+
 
 if __name__ == '__main__':
     main()
     fix_authors()
+    fix_license()

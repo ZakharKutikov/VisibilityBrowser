@@ -1,0 +1,1385 @@
+diff --git a/chrome/app/theme/default_100_percent/chromium/product_logo_16.png b/chrome/app/theme/default_100_percent/chromium/product_logo_16.png
+index df90579a58b7c8e5120f9ee4dc81fe3db6223928..15f3b1789d06f5143e9a11cd0a9286318e6d080c 100644
+GIT binary patch
+delta 515
+zcmV+e0{s1@1e^qrBYy$oNkl<Zc$|$>&1w`u5dNyBcQ&)hY}_aTZ~k2U0fWd&l8cGv
+zAtd+$p1k=Cx%mR3zCsX*5kX{6M$E;dxdnnGXksQi+ubGAlbOu!Dx|s_imLCc>Z-0L
+z0J!q$@$IM;ugSpOhm!;XfG{kj%}_=W_gpr3wzKf&8(r<K-hX1|4QfWS{?7pC5uR*7
+z`fksAzsw}`f+ozYKg#X7*Z>r(9OW7j-}OhifXIv?_1gGHIYdS|0_hq;AXX4MUAl!&
+zZ5l{)7pn>bGDBG-V&vYUF9WaxIP=Ao6NZm~CN&VVffIk$57aXM%zq;_2_9XzgS&Jc
+z*w4dJU2W=9On<mxJph41)+d*j@o{bqOVLeW!r<Qa#c)(toB9-^*fI!@byx&xa}w*{
+zKVWg?0Tx%5g0438jrP<O&6ZH#%iRsUJNSb6_6>9zDc0>)0IB}A{}s=-USs!UA2W@#
+zY9?L#yz0xKWfL>Wk#d5=gI@uZcBXOYGb9v`Hc^INL3|yCBDARm50CbxPEnR~XmcxM
+zt-nAhK_Iq13-!15)>VU~0Y^j!$ubf5cq%4{jE}O09G${~YLyeXLh@8j>>f|W<D>i^
+zQLJ*5%RjoWwq0%?ij(&+bX-+Y{DiYp+6*0w^_$93?q7CY=i%b2zAgX&002ovPDHLk
+FV1lB;`3nF5
+
+delta 525
+zcmV+o0`mQw1f>L!BYyw^b5ch_0Itp)=>Px#1ZP1_K>z@;j|==^1poj532;bRa{vGi
+z!vFvd!vV){sAK>D0lG;<K~y+TrBk_1TR{|^B42<6NZ1sf!3ALcAU#XL?hp_j-b2Fv
+zfB-^b>7gNYK%xMeD1itt6ktJk3(wD{LV_qpf(B9q%vQQM=zorkgl%?;BVFCIXy(pb
+z#u#HF_PJUl^`AVhop4K@b2IcXh;y|QvD>@AH@gGmW&WK|rEs-N|DOm%LWgj*r;*U%
+zKZt-Q^ebV=YQ`<OL}qSEaO;IICCKA5Lo3W@$^VpEAbJK_&l#N{O-IWYa9ct+ngZ4N
+zeAaWpXgGHP!hez|H@i@3d_vh)2Rv)-@T>(@O+DgBb1xvB6HxTK6#=IYJ$vJ5*&cy+
+zt_j}RMl^2^qi1gd0Vk|91p(aE;4wNekot!6%r$<bVrbkMMcZI6TKhFLIb-<#cSCW5
+zsVSu;PfkFY(W%IE<_4?BHa^UJ#AIw1Ut@Esjvkq~$bZ~m=y19)Am<A4Fv9zjD4uUX
+z?fMtgZS<pfzFzfe;*VS*e~2YUP`!1@O0$Bhjo>3geD5>9|0CIQ`AuK>AOfEyqpZTw
+zt7tK(@v3D?>Q~&#ZX~TH-_;j|tDSONrfDt@!dCP8$CLUm-&R)*d2a!Ddq3cxu;KRr
+P0000<MFvhpu0mjf?LX{z
+
+diff --git a/chrome/app/theme/default_100_percent/chromium/product_logo_32.png b/chrome/app/theme/default_100_percent/chromium/product_logo_32.png
+index 6f9cbca1f5e46d68e9e1f03fa80a082a872361bc..9b5afffc71604871f6813f96fd9a3cd01d59ea99 100644
+GIT binary patch
+delta 1126
+zcmV-s1eyD*2>J++BYy-zNkl<Zc%02wTWFj`6#mZ4|L^{r%{G^Y=0dPg8|rJcB3dD0
+zgwlwhLe;7jT3z~5eGx$)1fgJy@d8!ER?&y35ABQiQY;b-wbp9$(uzo-KG@BrF^Ns%
+zZg&6wpE+{IMAs&p=H}{wfnm<&J992`AqX)D1eWQhb9?RvD1S@Fc3H!%#O#T{%80;3
+zu~Ib39t{9E`t#P0zAne4xk>vsJ5$L-`VBB;$x|MO1{~WJ0$=Bbr$7k}8{3$O-!Fyv
+z=W}-*pAl@rv7LJ3?KQq0qZ7I=d5;;N5tl3&%DJ`{#Q4jmZc34vDt#52d`~WiP~nl|
+zMh){@0v?YS!hcy%y=LG-Wi|yvuzX6rDcE%L+1+;n`ZOCW9_lp%UECo<S}DM6Q*3EJ
+zCG>0wR*4u=6C~IQmb<uQWKmVo0VPEaOI;p78`#*nJXMDXG}~d#3gGJGePL274|{pd
+ztfGF@N|Z<uNdKKNnai4+FVmK{6d^g06e)x@0u;d(LVuX)5T+D4zE1kk>k?3b4_HP*
+z`LJx=$#Y}di;&c%CWWF6F&<4J<p&7z1T$Jd@wYteOzeit%}BxVYW%>-ijL^ssJ2xl
+zhA2lIV=|h?O~D4dx_K{NX?YyAc^@C{IDm$A^{{E}hRkJ6cp@XR8-r%2D>lT|vK$}~
+zCZcO-^nWvWZF3eUI}c%B+x_@<=seDiUVz+>yIQ(2`TAKm9&7FfJaW7<L+73B7o7*u
+z+mUrP#8#z9sCnQ-DA@?lwCzBDXD{})ZAV%Mh}mFp;vzI@ygm3S9_r{u-47w^E|l<a
+zM>h@+e&Tq8lNX(==<I3Tj{aMFk!|a7HpTW5i+_+8T$RGA4QerP={pQ<djh+jd)i%e
+z!wq@2COm7GcZGZNpqY_W34Abo0w*U2@of8pc(l38?PzP$E%^S|9}(yT-aXZa1261%
+zIxnAk4_a#!;}ULLzXcv?<V_LB#s+Zs@@M#^IEDr<<8051_@>jljdb?)3@IE5n;6<s
+z(|?X9Tkk^~>anl?kW1X}VF7&)9F&~lsn1_TI#B~y;OM<CVHj8O@yM6>sc_jjo>V>z
+zFBlnH(E;b3>wm(GDWPCXXbBn-O%-u<bOMoy(Vl5`a=Ga%@U@5fmi6%K0*n?XQKOPb
+z=_D*mk}94DcF}`K6b&;1l|YRSP>714jDJGfYe00Zh>@8ICzo!>z+V?2PANoD5lw!b
+ztCtG9Uj9jF!LV#xTEr#=K7y2wfHQNUf=jPucVbExES0<^OP2SBgjF^-*HvZn<=#sQ
+zE2Z+5Ud2m70kk%6@0F1i2d<EocS#jrg$$Ozf?z8s9-yR_Fjg-T1S=mE!B(XB9bXQO
+zd>pDr(lw!B!B&^<=sRO$dqg*;G&6_)Hnw00mbLbXVE>0-vxc5rE*Jg}KBs?r_|NY-
+sQI=xUWi49C%JX9tn^zPos{B3w1G)MTLKXRwaR2}S07*qoM6N<$f>RU`Q~&?~
+
+delta 1047
+zcmV+y1nB$v2&)K?BYyw^b5ch_0Itp)=>Px#1ZP1_K>z@;j|==^1poj532;bRa{vGi
+z!vFvd!vV){sAK>D1Hef{K~z{r#aG{N6jc-+e4qjvSVIhyChg2!nkXt5imeK<#AphL
+zq$FB2ota$?bq(nQ^#?y5jDLdqV7pzW3P~SC8f<NwQZ2OX&VSC%c17AIkhCNa$u^Ou
+zODF*aA)h&?w%yKFrKQt7$(Ox*@44Uk=FYiy?vW&i6<C$UqSyDeuzh{9rT?y&+Ncsy
+z=LS<7B@SWh{UYwK&5!9N&Ulmd^zpYA3tO-Ao_h~#FI0hkMXw(s?t3`&`k8BjQ?Y$P
+zZ+ltJwBXbsTYp+t;a~uYr9&|_cVOxGC&p>-VD*#;`K%f&913Jka0w)$AgqQsxCrYT
+zd1>5yawjYu-e2E`5>bmJIjRQNUaZP=av78pim8SqIig+Q6_~-vO>oSJdQp;1ZA8TV
+z84hlPV@A|bNio$FZ5OA5+Zd0jUYAHk_5^6DISCM!4u27w+BMXsKBwP*VNL?_BbAUX
+z4S8J^$URw(Rp0GoP@DQ_jC`E)X2PrltPbzNitci(i|@r#KkLYA+yzg=Yk2b5b_TWc
+z8sFqG@*&^V;ff5NSqTuPj@<A&Otv|(AGOI=G+pgMar0iBO7+3pQ~}TNZSZ`*9pc2>
+z=omeZl7HqZH2v0%V6u(p(A?bc9_Gs6|33kq?sBZR12B>u_~ZT^kkv%LgjBZ)9b^6Y
+zJZeBH@<7_?!Do>WI&ThOQQZsJZ+^kPf8M`~Z-!4{gZ&|MIr;xpfNW~4`oPc;-1zGj
+zlTFx`mH-w7i}6O!LG+DWfhXs2EMNQ>&R@HXoquN!^VrKRA55D=9EUC$%t_o2Ea1?P
+zfw6nj1#E5!U}?ivEHg^cdZ!=N2S3KXPixS2cL2*8w(^)$z|DKNarjchg9}K11sm)D
+zFC#4{*+<q_cqH@^mKdej*7XVc$F4GVoIZdh#w$EVuZfK2d^_BU=V$v0CLK5l$FrXj
+zihmNTZP>!9V>|G~(buumC`EHBfgi8`!Ye|3G}fAoqCVM<Es2_kOTu)}mLjre;#Da8
+zNyW;eWms;!if2!#c&<t1HuV*DR<h5Eo_W}YGl35oOGCk#cd_P&-S9M)G1i>i&3!cH
+z%0c8r#!*cF7vd<MPfQ8O_UAbJ7m_Sp$$!Mel}s_U`tb{5rjwiCm=W~|C1FvvuH~}n
+z+caL7ge&V8x-j9VpDfJ=t8=JaTENn*JO7OS=%fG^(O#Crg=2bg8lQ*aG@e$RQZ*FQ
+zLm9!-%^TB8M8aPyV)}q$Y1fpfmZAe=PKatLIjW5aTOSY!f1R+^7oG9`2J;~5@ep+6
+RdKmx!002ovPDHLkV1jUt{7e7<
+
+diff --git a/chrome/app/theme/default_200_percent/chromium/product_logo_16.png b/chrome/app/theme/default_200_percent/chromium/product_logo_16.png
+index 6f9cbca1f5e46d68e9e1f03fa80a082a872361bc..9b5afffc71604871f6813f96fd9a3cd01d59ea99 100644
+GIT binary patch
+delta 1126
+zcmV-s1eyD*2>J++BYy-zNkl<Zc%02wTWFj`6#mZ4|L^{r%{G^Y=0dPg8|rJcB3dD0
+zgwlwhLe;7jT3z~5eGx$)1fgJy@d8!ER?&y35ABQiQY;b-wbp9$(uzo-KG@BrF^Ns%
+zZg&6wpE+{IMAs&p=H}{wfnm<&J992`AqX)D1eWQhb9?RvD1S@Fc3H!%#O#T{%80;3
+zu~Ib39t{9E`t#P0zAne4xk>vsJ5$L-`VBB;$x|MO1{~WJ0$=Bbr$7k}8{3$O-!Fyv
+z=W}-*pAl@rv7LJ3?KQq0qZ7I=d5;;N5tl3&%DJ`{#Q4jmZc34vDt#52d`~WiP~nl|
+zMh){@0v?YS!hcy%y=LG-Wi|yvuzX6rDcE%L+1+;n`ZOCW9_lp%UECo<S}DM6Q*3EJ
+zCG>0wR*4u=6C~IQmb<uQWKmVo0VPEaOI;p78`#*nJXMDXG}~d#3gGJGePL274|{pd
+ztfGF@N|Z<uNdKKNnai4+FVmK{6d^g06e)x@0u;d(LVuX)5T+D4zE1kk>k?3b4_HP*
+z`LJx=$#Y}di;&c%CWWF6F&<4J<p&7z1T$Jd@wYteOzeit%}BxVYW%>-ijL^ssJ2xl
+zhA2lIV=|h?O~D4dx_K{NX?YyAc^@C{IDm$A^{{E}hRkJ6cp@XR8-r%2D>lT|vK$}~
+zCZcO-^nWvWZF3eUI}c%B+x_@<=seDiUVz+>yIQ(2`TAKm9&7FfJaW7<L+73B7o7*u
+z+mUrP#8#z9sCnQ-DA@?lwCzBDXD{})ZAV%Mh}mFp;vzI@ygm3S9_r{u-47w^E|l<a
+zM>h@+e&Tq8lNX(==<I3Tj{aMFk!|a7HpTW5i+_+8T$RGA4QerP={pQ<djh+jd)i%e
+z!wq@2COm7GcZGZNpqY_W34Abo0w*U2@of8pc(l38?PzP$E%^S|9}(yT-aXZa1261%
+zIxnAk4_a#!;}ULLzXcv?<V_LB#s+Zs@@M#^IEDr<<8051_@>jljdb?)3@IE5n;6<s
+z(|?X9Tkk^~>anl?kW1X}VF7&)9F&~lsn1_TI#B~y;OM<CVHj8O@yM6>sc_jjo>V>z
+zFBlnH(E;b3>wm(GDWPCXXbBn-O%-u<bOMoy(Vl5`a=Ga%@U@5fmi6%K0*n?XQKOPb
+z=_D*mk}94DcF}`K6b&;1l|YRSP>714jDJGfYe00Zh>@8ICzo!>z+V?2PANoD5lw!b
+ztCtG9Uj9jF!LV#xTEr#=K7y2wfHQNUf=jPucVbExES0<^OP2SBgjF^-*HvZn<=#sQ
+zE2Z+5Ud2m70kk%6@0F1i2d<EocS#jrg$$Ozf?z8s9-yR_Fjg-T1S=mE!B(XB9bXQO
+zd>pDr(lw!B!B&^<=sRO$dqg*;G&6_)Hnw00mbLbXVE>0-vxc5rE*Jg}KBs?r_|NY-
+sQI=xUWi49C%JX9tn^zPos{B3w1G)MTLKXRwaR2}S07*qoM6N<$f>RU`Q~&?~
+
+delta 1047
+zcmV+y1nB$v2&)K?BYyw^b5ch_0Itp)=>Px#1ZP1_K>z@;j|==^1poj532;bRa{vGi
+z!vFvd!vV){sAK>D1Hef{K~z{r#aG{N6jc-+e4qjvSVIhyChg2!nkXt5imeK<#AphL
+zq$FB2ota$?bq(nQ^#?y5jDLdqV7pzW3P~SC8f<NwQZ2OX&VSC%c17AIkhCNa$u^Ou
+zODF*aA)h&?w%yKFrKQt7$(Ox*@44Uk=FYiy?vW&i6<C$UqSyDeuzh{9rT?y&+Ncsy
+z=LS<7B@SWh{UYwK&5!9N&Ulmd^zpYA3tO-Ao_h~#FI0hkMXw(s?t3`&`k8BjQ?Y$P
+zZ+ltJwBXbsTYp+t;a~uYr9&|_cVOxGC&p>-VD*#;`K%f&913Jka0w)$AgqQsxCrYT
+zd1>5yawjYu-e2E`5>bmJIjRQNUaZP=av78pim8SqIig+Q6_~-vO>oSJdQp;1ZA8TV
+z84hlPV@A|bNio$FZ5OA5+Zd0jUYAHk_5^6DISCM!4u27w+BMXsKBwP*VNL?_BbAUX
+z4S8J^$URw(Rp0GoP@DQ_jC`E)X2PrltPbzNitci(i|@r#KkLYA+yzg=Yk2b5b_TWc
+z8sFqG@*&^V;ff5NSqTuPj@<A&Otv|(AGOI=G+pgMar0iBO7+3pQ~}TNZSZ`*9pc2>
+z=omeZl7HqZH2v0%V6u(p(A?bc9_Gs6|33kq?sBZR12B>u_~ZT^kkv%LgjBZ)9b^6Y
+zJZeBH@<7_?!Do>WI&ThOQQZsJZ+^kPf8M`~Z-!4{gZ&|MIr;xpfNW~4`oPc;-1zGj
+zlTFx`mH-w7i}6O!LG+DWfhXs2EMNQ>&R@HXoquN!^VrKRA55D=9EUC$%t_o2Ea1?P
+zfw6nj1#E5!U}?ivEHg^cdZ!=N2S3KXPixS2cL2*8w(^)$z|DKNarjchg9}K11sm)D
+zFC#4{*+<q_cqH@^mKdej*7XVc$F4GVoIZdh#w$EVuZfK2d^_BU=V$v0CLK5l$FrXj
+zihmNTZP>!9V>|G~(buumC`EHBfgi8`!Ye|3G}fAoqCVM<Es2_kOTu)}mLjre;#Da8
+zNyW;eWms;!if2!#c&<t1HuV*DR<h5Eo_W}YGl35oOGCk#cd_P&-S9M)G1i>i&3!cH
+z%0c8r#!*cF7vd<MPfQ8O_UAbJ7m_Sp$$!Mel}s_U`tb{5rjwiCm=W~|C1FvvuH~}n
+z+caL7ge&V8x-j9VpDfJ=t8=JaTENn*JO7OS=%fG^(O#Crg=2bg8lQ*aG@e$RQZ*FQ
+zLm9!-%^TB8M8aPyV)}q$Y1fpfmZAe=PKatLIjW5aTOSY!f1R+^7oG9`2J;~5@ep+6
+RdKmx!002ovPDHLkV1jUt{7e7<
+
+diff --git a/chrome/app/theme/default_200_percent/chromium/product_logo_32.png b/chrome/app/theme/default_200_percent/chromium/product_logo_32.png
+index 168d09cdbe46c8850c192b6ee318f85eda6ca154..936716bdffc1f6a089865f94ae5aa8d95f6c9c1e 100644
+GIT binary patch
+delta 2803
+zcmV<P3Jmp~5c(C6BYz6PNkl<Zc%0>1eQ;FO75|<4-oD*rlZ6mM_(oJjKoel17(cM7
+z_ytn@qj3h?LaEgmKRQ#ic1Fh;hicntr|q<rY5x$ReqcJpX^U3q2a0wmNU=hY4+}y0
+z3Ivl($R?X)ci+3WbI#ihNerzBS(5CTeY3mo-Fxo+oqO*&_kWys58-TNKtQDeReSt*
+z%FZR@j7xWTnr<OuW&#*(G{OX<a1qIXG?8fs(MeLY3kGjf$o@-h>8j&?fl3Rg)*zU^
+z>QmobpH`q1ntx8MdEjc#OMb_ASOl9!5pzmv7*7Mna1SmnF#;lxr9c4%V+@R|8<eHi
+z6Pc9<XRoR0jen_k^`5k@(!xE}Uh%H4hx0t=S-?E3f_6Z+C77`Wk%2La8$GK4Gf&(n
+z7KDZ|1Y0R9>_8{nB!J&Uqis($R8+U6v30LVJ=mlQT>g(`(@id_RE}NZosKhimke3p
+z;U5en;xL+sENgfOI_~bKgjrmB-I{&9g+N`EQV*tVTYol32kFm5G}4PDTxK$WM*3XI
+z7-Kvu?AXSbMoM@KYp;9pz3xJw?(1XH`%AC1$=U*A3U#OJrN9q*Vj-xIZGossC6YHC
+zEPr`_8ng1XJ-}<;()1cBD%71`dgO-$F&4q3sL)gDwUS+rh2?<(DO9tmTcPth)U#ID
+znc>9}Nq-{P7-Gbj7@L(BoE~d${GnKc>PjU><nj-eO*0xbCZS0*{NP>l|Bnn?3UZWz
+z=gmAc=cRoN*66r?Oa*P*7;T0ycqU?uj1{0q89PmU|7&CHq`en}0=R}X!cZ1~m`K>f
+z`@&{7;LcE%YtL6fs{pde8RFoX7^AB-W40K(0)Neu-5p=qLMgloG*20AN==fLA1<m>
+zlTk8IjM>1H+8`Puj?K`Y{AY;ZJ9D5hyhY4Sd5YO30`?YwTqXW|_N@Lh#Lgp(%AR$9
+z7E;J^Qpj>r7o}C!Ip%--&mh?uZ&BiRKHxOwba2hEW#Z7*kQ0FM=Nb`loDRuY0$#%9
+z7=NQYCR@RBY}jE3%CUVJuwO=lTmU4oXalnRNOEUWE0S$-81J*-l6=b|1oDCi7Uua8
+zUhVs4VzCF404!3{@lG!xpj1qw<wO&dCRmmN>=gPQYk+-KLcFB|9j)ycHntEtSBbDf
+zmLo#&WQ`0^B}gFHsVG|1ZAW9G1tWqHjDJYxqVeb{6z7b9<2V9>f%aB{e9to;oPdMk
+zoI*4nt(Urm!3Y|YEy9zD+qjTUt2$o>l<E`%Yf47td+zY7@!Zshv3kmKoId_3N=IFR
+z^>;sqr^+8d!b^%S5CQN~;ETf$MDmQwtiSu$C>?dB)O}&fqgZ*xBe;2ZNsl&sL4RE2
+zC18<)Ycx(LqbPEQVe#nsxVN|hSLIEX=ilA>OMDVNhO3IF%2K#>QaRR-+l(#8K0qWt
+z0-b7IxdzeJR@^v#7Uo@2F2D+MBG__lJASwC4gBi*<ybtr0()YI@oN3s_*27He41!R
+z#13}}Kch21fdqWB+a|vs9KR5Mn}7LZ{OGc833y(wwbA3K`uOiC&L53;j=hg9bvuzu
+zAuOIYA68BP?%^mBe>fzUceqvVEuKCfVG7}&bvyCS(H&Cv_aAQ(Ud;2V@Fmg)xAoBY
+zuRx{xz<uF<WJCZqS%~W-THF{Gjl3Rj&U^;XT)Gq!LZf6P655qDy7|NhXn&5k!cjJ~
+z(Wu(L0j+Kf<>O}Kngc~>eDYl+*VZDr_8=Obd>3U0M#?iTQ?-Ai)Zx0!gLyGe=FM%4
+z4;A4DmoCMdrO)E-qU)tEojTd2gZfPX1VTfy1;xPvyfE!CteUnQQ*$Rsr+9>TBrN}(
+zA$B$$fFg-LA>RpOTU`y_JAb(w`IL)$uURA(0g(U@aiBDCZ`mT`Q&`GutJ@`YxGwWx
+zUQEoJ+ell4sk!6v{FTeGdiwV;COAU+cCHFieg1-kxK7~PWADUUvwn)ZM$VB=F!Z$9
+zOACpqq4Ts%(bRi(8PQkwZ$Q*-!Hx58#f`UBpgr0q*A2H-;HCw)A%E&cQT5SA-%<z{
+zBRm>9n|tu)Z*G&@=CTV4uf<!leu4+a&X+!(%W_c20C6W}7Mw`U0_0-J_aB7fh@?_j
+z`uIa~@4XW>U8CP0Hvhb=fQCU(IaqaKBQ`hh!qbz#A+vyqJIhnG`>w4hG+ahKz02u7
+z3$7bef}1Pmp>$4}lz*RFF%MC<_vrhzxK2^1K>nq9^S3ts%wyl;&8F>G@$oCD?WjYc
+z9g)6XZ~>$nE(#38sdzK)+y8Sc99fRXCsoQ?Wa7?y(lKCG;T6(JQ3>X=v*7j#b8-Ju
+z%jIDn<>0R;cYJ2_xi0fyUOs<u61sHFf7*}ZXGf~>dgC@Y6n{WbU^raU<MscA-v_wH
+zLr?_}A_wamx8j}V8nMy$kG&HUL!-KsRK?iYC<x}m)n_`Co&`M8<>N|m!yR9e`%&H3
+z=tJr<59Y-@*(xv{i#K3Z-A1fE^|n}m0y|GmhMX(-FRTO7%7+_fHTc`(Z{YTwPvD8#
+z)%dXO6IlwEM}NlSp2@eMDc%BG`Q|A-3%1tn!oTYGz+&IPBkZXEQ0{dfeXhfGD<^+h
+zcrnjCZHMvXq1DpX%H!)rnB0f7GS2u;(BriaLSY~xcKG=d8&Gv>Gp>zH75n_n=?k!_
+zZU;W?Y(~IhH`lia{Qc6N*D-f&nf!lo&l_FOn0Q;<>3=3LC4T~zO<#zr`pvTY+aCQ0
+zZC(fRtz3)@3=`kse3d0#x^+pC-<F*hmu{wsr(w+NL{ht$m|F~LcX8y%QGb)-Tg5Jb
+zOJ*#TnlJBt9YNa>A^7XWUuu&kO$2gn9O*cP0NDszp{}j(1#yuH?gbOT+1+6!LTIm#
+z%F77iH-GZ-A+#o9Ql6*20OAkF0BnVv;)sCfI{oGj6Wo4@2c$b1P^oDjb`YLefOu03
+zt^`DQ1WBA3DW5uW$HEFkLI@Uyp#qjK3}t^I<u)K9LMCmuJswpHIin*I5_8)V@Zx7e
+zVu3zFV(F++e@25c7Zda~pMR7uV8bb}&l(i<&wprS?nRxAOp~1CO#Mzr#(IUuGD&vk
+zo9qMVMSLx*kmaP1<)o11qyXyafn*Dbi6yO|D3&_<o=wLj#7`$hF$Hbvc?Xtd@MYHt
+zn0iHuYAB$1XPTK9)IcDDX3PYtQ5t5GWLfZ)EtJBmVKynxb~os_*UV`q{l4)YFh^yT
+zVt>q@?QT#<%hsNR!XG)u#!x@HT?2#|BV%REN6Xfpl%w$~pnk67u1n&q59wK87^7f?
+z`GsJ|x=K|$d(A#1%}Q%n&@!gWRT*-`*cc-`v+~fKm-aGt4&)Q?G?mmG%4tj3+f~4t
+z;l+~fP|F$-@L|W+NpEkS<IdS#dRYgsf`1Q8`%`}R%vWNbGG8^?G^voqM`(wPK1d}^
+z*^G@bGFEv&>9kkQpIKLF9VvV9Bb6`<pwMWAo%C`T%sPS7=3FZru%M`slHOg6QPSp8
+zS){6~DCg0wtF#W5ui5SzHP?80w_On8Wx&VE-9cp{Ir!wyU}6l$7*3qLxp&Us=WI`%
+zb?ktS4W86lvXxR_D0MbX-4cx_|NFiY3;GeGv50InN*)iA<Y^V4=MI#-u)8;=-qq13
+z^_f0z-C?x3#c=w(F=LD&&NUb~>GKxVfbbRtK7acBe*r3NvZvAAi<AHW002ovPDHLk
+FV1mO6Y={5=
+
+delta 2065
+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
+
+diff --git a/chrome/browser/resources/history/app.ts b/chrome/browser/resources/history/app.ts
+index 5f344c4..32952c0 100644
+--- a/chrome/browser/resources/history/app.ts
++++ b/chrome/browser/resources/history/app.ts
+@@ -861,10 +861,8 @@ export class HistoryAppElement extends HistoryAppElementBase {
+   // 3. History sync is not disabled.
+   // 4. User is not already signed in and syncing history.
+   protected shouldShowHistoryPageHistorySyncPromo_(): boolean {
+-    return this.unoPhase2FollowUpEnabled_ && this.shouldShowHistorySyncPromo_ &&
+-        this.identityState_.historySync !== SyncState.DISABLED &&
+-        !(this.identityState_.signIn === HistorySignInState.SIGNED_IN &&
+-          this.identityState_.historySync === SyncState.TURNED_ON);
++    // Visibility: no Google history sync in our browser.
++    return false;
+   }
+ 
+   private handleShouldShowHistoryPageHistorySyncPromoChanged_(
+diff --git a/chrome/browser/resources/history/side_bar.html.ts b/chrome/browser/resources/history/side_bar.html.ts
+index f2384bf..bfeec16 100644
+--- a/chrome/browser/resources/history/side_bar.html.ts
++++ b/chrome/browser/resources/history/side_bar.html.ts
+@@ -20,7 +20,7 @@ export function getHtml(this: HistorySideBarElement) {
+     $i18n{historyMenuItem}
+     <cr-ripple></cr-ripple>
+   </a>
+-  <a id="syncedTabs" role="menuitem" href="/syncedTabs"
++  <a id="syncedTabs" role="menuitem" href="/syncedTabs" hidden
+       class="page-item cr-nav-menu-item" path="syncedTabs"
+       @click="${this.onItemClick_}">
+     <cr-icon icon="cr:devices"></cr-icon>
+diff --git a/chrome/browser/resources/settings/page_visibility.ts b/chrome/browser/resources/settings/page_visibility.ts
+index feff9bd..08c65df 100644
+--- a/chrome/browser/resources/settings/page_visibility.ts
++++ b/chrome/browser/resources/settings/page_visibility.ts
+@@ -44,7 +44,8 @@ export interface PrivacyPageVisibility {
+ 
+ function createPageVisibility(): PageVisibility|undefined {
+   if (!loadTimeData.getBoolean('isGuest')) {
+-    return undefined;
++    // Visibility: no Google account or Gemini pages in our browser.
++    return {people: false, ai: false};
+   }
+ 
+   // <if expr="not is_chromeos">
+diff --git a/chrome/browser/resources/settings/settings_menu/settings_menu.html b/chrome/browser/resources/settings/settings_menu/settings_menu.html
+index c35c985..952cf0b 100644
+--- a/chrome/browser/resources/settings/settings_menu/settings_menu.html
++++ b/chrome/browser/resources/settings/settings_menu/settings_menu.html
+@@ -123,7 +123,7 @@
+         </a>
+         <a role="menuitem" id="about-menu" href="/help"
+             class="cr-nav-menu-item">
+-          <cr-icon icon="cr:chrome-product"></cr-icon>
++          <cr-icon icon="cr:info"></cr-icon>
+           <span class="menu-label">$i18n{aboutPageTitle}</span>
+           <cr-ripple></cr-ripple>
+         </a>
+diff --git a/chrome/browser/resources/settings/settings_ui/settings_ui.ts b/chrome/browser/resources/settings/settings_ui/settings_ui.ts
+index 8fd66a2..5bd223d 100644
+--- a/chrome/browser/resources/settings/settings_ui/settings_ui.ts
++++ b/chrome/browser/resources/settings/settings_ui/settings_ui.ts
+@@ -97,6 +97,11 @@ export class SettingsUiElement extends SettingsUiElementBase {
+     super();
+ 
+     Router.getInstance().initializeRouteFromUrl();
++    // Visibility: the "You and Google" page is hidden, so the root page
++    // would be empty. Open on Appearance instead.
++    if (Router.getInstance().getCurrentRoute() === routes.BASIC) {
++      Router.getInstance().navigateTo(routes.APPEARANCE);
++    }
+   }
+ 
+   override connectedCallback() {
+diff --git a/chrome/browser/resources/webui_browser/BUILD.gn b/chrome/browser/resources/webui_browser/BUILD.gn
+index ac436ac..e5d6601 100644
+--- a/chrome/browser/resources/webui_browser/BUILD.gn
++++ b/chrome/browser/resources/webui_browser/BUILD.gn
+@@ -48,6 +48,10 @@ build_webui("build") {
+     "vis_sidebar.ts",
+     "vis_downloads.html.ts",
+     "vis_downloads.ts",
++    "vis_find.html.ts",
++    "vis_find.ts",
++    "vis_tab_search.html.ts",
++    "vis_tab_search.ts",
+     "vis_menu.html.ts",
+     "vis_menu.ts",
+     "vis_extensions.html.ts",
+@@ -84,6 +88,8 @@ build_webui("build") {
+     "vis_settings.css",
+     "vis_sidebar.css",
+     "vis_downloads.css",
++    "vis_find.css",
++    "vis_tab_search.css",
+     "vis_menu.css",
+     "vis_extensions.css",
+     "vis_vpn.css",
+diff --git a/chrome/browser/resources/webui_browser/app.html.ts b/chrome/browser/resources/webui_browser/app.html.ts
+index 5df2099..6c77868 100644
+--- a/chrome/browser/resources/webui_browser/app.html.ts
++++ b/chrome/browser/resources/webui_browser/app.html.ts
+@@ -196,6 +196,8 @@ export function getHtml(this: WebuiBrowserAppElement) {
+   </div>
+   <vis-sidebar id="visSidebar" @open-url="${this.onOpenUrl_}"></vis-sidebar>
+   <vis-downloads id="visDownloads"></vis-downloads>
++  <vis-find id="visFind"></vis-find>
++  <vis-tab-search id="visTabSearch"></vis-tab-search>
+   <vis-extensions id="visExtensions" @open-url="${this.onOpenUrl_}">
+   </vis-extensions>
+   <vis-menu id="visMenu" @menu-item="${this.onMenuItem_}"></vis-menu>
+diff --git a/chrome/browser/resources/webui_browser/app.ts b/chrome/browser/resources/webui_browser/app.ts
+index 8367236..f98968e 100644
+--- a/chrome/browser/resources/webui_browser/app.ts
++++ b/chrome/browser/resources/webui_browser/app.ts
+@@ -11,6 +11,8 @@ import '/strings.m.js';
+ import './tab_strip/tab_strip.js';
+ import './webview.js';
+ import './vis_downloads.js';
++import './vis_find.js';
++import './vis_tab_search.js';
+ import './vis_extensions.js';
+ import './vis_vpn.js';
+ import './vis_permission.js';
+@@ -37,6 +39,8 @@ import type {ContentRegionElement} from './content_region.js';
+ import type {SidePanelElement} from './side_panel.js';
+ import type {TabAdded, TabClosed, TabUpdated} from './tab_strip/events.js';
+ import type {VisDownloadsElement} from './vis_downloads.js';
++import type {VisFindElement} from './vis_find.js';
++import type {VisTabSearchElement} from './vis_tab_search.js';
+ import type {VisExtensionsElement} from './vis_extensions.js';
+ import type {VisVpnElement} from './vis_vpn.js';
+ import type {VisPermissionElement} from './vis_permission.js';
+@@ -58,6 +62,8 @@ export interface WebuiBrowserAppElement {
+     contentRegion: ContentRegionElement,
+     settings: VisSettingsElement,
+     visDownloads: VisDownloadsElement,
++    visFind: VisFindElement,
++    visTabSearch: VisTabSearchElement,
+     visExtensions: VisExtensionsElement,
+     visVpn: VisVpnElement,
+     visPermission: VisPermissionElement,
+@@ -144,6 +150,20 @@ export class WebuiBrowserAppElement extends CrLitElement {
+     });
+     callbackRouter.showVisibilityPanel.addListener(
+         this.onShowVisibilityPanel_.bind(this));
++    callbackRouter.showFindBar.addListener((text: string) => {
++      this.$.visTabSearch.hide();
++      this.$.visFind.show(text);
++    });
++    callbackRouter.hideFindBar.addListener(() => this.$.visFind.hide());
++    callbackRouter.setFindResult.addListener(
++        (active: number, total: number) =>
++            this.$.visFind.setResult(active, total));
++    callbackRouter.showTabSearch.addListener(() => {
++      this.$.visFind.hide();
++      this.$.visTabSearch.show(
++          this.$.tabstrip.getTabsForSearch(),
++          (id: string) => this.$.tabstrip.switchToTab(id));
++    });
+   }
+ 
+   override async connectedCallback() {
+diff --git a/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts b/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts
+index 0b78854..ab9d5d3 100644
+--- a/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts
++++ b/chrome/browser/resources/webui_browser/tab_strip/tab_strip.ts
+@@ -413,6 +413,26 @@ export class TabStripElement extends CrLitElement implements
+     }
+   }
+ 
++  // Visibility: the tab search overlay lists and switches tabs through these.
++  getTabsForSearch() {
++    return this.items_.flatMap(item => {
++      if (item.type !== 'tab') {
++        return [];
++      }
++      return [{
++        id: item.id,
++        title: item.tabData.title,
++        url: item.tabData.url,
++        favicon: item.tabData.favicon.dataUrl,
++        isActive: item.tabData.isActive,
++      }];
++    });
++  }
++
++  switchToTab(tabId: NodeId) {
++    this.activateTab(tabId);
++  }
++
+   protected activateTab(tabId: NodeId) {
+     // Only request the activation. The active state is applied when the
+     // browser reports the change through OnDataChanged (see updateTab()), so
+diff --git a/chrome/browser/resources/webui_browser/vis_find.css b/chrome/browser/resources/webui_browser/vis_find.css
+new file mode 100644
+index 0000000..7651219
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_find.css
+@@ -0,0 +1,96 @@
++/* Copyright 2026 The Chromium Authors
++ * Use of this source code is governed by a BSD-style license that can be
++ * found in the LICENSE file. */
++
++/* #css_wrapper_metadata_start
++ * #type=style-lit
++ * #scheme=relative
++ * #css_wrapper_metadata_end */
++
++:host {
++  position: fixed;
++  top: 98px;
++  right: 24px;
++  z-index: 940;
++  display: none;
++  font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui,
++      sans-serif;
++  font-size: 13px;
++  color: #f8fafc;
++}
++
++:host([open]) {
++  display: block;
++}
++
++.card {
++  display: flex;
++  align-items: center;
++  gap: 4px;
++  padding: 6px 6px 6px 12px;
++  background: #1e202a;
++  border: 1px solid rgba(255, 255, 255, 14%);
++  border-radius: 12px;
++  box-shadow: 0 12px 32px rgba(0, 0, 0, 55%);
++}
++
++input {
++  width: 190px;
++  background: transparent;
++  border: none;
++  outline: none;
++  color: inherit;
++  font: inherit;
++  user-select: text;
++}
++
++input::placeholder {
++  color: rgba(255, 255, 255, 45%);
++}
++
++.count {
++  min-width: 34px;
++  text-align: right;
++  font-variant-numeric: tabular-nums;
++  color: #94a3b8;
++  font-size: 12px;
++}
++
++.count.none {
++  color: #f55;
++}
++
++.sep {
++  width: 1px;
++  height: 16px;
++  margin: 0 4px;
++  background: rgba(255, 255, 255, 14%);
++}
++
++.btn {
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  width: 26px;
++  height: 26px;
++  padding: 0;
++  border: none;
++  border-radius: 8px;
++  background: transparent;
++  color: #94a3b8;
++  cursor: pointer;
++}
++
++.btn:hover {
++  background: rgba(255, 255, 255, 8%);
++  color: #f8fafc;
++}
++
++:focus-visible {
++  outline: 2px solid #818cf8;
++  outline-offset: 1px;
++}
++
++input:focus-visible {
++  outline: none;
++}
+diff --git a/chrome/browser/resources/webui_browser/vis_find.html.ts b/chrome/browser/resources/webui_browser/vis_find.html.ts
+new file mode 100644
+index 0000000..b2c1473
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_find.html.ts
+@@ -0,0 +1,39 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++import {html} from '//resources/lit/v3_0/lit.rollup.js';
++
++import type {VisFindElement} from './vis_find.js';
++
++export function getHtml(this: VisFindElement) {
++  return html`<!--_html_template_start_-->
++<div class="card" role="search" @keydown="${this.onKeydown}">
++  <input type="text" .value="${this.query}" @input="${this.onInput}"
++      placeholder="${this.t('findPlaceholder')}" spellcheck="false"
++      aria-label="${this.t('findPlaceholder')}">
++  <span class="count ${this.total === 0 && this.query !== '' ? 'none' : ''}">
++    ${this.counter()}</span>
++  <span class="sep"></span>
++  <button class="btn" title="${this.t('findPrev')}" @click="${this.onPrevClick}">
++    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
++        stroke="currentColor" stroke-width="2" stroke-linecap="round"
++        stroke-linejoin="round" aria-hidden="true">
++      <polyline points="18,15 12,9 6,15"/></svg>
++  </button>
++  <button class="btn" title="${this.t('findNext')}" @click="${this.onNextClick}">
++    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
++        stroke="currentColor" stroke-width="2" stroke-linecap="round"
++        stroke-linejoin="round" aria-hidden="true">
++      <polyline points="6,9 12,15 18,9"/></svg>
++  </button>
++  <button class="btn" title="${this.t('close')}" @click="${this.onCloseClick}">
++    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
++        stroke="currentColor" stroke-width="2" stroke-linecap="round"
++        stroke-linejoin="round" aria-hidden="true">
++      <line x1="18" y1="6" x2="6" y2="18"/>
++      <line x1="6" y1="6" x2="18" y2="18"/></svg>
++  </button>
++</div>
++<!--_html_template_end_-->`;
++}
+diff --git a/chrome/browser/resources/webui_browser/vis_find.ts b/chrome/browser/resources/webui_browser/vis_find.ts
+new file mode 100644
+index 0000000..6e74265
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_find.ts
+@@ -0,0 +1,112 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++// Visibility: find in page. A floating card in the 2.1 palette; Chromium's own
++// find bar widget is replaced (see vis_find_bar.cc).
++
++import {CrLitElement} from '//resources/lit/v3_0/lit.rollup.js';
++
++import {browserProxyFactory} from './browser.mojom-webui.js';
++import {getCss} from './vis_find.css.js';
++import {getHtml} from './vis_find.html.js';
++import {t} from './vis_settings.js';
++
++export class VisFindElement extends CrLitElement {
++  static get is() {
++    return 'vis-find';
++  }
++
++  static override get styles() {
++    return getCss();
++  }
++
++  override render() {
++    return getHtml.bind(this)();
++  }
++
++  static override get properties() {
++    return {
++      open: {type: Boolean, reflect: true},
++      query: {state: true, type: String},
++      active: {state: true, type: Number},
++      total: {state: true, type: Number},
++    };
++  }
++
++  accessor open: boolean = false;
++  accessor query: string = '';
++  accessor active: number = 0;
++  accessor total: number = 0;
++
++  readonly t = t;
++
++  show(text: string) {
++    if (text !== '' || !this.open) {
++      this.query = text;
++    }
++    this.open = true;
++    this.updateComplete.then(() => {
++      const input = this.shadowRoot.querySelector('input');
++      input?.focus();
++      input?.select();
++    });
++  }
++
++  hide() {
++    this.open = false;
++  }
++
++  setResult(active: number, total: number) {
++    this.active = active;
++    this.total = total;
++  }
++
++  private find_(forward: boolean, findNext: boolean) {
++    browserProxyFactory.getInstance().handler.findInPage(
++        this.query, forward, false, findNext);
++  }
++
++  protected onInput(e: Event) {
++    this.query = (e.target as HTMLInputElement).value;
++    this.find_(true, false);
++  }
++
++  protected onKeydown(e: KeyboardEvent) {
++    if (e.key === 'Enter') {
++      e.preventDefault();
++      this.find_(!e.shiftKey, true);
++    } else if (e.key === 'Escape') {
++      e.preventDefault();
++      this.onCloseClick();
++    }
++  }
++
++  protected onPrevClick() {
++    this.find_(false, true);
++  }
++
++  protected onNextClick() {
++    this.find_(true, true);
++  }
++
++  protected onCloseClick() {
++    this.open = false;
++    browserProxyFactory.getInstance().handler.closeFindBar(false);
++  }
++
++  protected counter(): string {
++    if (this.query === '') {
++      return '';
++    }
++    return this.total === 0 ? t('findNone') : `${this.active}/${this.total}`;
++  }
++}
++
++declare global {
++  interface HTMLElementTagNameMap {
++    'vis-find': VisFindElement;
++  }
++}
++
++customElements.define(VisFindElement.is, VisFindElement);
+diff --git a/chrome/browser/resources/webui_browser/vis_settings.ts b/chrome/browser/resources/webui_browser/vis_settings.ts
+index 07c8498..d831c26 100644
+--- a/chrome/browser/resources/webui_browser/vis_settings.ts
++++ b/chrome/browser/resources/webui_browser/vis_settings.ts
+@@ -39,6 +39,14 @@ const TEXT: Record<string, [string, string]> = {
+     'Opened by the Home button. Empty means the new tab page',
+   ],
+   restore: ['Восстанавливать вкладки', 'Restore tabs'],
++  findPlaceholder: ['Найти на странице', 'Find in page'],
++  findNone: ['Нет', 'None'],
++  findPrev: ['Предыдущее', 'Previous'],
++  findNext: ['Следующее', 'Next'],
++  tabSearch: ['Поиск по вкладкам', 'Search tabs'],
++  tabSearchPlaceholder: ['Поиск по открытым вкладкам', 'Search open tabs'],
++  tabSearchEmpty: ['Ничего не найдено', 'Nothing found'],
++  tabSearchCurrent: ['Текущая', 'Current'],
+   restoreDesc: [
+     'Открывать вкладки с прошлого сеанса при запуске',
+     'Reopen the tabs of the last session on start',
+diff --git a/chrome/browser/resources/webui_browser/vis_tab_search.css b/chrome/browser/resources/webui_browser/vis_tab_search.css
+new file mode 100644
+index 0000000..3893818
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_tab_search.css
+@@ -0,0 +1,143 @@
++/* Copyright 2026 The Chromium Authors
++ * Use of this source code is governed by a BSD-style license that can be
++ * found in the LICENSE file. */
++
++/* #css_wrapper_metadata_start
++ * #type=style-lit
++ * #scheme=relative
++ * #css_wrapper_metadata_end */
++
++:host {
++  position: fixed;
++  inset: 0;
++  z-index: 960;
++  display: none;
++  font-family: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui,
++      sans-serif;
++  font-size: 13px;
++  color: #f8fafc;
++}
++
++:host([open]) {
++  display: block;
++}
++
++.backdrop {
++  position: absolute;
++  inset: 0;
++  background: rgba(0, 0, 0, 35%);
++}
++
++.panel {
++  position: absolute;
++  top: 96px;
++  left: 50%;
++  width: 560px;
++  max-width: calc(100% - 32px);
++  transform: translateX(-50%);
++  background: #1e202a;
++  border: 1px solid rgba(255, 255, 255, 14%);
++  border-radius: 14px;
++  box-shadow: 0 24px 64px rgba(0, 0, 0, 60%);
++  overflow: hidden;
++}
++
++input {
++  box-sizing: border-box;
++  width: 100%;
++  padding: 14px 16px;
++  background: transparent;
++  border: none;
++  border-bottom: 1px solid rgba(255, 255, 255, 8%);
++  outline: none;
++  color: inherit;
++  font: inherit;
++  font-size: 14px;
++  user-select: text;
++}
++
++input::placeholder {
++  color: rgba(255, 255, 255, 45%);
++}
++
++.list {
++  max-height: 380px;
++  overflow-y: auto;
++  padding: 6px;
++}
++
++.item {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  width: 100%;
++  padding: 8px 10px;
++  border: none;
++  border-radius: 9px;
++  background: transparent;
++  color: inherit;
++  font: inherit;
++  text-align: left;
++  cursor: pointer;
++}
++
++.item:hover,
++.item.selected {
++  background: rgba(255, 255, 255, 8%);
++}
++
++.item.selected {
++  box-shadow: inset 2px 0 0 #818cf8;
++}
++
++.ico {
++  flex-shrink: 0;
++  width: 16px;
++  height: 16px;
++  background-size: contain;
++  background-repeat: no-repeat;
++  background-position: center;
++}
++
++.text {
++  display: flex;
++  flex: 1;
++  flex-direction: column;
++  min-width: 0;
++}
++
++.title,
++.url {
++  overflow: hidden;
++  text-overflow: ellipsis;
++  white-space: nowrap;
++}
++
++.url {
++  color: #94a3b8;
++  font-size: 11px;
++}
++
++.badge {
++  flex-shrink: 0;
++  padding: 2px 8px;
++  border-radius: 10px;
++  background: rgba(129, 140, 248, 15%);
++  color: #818cf8;
++  font-size: 11px;
++}
++
++.empty {
++  padding: 24px;
++  text-align: center;
++  color: #94a3b8;
++}
++
++:focus-visible {
++  outline: 2px solid #818cf8;
++  outline-offset: -2px;
++}
++
++input:focus-visible {
++  outline: none;
++}
+diff --git a/chrome/browser/resources/webui_browser/vis_tab_search.html.ts b/chrome/browser/resources/webui_browser/vis_tab_search.html.ts
+new file mode 100644
+index 0000000..ba34c2e
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_tab_search.html.ts
+@@ -0,0 +1,37 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++import {html} from '//resources/lit/v3_0/lit.rollup.js';
++
++import type {VisTabSearchElement} from './vis_tab_search.js';
++
++export function getHtml(this: VisTabSearchElement) {
++  return html`<!--_html_template_start_-->
++<div class="backdrop" @click="${this.onBackdropClick}"></div>
++<section class="panel" role="dialog" aria-label="${this.t('tabSearch')}"
++    @keydown="${this.onKeydown}">
++  <input type="text" .value="${this.query}" @input="${this.onInput}"
++      placeholder="${this.t('tabSearchPlaceholder')}" spellcheck="false"
++      aria-label="${this.t('tabSearchPlaceholder')}">
++  <div class="list" role="listbox">
++    ${this.filtered().length === 0 ?
++      html`<div class="empty">${this.t('tabSearchEmpty')}</div>` :
++      html`${this.filtered().map((tab, i) => html`
++        <button class="item ${i === this.selected ? 'selected' : ''}"
++            role="option" aria-selected="${i === this.selected}"
++            data-index="${i}" @click="${this.onItemClick}">
++          <span class="ico"
++              style="background-image: url('${tab.favicon}')"></span>
++          <span class="text">
++            <span class="title">${tab.title || tab.url}</span>
++            <span class="url">${tab.url}</span>
++          </span>
++          ${tab.isActive ?
++            html`<span class="badge">${this.t('tabSearchCurrent')}</span>` :
++            html``}
++        </button>`)}`}
++  </div>
++</section>
++<!--_html_template_end_-->`;
++}
+diff --git a/chrome/browser/resources/webui_browser/vis_tab_search.ts b/chrome/browser/resources/webui_browser/vis_tab_search.ts
+new file mode 100644
+index 0000000..8c937c4
+--- /dev/null
++++ b/chrome/browser/resources/webui_browser/vis_tab_search.ts
+@@ -0,0 +1,122 @@
++// Copyright 2026 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++// Visibility: tab search (Ctrl+Shift+A in 2.1). A centered card with a filter
++// field and the open tabs; Enter or a click switches to the tab.
++
++import {CrLitElement} from '//resources/lit/v3_0/lit.rollup.js';
++
++import {getCss} from './vis_tab_search.css.js';
++import {getHtml} from './vis_tab_search.html.js';
++import {t} from './vis_settings.js';
++
++export interface SearchableTab {
++  id: string;
++  title: string;
++  url: string;
++  favicon: string;
++  isActive: boolean;
++}
++
++export class VisTabSearchElement extends CrLitElement {
++  static get is() {
++    return 'vis-tab-search';
++  }
++
++  static override get styles() {
++    return getCss();
++  }
++
++  override render() {
++    return getHtml.bind(this)();
++  }
++
++  static override get properties() {
++    return {
++      open: {type: Boolean, reflect: true},
++      query: {state: true, type: String},
++      tabs: {state: true, type: Array},
++      selected: {state: true, type: Number},
++    };
++  }
++
++  accessor open: boolean = false;
++  accessor query: string = '';
++  accessor tabs: SearchableTab[] = [];
++  accessor selected: number = 0;
++  private onPick_: ((id: string) => void)|null = null;
++
++  readonly t = t;
++
++  show(tabs: SearchableTab[], onPick: (id: string) => void) {
++    this.tabs = tabs;
++    this.onPick_ = onPick;
++    this.query = '';
++    this.selected = 0;
++    this.open = true;
++    this.updateComplete.then(
++        () => this.shadowRoot.querySelector('input')?.focus());
++  }
++
++  hide() {
++    this.open = false;
++  }
++
++  filtered(): SearchableTab[] {
++    const q = this.query.trim().toLowerCase();
++    if (q === '') {
++      return this.tabs;
++    }
++    return this.tabs.filter(
++        tab => tab.title.toLowerCase().includes(q) ||
++            tab.url.toLowerCase().includes(q));
++  }
++
++  protected onInput(e: Event) {
++    this.query = (e.target as HTMLInputElement).value;
++    this.selected = 0;
++  }
++
++  protected onKeydown(e: KeyboardEvent) {
++    const list = this.filtered();
++    if (e.key === 'Escape') {
++      e.preventDefault();
++      this.hide();
++    } else if (e.key === 'ArrowDown') {
++      e.preventDefault();
++      this.selected = Math.min(this.selected + 1, list.length - 1);
++    } else if (e.key === 'ArrowUp') {
++      e.preventDefault();
++      this.selected = Math.max(this.selected - 1, 0);
++    } else if (e.key === 'Enter' && list[this.selected]) {
++      e.preventDefault();
++      this.pick(list[this.selected]!);
++    }
++  }
++
++  protected onItemClick(e: Event) {
++    const index = Number((e.currentTarget as HTMLElement).dataset['index']);
++    const tab = this.filtered()[index];
++    if (tab) {
++      this.pick(tab);
++    }
++  }
++
++  protected pick(tab: SearchableTab) {
++    this.hide();
++    this.onPick_?.(tab.id);
++  }
++
++  protected onBackdropClick() {
++    this.hide();
++  }
++}
++
++declare global {
++  interface HTMLElementTagNameMap {
++    'vis-tab-search': VisTabSearchElement;
++  }
++}
++
++customElements.define(VisTabSearchElement.is, VisTabSearchElement);
+diff --git a/chrome/browser/signin/account_consistency_mode_manager.cc b/chrome/browser/signin/account_consistency_mode_manager.cc
+index 04b273a..cfa494b 100644
+--- a/chrome/browser/signin/account_consistency_mode_manager.cc
++++ b/chrome/browser/signin/account_consistency_mode_manager.cc
+@@ -148,7 +148,8 @@ AccountConsistencyModeManager::~AccountConsistencyModeManager() = default;
+ // static
+ void AccountConsistencyModeManager::RegisterProfilePrefs(
+     user_prefs::PrefRegistrySyncable* registry) {
+-  registry->RegisterBooleanPref(prefs::kSigninAllowedOnNextStartup, true);
++  // Visibility: no Google sign-in or sync in our browser.
++  registry->RegisterBooleanPref(prefs::kSigninAllowedOnNextStartup, false);
+ }
+ 
+ // static
+diff --git a/chrome/browser/ui/webui_browser/BUILD.gn b/chrome/browser/ui/webui_browser/BUILD.gn
+index cbc7f19..7e618b0 100644
+--- a/chrome/browser/ui/webui_browser/BUILD.gn
++++ b/chrome/browser/ui/webui_browser/BUILD.gn
+@@ -63,6 +63,8 @@ source_set("impl") {
+     "bookmark_bar_page_handler.h",
+     "browser_elements_webui_browser.cc",
+     "find_bar_owner_webui_browser.cc",
++    "vis_find_bar.cc",
++    "vis_find_bar.h",
+     "webui_browser.cc",
+     "webui_browser_client_view.cc",
+     "webui_browser_client_view.h",
+diff --git a/chrome/browser/ui/webui_browser/browser.mojom b/chrome/browser/ui/webui_browser/browser.mojom
+index fb33892..24b4d11 100644
+--- a/chrome/browser/ui/webui_browser/browser.mojom
++++ b/chrome/browser/ui/webui_browser/browser.mojom
+@@ -76,6 +76,14 @@ interface Page {
+   // surface) before the user replied here; hide it without a response.
+   HidePermissionPrompt();
+ 
++  // Visibility: show, hide and update our find-in-page card (vis_find_bar.cc).
++  ShowFindBar(string text);
++  HideFindBar();
++  SetFindResult(int32 active, int32 total);
++
++  // Visibility: show our tab search overlay.
++  ShowTabSearch();
++
+   // Visibility: the user clicked the location bar's lock/info icon
+   // (GuestHandler.OpenPageInfoMenu); show the 2.1-style site info panel
+   // instead of the native PageInfoBubbleView. Purely informational -- unlike
+@@ -152,6 +160,11 @@ interface PageHandler {
+   // Shows the Tab Search bubble.
+   ShowTabSearchBubble(string anchor_name);
+ 
++  // Visibility: the find card searches the current tab.
++  FindInPage(string text, bool forward, bool match_case, bool find_next);
++  // Visibility: the find card was closed; `activate` follows a focused link.
++  CloseFindBar(bool activate);
++
+   // Visibility: the 2.1-style tab hover preview. Replies with the cached
+   // thumbnail as a data: URL if one is already available; otherwise kicks
+   // off a capture and replies with null right away -- if the capture
+diff --git a/chrome/browser/ui/webui_browser/vis_find_bar.cc b/chrome/browser/ui/webui_browser/vis_find_bar.cc
+new file mode 100644
+index 0000000..ef4d4f7
+--- /dev/null
++++ b/chrome/browser/ui/webui_browser/vis_find_bar.cc
+@@ -0,0 +1,96 @@
++#include "chrome/browser/ui/webui_browser/vis_find_bar.h"
++
++#include "chrome/browser/ui/webui_browser/browser.mojom.h"
++#include "chrome/browser/ui/webui_browser/webui_browser_ui.h"
++#include "chrome/browser/ui/webui_browser/webui_browser_window.h"
++#include "base/strings/utf_string_conversions.h"
++#include "components/find_in_page/find_notification_details.h"
++
++VisFindBar::VisFindBar(WebUIBrowserWindow* window) : window_(window) {}
++
++VisFindBar::~VisFindBar() = default;
++
++FindBarController* VisFindBar::GetFindBarController() const {
++  return controller_;
++}
++
++void VisFindBar::SetFindBarController(FindBarController* controller) {
++  controller_ = controller;
++}
++
++void VisFindBar::Show(bool animate, bool focus) {
++  visible_ = true;
++  if (webui_browser::mojom::Page* page = window_->GetWebUIBrowserUI()->page()) {
++    page->ShowFindBar(base::UTF16ToUTF8(text_));
++  }
++}
++
++void VisFindBar::Hide(bool animate) {
++  visible_ = false;
++  if (webui_browser::mojom::Page* page = window_->GetWebUIBrowserUI()->page()) {
++    page->HideFindBar();
++  }
++}
++
++void VisFindBar::SetFocusAndSelection() {
++  if (visible_) {
++    Show(false, true);
++  }
++}
++
++void VisFindBar::ClearResults(
++    const find_in_page::FindNotificationDetails& results) {
++  PushResult(0, 0);
++}
++
++void VisFindBar::SetFindTextAndSelectedRange(const std::u16string& find_text,
++                                             const gfx::Range& selected_range) {
++  text_ = find_text;
++  if (visible_) {
++    Show(false, true);
++  }
++}
++
++std::u16string_view VisFindBar::GetFindText() const {
++  return text_;
++}
++
++gfx::Range VisFindBar::GetSelectedRange() const {
++  return gfx::Range(0, text_.size());
++}
++
++void VisFindBar::UpdateUIForFindResult(
++    const find_in_page::FindNotificationDetails& result,
++    const std::u16string& find_text) {
++  PushResult(result.active_match_ordinal(), result.number_of_matches());
++}
++
++bool VisFindBar::IsFindBarVisible() const {
++  return visible_;
++}
++
++bool VisFindBar::HasGlobalFindPasteboard() const {
++  return false;
++}
++
++bool VisFindBar::CanPopulateFromSelectedText() {
++  return true;
++}
++
++const FindBarTesting* VisFindBar::GetFindBarTesting() const {
++  return nullptr;
++}
++
++bool VisFindBar::HasFocus() const {
++  return visible_;
++}
++
++views::Widget* VisFindBar::GetHostWidget() {
++  return nullptr;
++}
++
++void VisFindBar::PushResult(int active, int total) {
++  if (webui_browser::mojom::Page* page = window_->GetWebUIBrowserUI()->page()) {
++    page->SetFindResult(active < 0 ? 0 : active, total < 0 ? 0 : total);
++  }
++}
+diff --git a/chrome/browser/ui/webui_browser/vis_find_bar.h b/chrome/browser/ui/webui_browser/vis_find_bar.h
+new file mode 100644
+index 0000000..14f0426
+--- /dev/null
++++ b/chrome/browser/ui/webui_browser/vis_find_bar.h
+@@ -0,0 +1,64 @@
++// Visibility: the find-in-page bar. Chromium's FindBarHost is a native widget
++// with Chromium's own look; this FindBar hands everything to the WebUI frame
++// (app.ts) which draws our floating card.
++
++#ifndef CHROME_BROWSER_UI_WEBUI_BROWSER_VIS_FIND_BAR_H_
++#define CHROME_BROWSER_UI_WEBUI_BROWSER_VIS_FIND_BAR_H_
++
++#include <string>
++#include <string_view>
++
++#include "base/memory/raw_ptr.h"
++#include "chrome/browser/ui/find_bar/find_bar.h"
++#include "ui/gfx/range/range.h"
++
++class WebUIBrowserWindow;
++
++class VisFindBar : public FindBar {
++ public:
++  explicit VisFindBar(WebUIBrowserWindow* window);
++  VisFindBar(const VisFindBar&) = delete;
++  VisFindBar& operator=(const VisFindBar&) = delete;
++  ~VisFindBar() override;
++
++  // The card reports what the user typed.
++  void SetTypedText(const std::u16string& text) { text_ = text; }
++
++  // FindBar:
++  FindBarController* GetFindBarController() const override;
++  void SetFindBarController(FindBarController* controller) override;
++  void Show(bool animate, bool focus) override;
++  void Hide(bool animate) override;
++  void SetFocusAndSelection() override;
++  void ClearResults(
++      const find_in_page::FindNotificationDetails& results) override;
++  void StopAnimation() override {}
++  void MoveWindowIfNecessary() override {}
++  void SetFindTextAndSelectedRange(const std::u16string& find_text,
++                                   const gfx::Range& selected_range) override;
++  std::u16string_view GetFindText() const override;
++  gfx::Range GetSelectedRange() const override;
++  void UpdateUIForFindResult(
++      const find_in_page::FindNotificationDetails& result,
++      const std::u16string& find_text) override;
++  void AudibleAlert() override {}
++  bool IsFindBarVisible() const override;
++  void RestoreSavedFocus() override {}
++  bool HasGlobalFindPasteboard() const override;
++  void UpdateFindBarForChangedWebContents() override {}
++  bool CanPopulateFromSelectedText() override;
++  const FindBarTesting* GetFindBarTesting() const override;
++  bool HasFocus() const override;
++  void CloseOverlappingBubbles() override {}
++  views::Widget* GetHostWidget() override;
++
++ private:
++  void PushResult(int active, int total);
++
++  raw_ptr<WebUIBrowserWindow> window_;
++  raw_ptr<FindBarController> controller_ = nullptr;
++  std::u16string text_;
++  bool visible_ = false;
++};
++
++#endif  // CHROME_BROWSER_UI_WEBUI_BROWSER_VIS_FIND_BAR_H_
+diff --git a/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc b/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc
+index 6b92876..1fe70bd 100644
+--- a/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc
++++ b/chrome/browser/ui/webui_browser/webui_browser_page_handler.cc
+@@ -3,6 +3,11 @@
+ // found in the LICENSE file.
+ 
+ #include "chrome/browser/ui/webui_browser/webui_browser_page_handler.h"
++#include "base/strings/utf_string_conversions.h"
++#include "chrome/browser/ui/find_bar/find_bar_controller.h"
++#include "chrome/browser/ui/webui_browser/vis_find_bar.h"
++#include "components/find_in_page/find_tab_helper.h"
++#include "components/find_in_page/find_types.h"
+ 
+ #include "base/functional/bind.h"
+ #include "base/functional/callback_helpers.h"
+@@ -893,3 +898,38 @@ WebUIBrowserWindow* WebUIBrowserPageHandler::GetBrowserWindow() {
+ 
+   return controller_->browser_window();
+ }
++
++void WebUIBrowserPageHandler::FindInPage(const std::string& text,
++                                         bool forward,
++                                         bool match_case,
++                                         bool find_next) {
++  FindBarController* controller = FindBarController::From(GetBrowser());
++  if (!controller || !controller->web_contents()) {
++    return;
++  }
++  std::u16string text16 = base::UTF8ToUTF16(text);
++  if (FindBar* bar = controller->find_bar()) {
++    static_cast<VisFindBar*>(bar)->SetTypedText(text16);
++  }
++  controller->OnUserChangedFindText(text16);
++  find_in_page::FindTabHelper* helper =
++      find_in_page::FindTabHelper::FromWebContents(controller->web_contents());
++  if (!helper) {
++    return;
++  }
++  if (text16.empty()) {
++    helper->StopFinding(find_in_page::SelectionAction::kClear);
++    return;
++  }
++  helper->StartFinding(text16, forward, match_case, /*find_match=*/true);
++}
++
++void WebUIBrowserPageHandler::CloseFindBar(bool activate) {
++  if (FindBarController* controller = FindBarController::From(GetBrowser())) {
++    controller->EndFindSession(
++        activate ? find_in_page::SelectionAction::kActivate
++                 : find_in_page::SelectionAction::kKeep,
++        activate ? find_in_page::ResultAction::kClear
++                 : find_in_page::ResultAction::kKeep);
++  }
++}
+diff --git a/chrome/browser/ui/webui_browser/webui_browser_page_handler.h b/chrome/browser/ui/webui_browser/webui_browser_page_handler.h
+index 65eba0d..9d07ac1 100644
+--- a/chrome/browser/ui/webui_browser/webui_browser_page_handler.h
++++ b/chrome/browser/ui/webui_browser/webui_browser_page_handler.h
+@@ -96,6 +96,11 @@ class WebUIBrowserPageHandler
+       webui_browser::mojom::PermissionPromptAnswer answer) override;
+ 
+   static int GetTabStripInsetWidth();
++  void FindInPage(const std::string& text,
++                  bool forward,
++                  bool match_case,
++                  bool find_next) override;
++  void CloseFindBar(bool activate) override;
+ 
+  private:
+   ~WebUIBrowserPageHandler() override;
+diff --git a/chrome/browser/ui/webui_browser/webui_browser_window.cc b/chrome/browser/ui/webui_browser/webui_browser_window.cc
+index 80b53cd..d745d31 100644
+--- a/chrome/browser/ui/webui_browser/webui_browser_window.cc
++++ b/chrome/browser/ui/webui_browser/webui_browser_window.cc
+@@ -34,7 +34,7 @@
+ #include "chrome/browser/ui/side_panel/side_panel_ui_base.h"
+ #include "chrome/browser/ui/tabs/public/tab_features.h"
+ #include "chrome/browser/ui/unload_controller.h"
+-#include "chrome/browser/ui/views/find_bar_host.h"
++#include "chrome/browser/ui/webui_browser/vis_find_bar.h"
+ #include "chrome/browser/ui/views/find_bar_owner.h"
+ #include "chrome/browser/ui/views/zoom/zoom_view_controller.h"
+ #include "chrome/browser/ui/web_applications/app_browser_controller.h"
+@@ -1134,7 +1134,7 @@ views::NativeWidget* WebUIBrowserWindow::CreateNativeWidget() {
+ #endif
+ 
+ std::unique_ptr<FindBar> WebUIBrowserWindow::CreateFindBar() {
+-  return std::make_unique<FindBarHost>(FindBarOwner::From(browser_));
++  return std::make_unique<VisFindBar>(this);
+ }
+ 
+ web_modal::WebContentsModalDialogHost*
+@@ -1194,7 +1194,10 @@ void WebUIBrowserWindow::ShowCaretBrowsingDialog() {
+ }
+ 
+ void WebUIBrowserWindow::CreateTabSearchBubble() {
+-  NOTIMPLEMENTED_LOG_ONCE();
++  // Visibility: our own overlay in the frame instead of the native bubble.
++  if (webui_browser::mojom::Page* page = GetWebUIBrowserUI()->page()) {
++    page->ShowTabSearch();
++  }
+ }
+ 
+ void WebUIBrowserWindow::CloseTabSearchBubble() {
+diff --git a/components/signin/internal/identity_manager/primary_account_manager.cc b/components/signin/internal/identity_manager/primary_account_manager.cc
+index b7c706a..b6008cb 100644
+--- a/components/signin/internal/identity_manager/primary_account_manager.cc
++++ b/components/signin/internal/identity_manager/primary_account_manager.cc
+@@ -391,7 +391,8 @@ void PrimaryAccountManager::RegisterProfilePrefs(PrefRegistrySimple* registry) {
+       prefs::kGoogleServicesSyncingUsernameMigratedToSignedIn, std::string());
+   registry->RegisterIntegerPref(prefs::kGoogleServicesSyncingUserMigrationType,
+                                 /*SyncToSigninMigrationType::kUnknown=*/0);
+-  registry->RegisterBooleanPref(prefs::kSigninAllowed, true);
++  // Visibility: no Google sign-in or sync in our browser.
++  registry->RegisterBooleanPref(prefs::kSigninAllowed, false);
+   registry->RegisterBooleanPref(prefs::kSignedInWithCredentialProvider, false);
+   registry->RegisterBooleanPref(prefs::kExplicitBrowserSignin, false);
+   registry->RegisterBooleanPref(
+diff --git a/ui/webui/resources/images/chrome_logo_dark.svg b/ui/webui/resources/images/chrome_logo_dark.svg
+index 19ba047..63c7248 100644
+--- a/ui/webui/resources/images/chrome_logo_dark.svg
++++ b/ui/webui/resources/images/chrome_logo_dark.svg
+@@ -1 +1 @@
+-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#a)" fill="#fff"><path d="M5.225 10.265A6.996 6.996 0 0 1 12 5h9.733a11.976 11.976 0 0 0-19.512.061l3.004 5.204zM22.898 7h-6.003a6.979 6.979 0 0 1 1.162 8.498l.008.004-4.872 8.438A11.98 11.98 0 0 0 22.898 7zm-9.009 11.735A6.964 6.964 0 0 1 5.944 15.5l-.004.002-4.87-8.435a11.98 11.98 0 0 0 9.812 16.877l3.007-5.21z"/><path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h24v24H0z"/></clipPath></defs></svg>
+\ No newline at end of file
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 256 256" width="256" height="256"><image width="256" height="256" xlink:href="data:image/png;base64,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"/></svg>
