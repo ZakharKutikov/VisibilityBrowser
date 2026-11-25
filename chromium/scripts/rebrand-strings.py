@@ -34,6 +34,8 @@ GRDS = [
 RU_CHROMIUM = [
     'chrome/app/resources/chromium_strings_ru.xtb',
     'components/strings/components_chromium_strings_ru.xtb',
+    'chrome/app/resources/generated_resources_ru.xtb',
+    'components/strings/components_strings_ru.xtb',
 ]
 RU_CHROME = [
     'chrome/app/resources/generated_resources_ru.xtb',
@@ -118,5 +120,40 @@ def main():
         print('%s: %d replacements' % (p, n))
 
 
+def fix_authors():
+    """The About page must credit Chromium's authors, not claim their code.
+
+    Runs after the rename: company name and copyright become GOmp Studios
+    "based on Chromium". Other languages fall back to English for these two.
+    """
+    grd = 'chrome/app/chromium_strings.grd'
+    old = dict(message_ids(grd))
+    text = read(grd)
+    text = text.replace('The Visibility Authors\n', 'GOmp Studios\n', 1)
+    text = text.replace(
+        '<ex>2016</ex></ph> The Visibility Authors. All rights reserved.',
+        '<ex>2016</ex></ph> GOmp Studios. Based on Chromium, Copyright The '
+        'Chromium Authors. All rights reserved.', 1)
+    write(grd, text)
+    new = dict(message_ids(grd))
+    changed = {old[k]: new[k] for k in old if old[k] != new[k]}
+    ru = 'chrome/app/resources/chromium_strings_ru.xtb'
+    xtb = read(ru)
+    russian = {
+        '7723433520011474808': '© GOmp Studios, <ph name="YEAR" /> . '
+                               'Основано на Chromium, '
+                               '© The Chromium Authors. Все права '
+                               'защищены.',
+        '5155533032779998642': 'GOmp Studios',
+    }
+    for old_id, translation in russian.items():
+        xtb = re.sub(r'<translation id="%s">.*?</translation>' % old_id,
+                     '<translation id="%s">%s</translation>' %
+                     (changed[old_id], translation), xtb, flags=re.S)
+    write(ru, xtb)
+    print('authors: %d message ids changed' % len(changed))
+
+
 if __name__ == '__main__':
     main()
+    fix_authors()

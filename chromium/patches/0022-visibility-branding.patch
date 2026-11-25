@@ -1,0 +1,86 @@
+diff --git a/chrome/app/theme/chromium/BRANDING b/chrome/app/theme/chromium/BRANDING
+index f8363d5b29..c452c95430 100644
+--- a/chrome/app/theme/chromium/BRANDING
++++ b/chrome/app/theme/chromium/BRANDING
+@@ -1,10 +1,10 @@
+-COMPANY_FULLNAME=The Chromium Authors
+-COMPANY_SHORTNAME=The Chromium Authors
+-PRODUCT_FULLNAME=Chromium
+-PRODUCT_SHORTNAME=Chromium
+-PRODUCT_INSTALLER_FULLNAME=Chromium Installer
+-PRODUCT_INSTALLER_SHORTNAME=Chromium Installer
+-COPYRIGHT=Copyright @LASTCHANGE_YEAR@ The Chromium Authors. All rights reserved.
++COMPANY_FULLNAME=GOmp Studios
++COMPANY_SHORTNAME=GOmp Studios
++PRODUCT_FULLNAME=Visibility Browser
++PRODUCT_SHORTNAME=Visibility
++PRODUCT_INSTALLER_FULLNAME=Visibility Browser Setup
++PRODUCT_INSTALLER_SHORTNAME=Visibility Setup
++COPYRIGHT=Copyright 2026 GOmp Studios. Based on Chromium, Copyright The Chromium Authors.
+ MAC_BUNDLE_ID=org.chromium.Chromium
+ MAC_CREATOR_CODE=Cr24
+ MAC_TEAM_ID=
+diff --git a/chrome/app/theme/default_100_percent/common/favicon_ntp.png b/chrome/app/theme/default_100_percent/common/favicon_ntp.png
+index 79291d8c90432afcd0d7eb6d37bdeeb8d7ade09e..15f3b1789d06f5143e9a11cd0a9286318e6d080c 100644
+GIT binary patch
+delta 515
+zcmV+e0{s290-OYpBYy$oNkl<Zc$|$>&1w`u5dNyBcQ&)hY}_aTZ~k2U0fWd&l8cGv
+zAtd+$p1k=Cx%mR3zCsX*5kX{6M$E;dxdnnGXksQi+ubGAlbOu!Dx|s_imLCc>Z-0L
+z0J!q$@$IM;ugSpOhm!;XfG{kj%}_=W_gpr3wzKf&8(r<K-hX1|4QfWS{?7pC5uR*7
+z`fksAzsw}`f+ozYKg#X7*Z>r(9OW7j-}OhifXIv?_1gGHIYdS|0_hq;AXX4MUAl!&
+zZ5l{)7pn>bGDBG-V&vYUF9WaxIP=Ao6NZm~CN&VVffIk$57aXM%zq;_2_9XzgS&Jc
+z*w4dJU2W=9On<mxJph41)+d*j@o{bqOVLeW!r<Qa#c)(toB9-^*fI!@byx&xa}w*{
+zKVWg?0Tx%5g0438jrP<O&6ZH#%iRsUJNSb6_6>9zDc0>)0IB}A{}s=-USs!UA2W@#
+zY9?L#yz0xKWfL>Wk#d5=gI@uZcBXOYGb9v`Hc^INL3|yCBDARm50CbxPEnR~XmcxM
+zt-nAhK_Iq13-!15)>VU~0Y^j!$ubf5cq%4{jE}O09G${~YLyeXLh@8j>>f|W<D>i^
+zQLJ*5%RjoWwq0%?ij(&+bX-+Y{DiYp+6*0w^_$93?q7CY=i%b2zAgX&002ovPDHLk
+FV1mH$`5FKK
+
+delta 284
+zcmV+%0ptFh1hxW@BYyz>Nkl<Zc-pO!(G9{d3`7}$5g36_)KYXLMdFhUU<23yHlQ28
+zCXB!c9ibyY9+goOwFn_1ozyzMvwhC!??=*jE_W>C>$&`+MS0KVFEgztAIS^(Z6Gv|
+z2GHbkhhB0fw<GBrP-v+2SM^YZ_V+VsGK7d6lB-srJV7QQ(|>A89N6sP{)iVK>H?Dr
+zm1jf>`3;1`iv~gFw^$IV-vSmSsr_G8J+oJI){UhC;P#V1ymKj&re-MM8*;oUckg;|
+z>duA-5X?jb(?Z01S7;)*j0ktOfwZHq9uh+7R&tg7uaPyyow&M<`>RzhLZQ*8W3ywD
+iy$NQ=CmZLl=M@Qc2I(qufPwA+0000<MNUMnLSTaH4uQx3
+
+diff --git a/chrome/app/theme/default_200_percent/common/favicon_ntp.png b/chrome/app/theme/default_200_percent/common/favicon_ntp.png
+index 841d0a4d3eaaa08cf1a99182b785a8efae077b48..9b5afffc71604871f6813f96fd9a3cd01d59ea99 100644
+GIT binary patch
+delta 1136
+zcmV-$1dsdb1NsP%8Gi-<0047(dh`GQ1VKqeK~#90%~xA!oJAD=&dmSs{+rD<mxks-
+zuuvQ7YqTO-A!3Bmh@e8%sufyY`ci!nK_3L6V2kkrRm4`&ho}$ji}+G35)8H0YV*>H
+zNTEL1&80DkP2+BM|Noyka>hj0CY$Ew>Vbh_&gDCEE^{FWF@FdImg%N*d+r7(OU8Ct
+z!>z>ZiNMN;z(lc9G|C<g066;d){nj}$E3MQ`!_pN$wc}MFlEV89)|`T+Z6&|=Z2?1
+z2@M<Dn26smh56@mcO9P*Y{IdfdgJXiz8<3!x-NN-8J`iCEEvkUwid+r%cgEhk(nxe
+z6`FicE{9Ozk$>Yx4f9(99*-BoSx~)Z;6i0K1w*iWO1&xAbo1HWcLMq}8!H~_H3MDT
+zAwyazz-&`&X+I_OYzbD07*Z1?*b0`rxMXBeRnY+@MGi|{9zYw|*ttAahX^#=Va*EQ
+z>g0W4QY#O8dCjb%e$+~oND)Z?oiUlqnwu}vmbVlkIe(E9DTFox6u}lknCTFv6gj?5
+z`q1kVP=OCvMnd_pY~9IoW7~_6)TJhcq75+~O(Eq62=W9oT0rr)JnT&DhRn@K!SQPR
+zz{!e^=-#NdRV9WfM;v1^n#N7R2E4j?FJ5VR9JP5LAMQAShIRF@Y3+v0WleY@BeENV
+zW~VDQ#DCVZ93T)TqHAdMGk9%t7AHFoVPD(*_;%<#&W&Dx+>g6jx-t3sSvMYQ?gl(^
+zyfZ`Ro$ME#2hrP+bvDFSrAVlG;6y0d2+y?bK!0a1_O@+DS_g>PU~u9hG-<p&_$eOh
+z=tkWSA?hxa@Nh>r4iA3fc!QG{ovi5WY2A+gTYr0zZR>G1#r6`5kQZE)!m15wF>vWS
+z3~hS?yPkX6U39|@dABA!YnOM0d-I@~kyHtMFnj_hCkOFt`-6D2xy$WnYtt?G{?{K7
+z=mg$9)rSKw>~}gZpL!2kYZT)WZd<<v9%<xF5y!>`aQO0P_@y|81~21m&x`n`)4Ppy
+z_J8#ZDI5u#7}`?Pjwf61LmTR`um6xs-0xuleGeRzoZ+d@Uqm`l16bhby)R)HSMl-4
+zm-wl0**Tt6J`67y8C%f-=bh_+!i*`QU`uET8WBwuadmV8k%`fsX?AkC=_~NHhx(TF
+z@aqDM7AH}ol1S+!EK8Cqo(Fc(gGdw&Gk*e=K#dMih>D<$LfUIUbghVynF%MCZpgr2
+z7a&e4L{Sk<ex0kA3cFtZNoc{aY+PEzCIvo%l#hTjbD@GuuVr^)N*64Zyd_JP_lAU3
+zHaFK*W%K3UOA0Hc@|Ir3OF{v(HgE5hkrfB7kd}8z6<>u6mcN2vD<~eIq?RyNFKH44
+zD<2iXR;2hH4vl;qsz=f_p<%&Rm+t60V`F<nH>NZ*hyOOVU<j7A_K0BrhhMXXo?I>$
+z{trH<e|q@O?>SMHV$)?UTFJ`uV-=fM6f3IyJ^ur_`Vc}D`IB(~0000<MNUMnLSTZx
+CofGc>
+
+literal 490
+zcmeAS@N?(olHy`uVBq!ia0vp^3LwnE3?yBabR7dyX#qYVu0Yzt0R(J7$Qg{BfTV?k
+zhb@TfV&~v&?ci+d-~{9X8CDJsRt`=;hBZh8$N(w^GF)sN9Dxj=dKdz#bhQR?L8e_&
+zp0)sJlVVAbUoeA$fWw6S@82r~IK<z-e}BF~!h-w#1r7ZZ&Y!PuSZ`2JpZm<+pMil<
+z$kW9!q~g}vORSR)8;CFm%uGCeX6?KBlWX7JXgpaEzq3(a^_ahAZSfN0sKj$+N7FvG
+zYvx;Q`XKSMcuoN$bE9!va@d@QHnWtCe{&=`ESj#I)mfRXFsX)lg7nnyL9ClRSZykq
+zo+wU@tadQgu8!F;K_L9V^ffP+Z}BOaThC;6pl`16hlC>6Bv19rHDW*0HR30H$ez2|
+zM4BVbBWsShwCOFy=Y|>wxjHQ*3Rj26ZQi`D(Rby|UAi;hvTl&N(zAB9$MHzr#_F?^
+zO4;RtukP^dtu5CQi58O&*?qFhKu0WFwT0d6E6dakZ??9CozdG_Ds34zW!l=Loh!`}
+zTy&z>G4Jm=aHTA==;xP@?UsSF8SeD<{a9Lm+0EpLL+eHtU{Er6y85}Sb4q9e0I6!a
+A^Z)<=
+

@@ -14,3 +14,7 @@ proprietary_codecs = true
 ffmpeg_branding = "Chrome"
 
 enable_widevine = true
+
+# Visibility: drop Google services that have no place in our browser.
+enable_hangout_services_extension = false
+enable_service_discovery = false

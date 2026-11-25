@@ -1,0 +1,28 @@
+diff --git a/chrome/app/chrome_main_delegate.cc b/chrome/app/chrome_main_delegate.cc
+index 33a3b3844a..186cc6fd42 100644
+--- a/chrome/app/chrome_main_delegate.cc
++++ b/chrome/app/chrome_main_delegate.cc
+@@ -1228,6 +1228,23 @@ std::optional<int> ChromeMainDelegate::BasicStartupComplete() {
+   }
+ #endif  // !defined(BUILDING_CHROME_RENDERER)
+ 
++#if !defined(BUILDING_CHROME_RENDERER)
++  // Visibility: switch off Google services that have no place in our browser.
++  // A user's own --disable-features keeps working: the lists are merged.
++  {
++    base::CommandLine* cl = base::CommandLine::ForCurrentProcess();
++    std::string disabled = cl->GetSwitchValueASCII("disable-features");
++    if (!disabled.empty()) {
++      disabled += ",";
++    }
++    disabled +=
++        "Glic,GlicRollout,GlicActor,LensOverlay,LensStandalone,AimEnabled,"
++        "AiModeStartPack,ContextualCueing,ContextualCueingV2,ContextualTasks,"
++        "HistoryEmbeddings,ShoppingList";
++    cl->AppendSwitchASCII("disable-features", disabled);
++  }
++#endif  // !defined(BUILDING_CHROME_RENDERER)
++
+ #if !defined(BUILDING_CHROME_RENDERER)
+   const bool is_browser = !command_line.HasSwitch(switches::kProcessType);
+ #if BUILDFLAG(IS_WIN)
